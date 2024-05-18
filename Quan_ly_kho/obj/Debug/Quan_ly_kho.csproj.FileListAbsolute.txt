@@ -45,3 +45,5 @@ D:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\obj\Debug\Quan_ly_.5371F6DC.Up2Date
 D:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\obj\Debug\Quan_ly_kho.exe
 D:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\obj\Debug\Quan_ly_kho.pdb
 D:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\obj\Debug\Quan_ly_kho_Content.g.cs
+D:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\obj\Debug\ModifyWindow.g.cs
+D:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\obj\Debug\ModifyWindow.baml

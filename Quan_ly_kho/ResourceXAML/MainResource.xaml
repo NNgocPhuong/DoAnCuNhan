@@ -3,4 +3,5 @@
                     xmlns:viewmodel="clr-namespace:Quan_ly_kho.ViewModels">
     <viewmodel:MainViewModel x:Key="MainVM"></viewmodel:MainViewModel>
     <viewmodel:LoginViewModel x:Key="LoginVM"></viewmodel:LoginViewModel>
+    <viewmodel:ManageViewModel x:Key="ManageVM"></viewmodel:ManageViewModel>
 </ResourceDictionary>

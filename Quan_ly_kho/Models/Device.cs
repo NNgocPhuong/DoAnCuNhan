@@ -6,13 +6,25 @@
 //     Manual changes to this file will be overwritten if the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+using Quan_ly_kho.Models;
+
+namespace System
+{
+    partial class Document
+    {
+        public int RoomId { get => GetValue<int>(nameof(RoomId)); set => Push(nameof(RoomId), value); }
+        public string DeviceName { get => GetString(nameof(DeviceName)); set => Push(nameof(DeviceName), value); }
+        public string DeviceType { get => GetString(nameof(DeviceType)); set => Push(nameof(DeviceType), value); }
+        public virtual Room Room { get => GetObject<Room>(nameof(Room)); set => Push(nameof(Room), value); }
+    }
+}
 
 namespace Quan_ly_kho.Models
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Device
+    public partial class Device : Document
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Device()
@@ -21,12 +33,7 @@ namespace Quan_ly_kho.Models
             this.Schedule = new HashSet<Schedule>();
         }
     
-        public int Id { get; set; }
-        public int RoomId { get; set; }
-        public string DeviceName { get; set; }
-        public string DeviceType { get; set; }
-    
-        public virtual Room Room { get; set; }
+      
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DeviceState> DeviceState { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

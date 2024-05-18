@@ -43,6 +43,7 @@
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
                     <TextBox
+                        Text="{Binding UserName}"
                         VerticalAlignment="Center"
                         materialDesign:HintAssist.Hint="Tên đăng nhập"
                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
@@ -68,6 +69,7 @@
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Button Grid.Column="0"
+                            IsDefault="True"
                             Command="{Binding LoginCommand}"
                             CommandParameter="{Binding ElementName=loginWindow}"
                             Content="Đăng nhập" FontSize="15" Width="110"

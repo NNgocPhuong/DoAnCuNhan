@@ -33,42 +33,33 @@
         <Grid Grid.Row="1">
             <materialDesign:Card Width="400">
                 <StackPanel>
+                    <ComboBox Margin="15"
+                              ItemsSource="{Binding Buildings}"
+                              DisplayMemberPath="BuildingName"
+                              SelectedItem="{Binding SelectedBuilding}"
+                              materialDesign:HintAssist.Hint="Chọn toà nhà"
+                              materialDesign:HintAssist.HintOpacity=".26"
+                              IsEditable="True"/>
 
-                    <ComboBox Margin="15" materialDesign:ComboBoxAssist.MaxLength="2"
-materialDesign:HintAssist.Hint="Chọn toà nhà"
-materialDesign:HintAssist.HintOpacity=".26"
-IsEditable="True">
-                        <ComboBoxItem Content="D3" />
-                        <ComboBoxItem Content="D5" />
-                        <ComboBoxItem Content="D7" />
-                        <ComboBoxItem Content="D9" />
-                    </ComboBox>
-                    <ComboBox Margin="15" materialDesign:ComboBoxAssist.MaxLength="2"
-materialDesign:HintAssist.Hint="Chọn tầng"
-materialDesign:HintAssist.HintOpacity=".26"
-IsEditable="True">
-                        <ComboBoxItem Content="1" />
-                        <ComboBoxItem Content="2" />
-                        <ComboBoxItem Content="3" />
-                        <ComboBoxItem Content="4" />
-                    </ComboBox>
-                    <ComboBox Margin="15" materialDesign:ComboBoxAssist.MaxLength="2"
-materialDesign:HintAssist.Hint="Chọn phòng"
-materialDesign:HintAssist.HintOpacity=".26"
-IsEditable="True">
-                        <ComboBoxItem Content="1" />
-                        <ComboBoxItem Content="2" />
-                        <ComboBoxItem Content="3" />
-                        <ComboBoxItem Content="4" />
-                    </ComboBox>
-                    <Button Margin="15" 
-  Content="Tìm kiếm"
-                            Command="{Binding ManageWindowCommand}"
-  IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
-  Style="{StaticResource MaterialDesignRaisedDarkButton}"
-  ToolTip="Resource name: MaterialDesignRaisedLightDarkButton"
-  />
+                    <ComboBox Margin="15"
+                              ItemsSource="{Binding Floors}"
+                              DisplayMemberPath="FloorNumber"
+                              SelectedItem="{Binding SelectedFloor}"
+                              materialDesign:HintAssist.Hint="Chọn tầng"
+                              materialDesign:HintAssist.HintOpacity=".26"
+                              IsEditable="True"/>
 
+                    <ComboBox Margin="15"
+                              ItemsSource="{Binding Rooms}"
+                              DisplayMemberPath="RoomNumber"
+                              SelectedItem="{Binding SelectedRoom}"
+                              materialDesign:HintAssist.Hint="Chọn phòng"
+                              materialDesign:HintAssist.HintOpacity=".26"
+                              IsEditable="True"/>
+                    <Button Margin="15" Content="Tìm kiếm"
+                            Command="{Binding ManageWindowCommand}" IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                            Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                            ToolTip="Resource name: MaterialDesignRaisedLightDarkButton"/>
                 </StackPanel>
             </materialDesign:Card>
 

@@ -98,6 +98,7 @@
     <Compile Include="Models\Building.cs">
       <DependentUpon>MainModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DataProvider.cs" />
     <Compile Include="Models\Device.cs">
       <DependentUpon>MainModel.tt</DependentUpon>
     </Compile>
@@ -137,6 +138,9 @@
     <Compile Include="Models\User.cs">
       <DependentUpon>MainModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="ModifyWindow.xaml.cs">
+      <DependentUpon>ModifyWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControlPhuong\ControlBarUC.xaml.cs">
       <DependentUpon>ControlBarUC.xaml</DependentUpon>
     </Compile>
@@ -144,6 +148,7 @@
     <Compile Include="ViewModels\ControlBarViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\ManageViewModel.cs" />
     <Compile Include="VstData\BsonDataMap.cs" />
     <Compile Include="VstData\Collection.cs" />
     <Compile Include="VstData\Database.cs" />
@@ -175,6 +180,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="ManageWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ModifyWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

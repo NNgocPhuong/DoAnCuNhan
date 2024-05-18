@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows;
+using Quan_ly_kho.Models;
 
 namespace Quan_ly_kho.ViewModels
 {
@@ -34,19 +35,19 @@ namespace Quan_ly_kho.ViewModels
             if (p == null)
                 return;
             IsLogin = true;
-            p.Close();
-            //Users user = new Users(UserName, PassWord);
-            //var accCount = DataProvider.Ins.DB.Users.Where(u => u.UserName == UserName && u.Password == PassWord).Count();
-            //if (accCount > 0)
-            //{
-            //    IsLogin = true;
-            //    p.Close();
-            //}
-            //else
-            //{
-            //    IsLogin = false;
-            //    MessageBox.Show("Tài khoản hoặc mật khẩu sai");
-            //}
+
+            User user = new User(UserName, PassWord);
+            var accCount = DataProvider.Ins.DB.User.Where(u => u.Username == UserName && u.PasswordHash == PassWord).Count();
+            if (accCount > 0)
+            {
+                IsLogin = true;
+                p.Close();
+            }
+            else
+            {
+                IsLogin = false;
+                MessageBox.Show("Tài khoản hoặc mật khẩu sai");
+            }
         }
     }
 }

@@ -6,20 +6,25 @@
 //     Manual changes to this file will be overwritten if the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+using Quan_ly_kho.Models;
+
+namespace System
+{
+    partial class Document
+    {
+        
+    }
+}
 
 namespace Quan_ly_kho.Models
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Schedule
+    public partial class Schedule : Document
     {
-        public int Id { get; set; }
-        public int DeviceId { get; set; }
         public System.DateTime StartTime { get; set; }
         public System.DateTime EndTime { get; set; }
         public string Action { get; set; }
-    
-        public virtual Device Device { get; set; }
     }
 }

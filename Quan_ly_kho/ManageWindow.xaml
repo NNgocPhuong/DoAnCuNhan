@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Quan_ly_kho"
         mc:Ignorable="d"
         
+        DataContext="{StaticResource ManageVM}"
            WindowStartupLocation="CenterScreen"
    xmlns:uc ="clr-namespace:Quan_ly_kho.UserControlPhuong"
    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -45,13 +46,13 @@ FontFamily="{DynamicResource MaterialDesignFont}"
                 <materialDesign:Card Margin="5" Grid.Column="0">
                     <WrapPanel>
                         <materialDesign:PackIcon Kind="OfficeBuildingCogOutline" Width="60" Height="40"/>
-                        <Button Command="{Binding DeleteCommand}" Content="Quản lý" Margin="5" Width="100"></Button>
+                        <Button Command="{Binding ModifyWindowCommand}" Content="Quản lý" Margin="5" Width="100"></Button>
                     </WrapPanel>
                 </materialDesign:Card>
                 <materialDesign:Card Margin="5" Grid.Column="1">
                     <WrapPanel>
                         <materialDesign:PackIcon Kind="HomeClockOutline" Height="40" Width="60" />
-                        <Button Command="{Binding EditCommand}" Content="Lập lịch hoạt động" Margin="5" Width="170"></Button>
+                        <Button Command="{Binding ModifyWindowCommand}" Content="Lập lịch hoạt động" Margin="5" Width="170"></Button>
                     </WrapPanel>
                 </materialDesign:Card>
             </Grid>

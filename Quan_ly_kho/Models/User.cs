@@ -6,19 +6,36 @@
 //     Manual changes to this file will be overwritten if the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+using Quan_ly_kho.Models;
+
+namespace System
+{
+    partial class Document
+    {
+        public int Id { get => GetValue<int>(nameof(Id)); set => Push(nameof(Id), value); }
+        public string Username { get => GetString(nameof(Username)); set => Push(nameof(Username), value); }
+        public string PasswordHash { get => GetString(nameof(PasswordHash)); set => Push(nameof(PasswordHash), value); }
+        public int RoleId { get => GetValue<int>(nameof(RoleId)); set => Push(nameof(RoleId), value); }
+        public virtual Role Role { get => GetObject<Role>(nameof(Role)); set => Push(nameof(Role), value);}
+    }
+}
 
 namespace Quan_ly_kho.Models
 {
     using System;
     using System.Collections.Generic;
     
+    public partial class User : Document
+    {
+        
+    }
     public partial class User
     {
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public string PasswordHash { get; set; }
-        public int RoleId { get; set; }
-    
-        public virtual Role Role { get; set; }
+        public User(string name, string password)
+        {
+            Username = name;
+            PasswordHash = (name + password).ToMD5();
+        }
     }
+
 }

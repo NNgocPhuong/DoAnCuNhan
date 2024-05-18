@@ -6,13 +6,25 @@
 //     Manual changes to this file will be overwritten if the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+using Quan_ly_kho.Models;
+
+namespace System
+{
+    partial class Document
+    {
+        public int BuildingId { get => GetValue<int>(nameof(BuildingId)); set => Push(nameof(BuildingId), value); }
+        public int FloorNumber { get => GetValue<int>(nameof(FloorNumber)); set => Push(nameof(FloorNumber), value); }
+        public virtual Building Building { get => GetObject<Building>(nameof(Building)); set => Push(nameof(Building), value); }
+    }
+}
+
 
 namespace Quan_ly_kho.Models
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Floor
+    public partial class Floor : Document
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Floor()
@@ -20,11 +32,6 @@ namespace Quan_ly_kho.Models
             this.Room = new HashSet<Room>();
         }
     
-        public int Id { get; set; }
-        public int BuildingId { get; set; }
-        public int FloorNumber { get; set; }
-    
-        public virtual Building Building { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Room> Room { get; set; }
     }

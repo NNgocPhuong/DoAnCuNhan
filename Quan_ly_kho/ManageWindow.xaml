@@ -1,0 +1,78 @@
+﻿<Window x:Class="Quan_ly_kho.ManageWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Quan_ly_kho"
+        mc:Ignorable="d"
+        
+           WindowStartupLocation="CenterScreen"
+   xmlns:uc ="clr-namespace:Quan_ly_kho.UserControlPhuong"
+   xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+   TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+TextElement.FontWeight="Regular"
+TextElement.FontSize="13"
+TextOptions.TextFormattingMode="Ideal"
+TextOptions.TextRenderingMode="Auto"
+Background="{DynamicResource MaterialDesignPaper}"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+FontFamily="{DynamicResource MaterialDesignFont}"
+        x:Name="window"
+        
+        Title="Chọn thiết bị cần quản lý" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <uc:ControlBarUC Tag="{Binding Title, ElementName=window}"></uc:ControlBarUC>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <materialDesign:Card Margin="5" Grid.Column="0">
+                    <WrapPanel>
+                        <materialDesign:PackIcon Kind="OfficeBuildingCogOutline" Width="60" Height="40"/>
+                        <Button Command="{Binding DeleteCommand}" Content="Quản lý" Margin="5" Width="100"></Button>
+                    </WrapPanel>
+                </materialDesign:Card>
+                <materialDesign:Card Margin="5" Grid.Column="1">
+                    <WrapPanel>
+                        <materialDesign:PackIcon Kind="HomeClockOutline" Height="40" Width="60" />
+                        <Button Command="{Binding EditCommand}" Content="Lập lịch hoạt động" Margin="5" Width="170"></Button>
+                    </WrapPanel>
+                </materialDesign:Card>
+            </Grid>
+
+
+            <materialDesign:Card Grid.Row="2" Margin="5" VerticalAlignment="Stretch">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ListView ItemsSource="{Binding List}" SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}"></GridViewColumn>
+                                <GridViewColumn Header="Loại thiết bị" DisplayMemberBinding="{Binding DisplayName}"></GridViewColumn>
+                                <GridViewColumn Header="Tên thiết bị" DisplayMemberBinding="{Binding Address}"></GridViewColumn>
+                                <GridViewColumn Header="Trạng thái" DisplayMemberBinding="{Binding Phone}"></GridViewColumn>
+                                <GridViewColumn Header="Lịch hoạt động" DisplayMemberBinding="{Binding Email}"></GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </ScrollViewer>
+            </materialDesign:Card>
+        </Grid>
+
+    </Grid>
+</Window>

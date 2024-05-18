@@ -1,0 +1,81 @@
+﻿<Window x:Class="Quan_ly_kho.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Quan_ly_kho"
+        WindowStartupLocation="CenterScreen"
+        xmlns:uc ="clr-namespace:Quan_ly_kho.UserControlPhuong"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+     TextElement.FontWeight="Regular"
+     TextElement.FontSize="13"
+     TextOptions.TextFormattingMode="Ideal"
+     TextOptions.TextRenderingMode="Auto"
+     Background="{DynamicResource MaterialDesignPaper}"
+     FontFamily="{DynamicResource MaterialDesignFont}"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        x:Name="mainWindow"
+        mc:Ignorable="d"
+        Title="Phần mềm quản lý lớp học" Height="400" Width="500"
+        DataContext="{StaticResource MainVM}"
+        ResizeMode="NoResize" WindowStyle="None">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedWindowCommand}" CommandParameter="{Binding ElementName=mainWindow}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="1">
+            <materialDesign:Card Width="400">
+                <StackPanel>
+
+                    <ComboBox Margin="15" materialDesign:ComboBoxAssist.MaxLength="2"
+materialDesign:HintAssist.Hint="Chọn toà nhà"
+materialDesign:HintAssist.HintOpacity=".26"
+IsEditable="True">
+                        <ComboBoxItem Content="D3" />
+                        <ComboBoxItem Content="D5" />
+                        <ComboBoxItem Content="D7" />
+                        <ComboBoxItem Content="D9" />
+                    </ComboBox>
+                    <ComboBox Margin="15" materialDesign:ComboBoxAssist.MaxLength="2"
+materialDesign:HintAssist.Hint="Chọn tầng"
+materialDesign:HintAssist.HintOpacity=".26"
+IsEditable="True">
+                        <ComboBoxItem Content="1" />
+                        <ComboBoxItem Content="2" />
+                        <ComboBoxItem Content="3" />
+                        <ComboBoxItem Content="4" />
+                    </ComboBox>
+                    <ComboBox Margin="15" materialDesign:ComboBoxAssist.MaxLength="2"
+materialDesign:HintAssist.Hint="Chọn phòng"
+materialDesign:HintAssist.HintOpacity=".26"
+IsEditable="True">
+                        <ComboBoxItem Content="1" />
+                        <ComboBoxItem Content="2" />
+                        <ComboBoxItem Content="3" />
+                        <ComboBoxItem Content="4" />
+                    </ComboBox>
+                    <Button Margin="15" 
+  Content="Tìm kiếm"
+                            Command="{Binding ManageWindowCommand}"
+  IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+  Style="{StaticResource MaterialDesignRaisedDarkButton}"
+  ToolTip="Resource name: MaterialDesignRaisedLightDarkButton"
+  />
+
+                </StackPanel>
+            </materialDesign:Card>
+
+
+        </Grid>
+        <Grid Grid.Row="0">
+            <uc:ControlBarUC Tag="{Binding Title, ElementName=mainWindow}"></uc:ControlBarUC>
+        </Grid>
+    </Grid>
+</Window>

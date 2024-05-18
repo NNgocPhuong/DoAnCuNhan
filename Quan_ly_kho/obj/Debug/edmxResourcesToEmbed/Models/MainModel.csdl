@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="QuanLyPhongHocModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Building">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BuildingName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Floor" Relationship="Self.FK__Floor__BuildingI__3E52440B" FromRole="Building" ToRole="Floor" />
+  </EntityType>
+  <EntityType Name="Device">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RoomId" Type="Int32" Nullable="false" />
+    <Property Name="DeviceName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="DeviceType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Room" Relationship="Self.FK__Device__RoomId__440B1D61" FromRole="Device" ToRole="Room" />
+    <NavigationProperty Name="DeviceState" Relationship="Self.FK__DeviceSta__Devic__47DBAE45" FromRole="Device" ToRole="DeviceState" />
+    <NavigationProperty Name="Schedule" Relationship="Self.FK__Schedule__Device__4AB81AF0" FromRole="Device" ToRole="Schedule" />
+  </EntityType>
+  <EntityType Name="DeviceState">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DeviceId" Type="Int32" Nullable="false" />
+    <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Timestamp" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Device" Relationship="Self.FK__DeviceSta__Devic__47DBAE45" FromRole="DeviceState" ToRole="Device" />
+  </EntityType>
+  <EntityType Name="Floor">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BuildingId" Type="Int32" Nullable="false" />
+    <Property Name="FloorNumber" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Building" Relationship="Self.FK__Floor__BuildingI__3E52440B" FromRole="Floor" ToRole="Building" />
+    <NavigationProperty Name="Room" Relationship="Self.FK__Room__FloorId__412EB0B6" FromRole="Floor" ToRole="Room" />
+  </EntityType>
+  <EntityType Name="Role">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RoleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="User" Relationship="Self.FK__User__RoleId__398D8EEE" FromRole="Role" ToRole="User" />
+  </EntityType>
+  <EntityType Name="Room">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FloorId" Type="Int32" Nullable="false" />
+    <Property Name="RoomNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Device" Relationship="Self.FK__Device__RoomId__440B1D61" FromRole="Room" ToRole="Device" />
+    <NavigationProperty Name="Floor" Relationship="Self.FK__Room__FloorId__412EB0B6" FromRole="Room" ToRole="Floor" />
+  </EntityType>
+  <EntityType Name="Schedule">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DeviceId" Type="Int32" Nullable="false" />
+    <Property Name="StartTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="EndTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Action" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Device" Relationship="Self.FK__Schedule__Device__4AB81AF0" FromRole="Schedule" ToRole="Device" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="PasswordHash" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="RoleId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Role" Relationship="Self.FK__User__RoleId__398D8EEE" FromRole="User" ToRole="Role" />
+  </EntityType>
+  <Association Name="FK__Floor__BuildingI__3E52440B">
+    <End Role="Building" Type="Self.Building" Multiplicity="1" />
+    <End Role="Floor" Type="Self.Floor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Building">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Floor">
+        <PropertyRef Name="BuildingId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Device__RoomId__440B1D61">
+    <End Role="Room" Type="Self.Room" Multiplicity="1" />
+    <End Role="Device" Type="Self.Device" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Room">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Device">
+        <PropertyRef Name="RoomId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__DeviceSta__Devic__47DBAE45">
+    <End Role="Device" Type="Self.Device" Multiplicity="1" />
+    <End Role="DeviceState" Type="Self.DeviceState" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Device">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="DeviceState">
+        <PropertyRef Name="DeviceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Schedule__Device__4AB81AF0">
+    <End Role="Device" Type="Self.Device" Multiplicity="1" />
+    <End Role="Schedule" Type="Self.Schedule" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Device">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Schedule">
+        <PropertyRef Name="DeviceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Room__FloorId__412EB0B6">
+    <End Role="Floor" Type="Self.Floor" Multiplicity="1" />
+    <End Role="Room" Type="Self.Room" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Floor">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Room">
+        <PropertyRef Name="FloorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__User__RoleId__398D8EEE">
+    <End Role="Role" Type="Self.Role" Multiplicity="1" />
+    <End Role="User" Type="Self.User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="User">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="QuanLyPhongHocEntities1" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Building" EntityType="Self.Building" />
+    <EntitySet Name="Device" EntityType="Self.Device" />
+    <EntitySet Name="DeviceState" EntityType="Self.DeviceState" />
+    <EntitySet Name="Floor" EntityType="Self.Floor" />
+    <EntitySet Name="Role" EntityType="Self.Role" />
+    <EntitySet Name="Room" EntityType="Self.Room" />
+    <EntitySet Name="Schedule" EntityType="Self.Schedule" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="User" EntityType="Self.User" />
+    <AssociationSet Name="FK__Floor__BuildingI__3E52440B" Association="Self.FK__Floor__BuildingI__3E52440B">
+      <End Role="Building" EntitySet="Building" />
+      <End Role="Floor" EntitySet="Floor" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Device__RoomId__440B1D61" Association="Self.FK__Device__RoomId__440B1D61">
+      <End Role="Room" EntitySet="Room" />
+      <End Role="Device" EntitySet="Device" />
+    </AssociationSet>
+    <AssociationSet Name="FK__DeviceSta__Devic__47DBAE45" Association="Self.FK__DeviceSta__Devic__47DBAE45">
+      <End Role="Device" EntitySet="Device" />
+      <End Role="DeviceState" EntitySet="DeviceState" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Schedule__Device__4AB81AF0" Association="Self.FK__Schedule__Device__4AB81AF0">
+      <End Role="Device" EntitySet="Device" />
+      <End Role="Schedule" EntitySet="Schedule" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Room__FloorId__412EB0B6" Association="Self.FK__Room__FloorId__412EB0B6">
+      <End Role="Floor" EntitySet="Floor" />
+      <End Role="Room" EntitySet="Room" />
+    </AssociationSet>
+    <AssociationSet Name="FK__User__RoleId__398D8EEE" Association="Self.FK__User__RoleId__398D8EEE">
+      <End Role="Role" EntitySet="Role" />
+      <End Role="User" EntitySet="User" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

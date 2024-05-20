@@ -23,6 +23,7 @@ namespace Quan_ly_kho.Models
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
 
     public partial class Device : Document
@@ -58,5 +59,7 @@ namespace Quan_ly_kho.Models
                 return null;
             }
         }
+
+
     }
 }

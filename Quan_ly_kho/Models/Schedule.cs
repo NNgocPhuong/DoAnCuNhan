@@ -27,4 +27,14 @@ namespace Quan_ly_kho.Models
         public System.DateTime EndTime { get; set; }
         public string Action { get; set; }
     }
+    public partial class Schedule
+    {
+        public string ScheduleDescription
+        {
+            get
+            {
+                return $"{StartTime:dd/MM/yyyy HH:mm} - {EndTime:dd/MM/yyyy HH:mm}";
+            }
+        }
+    }
 }

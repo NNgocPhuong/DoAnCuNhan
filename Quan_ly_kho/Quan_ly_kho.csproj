@@ -102,6 +102,7 @@
     <Compile Include="Models\Device.cs">
       <DependentUpon>MainModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DeviceSchedule.cs" />
     <Compile Include="Models\DeviceState.cs">
       <DependentUpon>MainModel.tt</DependentUpon>
     </Compile>

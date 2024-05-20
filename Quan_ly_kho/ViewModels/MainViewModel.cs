@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows;
 using System.Collections.ObjectModel;
 using Quan_ly_kho.Models;
+using System.Data.Entity;
 
 namespace Quan_ly_kho.ViewModels
 {
@@ -147,11 +148,13 @@ namespace Quan_ly_kho.ViewModels
             Devices = new ObservableCollection<Device> { };
             if (SelectedRoom != null)
             {
-                var DeviveList = DataProvider.Ins.DB.Device.Where(x => x.RoomId == SelectedRoom.Id);
-                foreach (var item in DeviveList)
-                {
-                    Devices.Add(item);
-                }
+                var DeviveList = DataProvider.Ins.DB.Device.Where(x => x.RoomId == SelectedRoom.Id).Include(x => x.DeviceState).Include(x => x.Schedule).ToList();
+                Devices = new ObservableCollection<Device>(DeviveList);
+            }
+            else
+            {
+                // Nếu SelectedRoom là null, chỉ tạo một ObservableCollection rỗng
+                Devices = new ObservableCollection<Device>();
             }
         }
     }

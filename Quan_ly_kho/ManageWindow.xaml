@@ -7,18 +7,18 @@
         mc:Ignorable="d"
         
         DataContext="{StaticResource ManageVM}"
-           WindowStartupLocation="CenterScreen"
-   xmlns:uc ="clr-namespace:Quan_ly_kho.UserControlPhuong"
-   xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-   TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-TextElement.FontWeight="Regular"
-TextElement.FontSize="13"
-TextOptions.TextFormattingMode="Ideal"
-TextOptions.TextRenderingMode="Auto"
-Background="{DynamicResource MaterialDesignPaper}"
+        WindowStartupLocation="CenterScreen"
+        xmlns:uc ="clr-namespace:Quan_ly_kho.UserControlPhuong"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
         ResizeMode="NoResize"
         WindowStyle="None"
-FontFamily="{DynamicResource MaterialDesignFont}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
         x:Name="window"
         
         Title="Chọn thiết bị cần quản lý" Height="450" Width="800">
@@ -57,10 +57,9 @@ FontFamily="{DynamicResource MaterialDesignFont}"
                 </materialDesign:Card>
             </Grid>
             <Grid Grid.Row="2">
-                <DataGrid AutoGenerateColumns="False" CanUserAddRows="False"
-          HeadersVisibility="All"
-          ItemsSource="{Binding Devices}"
-          SelectionUnit="{Binding ElementName=selectionUnitComboBox, Path=SelectedValue}">
+                <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="All"
+                          ItemsSource="{Binding Devices}"
+                          SelectionUnit="{Binding ElementName=selectionUnitComboBox, Path=SelectedValue}">
                     <DataGrid.Columns>
                         <DataGridCheckBoxColumn Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}">
                             <DataGridCheckBoxColumn.Header>
@@ -91,17 +90,7 @@ FontFamily="{DynamicResource MaterialDesignFont}"
                         <DataGridTemplateColumn Header="Lịch hoạt động">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <ListBox ItemsSource="{Binding DeviceSchedule}">
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <StackPanel>
-                                                    <TextBlock Text="{Binding StartTime}" />
-                                                    <TextBlock Text="{Binding EndTime}" />
-                                                    <!-- Thêm các TextBlock khác nếu cần -->
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
+                                    <ComboBox materialDesign:HintAssist.Hint="Lịch trình" ItemsSource="{Binding Schedule}" DisplayMemberPath="ScheduleDescription" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

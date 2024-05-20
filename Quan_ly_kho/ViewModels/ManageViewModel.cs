@@ -25,6 +25,18 @@ namespace Quan_ly_kho.ViewModels
             }
         }
 
+        //private ObservableCollection<ICollection<Schedule>> _schedules;
+
+        //public ObservableCollection<ICollection<Schedule>> Schedules
+        //{
+        //    get => _schedules;
+        //    set
+        //    {
+        //        _schedules = value;
+        //        OnPropertyChanged(nameof(Schedules));
+        //    }
+        //}
+
         public ManageViewModel()
         {
             Devices = new ObservableCollection<Device>();

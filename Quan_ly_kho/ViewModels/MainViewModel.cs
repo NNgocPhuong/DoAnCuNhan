@@ -21,6 +21,8 @@ namespace Quan_ly_kho.ViewModels
         private ObservableCollection<Room> _rooms;
         public ObservableCollection<Room> Rooms { get => _rooms; set { _rooms = value; OnPropertyChanged(); } }
 
+        private ObservableCollection<Device> _devices;
+        public ObservableCollection<Device> Devices { get => _devices; set { _devices = value; OnPropertyChanged(); } }
 
         private Building _selectedBuilding;
         private Floor _selectedFloor;
@@ -56,6 +58,7 @@ namespace Quan_ly_kho.ViewModels
             set
             {
                 _selectedRoom = value;
+                UpdateDevice();
                 OnPropertyChanged();
             }
         }
@@ -90,7 +93,16 @@ namespace Quan_ly_kho.ViewModels
                     }
                 });
 
-            ManageWindowCommand = new RelayCommand<object>((p) => { return true; }, (p) => { ManageWindow w = new ManageWindow(); w.ShowDialog(); });
+            ManageWindowCommand = new RelayCommand<object>((p) => { return true; }, 
+                (p) => 
+                { 
+                    ManageWindow w = new ManageWindow();
+                    if (w.DataContext is ManageViewModel manageViewModel)
+                    {
+                        manageViewModel.Devices = Devices;
+                    }
+                    w.ShowDialog();
+                });
         }
         public void LoadBuildingData()
         {
@@ -127,6 +139,18 @@ namespace Quan_ly_kho.ViewModels
                 foreach (var item in RoomList)
                 {
                     Rooms.Add(item);
+                }
+            }
+        }
+        public void UpdateDevice()
+        {
+            Devices = new ObservableCollection<Device> { };
+            if (SelectedRoom != null)
+            {
+                var DeviveList = DataProvider.Ins.DB.Device.Where(x => x.RoomId == SelectedRoom.Id);
+                foreach (var item in DeviveList)
+                {
+                    Devices.Add(item);
                 }
             }
         }

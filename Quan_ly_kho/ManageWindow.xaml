@@ -56,23 +56,105 @@ FontFamily="{DynamicResource MaterialDesignFont}"
                     </WrapPanel>
                 </materialDesign:Card>
             </Grid>
+            <Grid Grid.Row="2">
+                <DataGrid AutoGenerateColumns="False" CanUserAddRows="False"
+          HeadersVisibility="All"
+          ItemsSource="{Binding Devices}"
+          SelectionUnit="{Binding ElementName=selectionUnitComboBox, Path=SelectedValue}">
+                    <DataGrid.Columns>
+                        <DataGridCheckBoxColumn Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}">
+                            <DataGridCheckBoxColumn.Header>
+                                <Border Background="Transparent">
+                                    <CheckBox IsChecked="{Binding DataContext.IsAllSelected, RelativeSource={RelativeSource AncestorType={x:Type ListView}}}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Border>
+                            </DataGridCheckBoxColumn.Header>
+                            <DataGridCheckBoxColumn.HeaderStyle>
+                                <Style TargetType="{x:Type DataGridColumnHeader}"
+                               BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                </Style>
+                            </DataGridCheckBoxColumn.HeaderStyle>
+                        </DataGridCheckBoxColumn>
 
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding DeviceType}" Header="Loại thiết bị" />
 
-            <materialDesign:Card Grid.Row="2" Margin="5" VerticalAlignment="Stretch">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <ListView ItemsSource="{Binding List}" SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}"></GridViewColumn>
-                                <GridViewColumn Header="Loại thiết bị" DisplayMemberBinding="{Binding DisplayName}"></GridViewColumn>
-                                <GridViewColumn Header="Tên thiết bị" DisplayMemberBinding="{Binding Address}"></GridViewColumn>
-                                <GridViewColumn Header="Trạng thái" DisplayMemberBinding="{Binding Phone}"></GridViewColumn>
-                                <GridViewColumn Header="Lịch hoạt động" DisplayMemberBinding="{Binding Email}"></GridViewColumn>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </ScrollViewer>
-            </materialDesign:Card>
+                        <materialDesign:DataGridTextColumn EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                                                   Header="Tên thiết bị" IsReadOnly="True">
+                            <materialDesign:DataGridTextColumn.Binding>
+                                <Binding Path="DeviceName">
+
+                                </Binding>
+                            </materialDesign:DataGridTextColumn.Binding>
+                        </materialDesign:DataGridTextColumn>
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding DeviceStateName}" Header="Trạng thái" />
+
+                        <DataGridTemplateColumn Header="Lịch hoạt động">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ListBox ItemsSource="{Binding DeviceSchedule}">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding StartTime}" />
+                                                    <TextBlock Text="{Binding EndTime}" />
+                                                    <!-- Thêm các TextBlock khác nếu cần -->
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!--<materialDesign:Card Grid.Row="2" Margin="5" VerticalAlignment="Stretch">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ListView ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}">
+                <ListView.View>
+                    <GridView>
+              
+                            -->
+                <!-- Checkbox column -->
+                <!--
+                        <GridViewColumn Width="50">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="{Binding DataContext.IsAllSelected, RelativeSource={RelativeSource AncestorType={x:Type ListView}}}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="{Binding IsSelected}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        -->
+                <!-- Device Type column -->
+                <!--
+                        <GridViewColumn Header="Loại thiết bị" DisplayMemberBinding="{Binding DeviceType}" Width="150"/>
+
+                        -->
+                <!-- Device Name column -->
+                <!--
+                        <GridViewColumn Header="Tên thiết bị" DisplayMemberBinding="{Binding DeviceName}" Width="150"/>
+
+                        -->
+                <!-- Device State column -->
+                <!--
+                        <GridViewColumn Header="Trạng thái" DisplayMemberBinding="{Binding DeviceState}" Width="100"/>
+
+                        -->
+                <!-- Schedule column -->
+                <!--
+                        <GridViewColumn Header="Lịch hoạt động" DisplayMemberBinding="{Binding Schedule}" Width="200"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </ScrollViewer>
+    </materialDesign:Card>-->
+            </Grid>
         </Grid>
 
     </Grid>

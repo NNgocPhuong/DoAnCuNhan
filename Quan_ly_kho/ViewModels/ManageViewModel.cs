@@ -25,22 +25,43 @@ namespace Quan_ly_kho.ViewModels
             }
         }
 
-        //private ObservableCollection<ICollection<Schedule>> _schedules;
+        private bool _isAllSelected;
+        public bool IsAllSelected
+        {
+            get => _isAllSelected;
+            set
+            {
+                if (_isAllSelected != value)
+                {
+                    _isAllSelected = value;
+                    OnPropertyChanged(nameof(IsAllSelected));
+                    SelectAllDevices(_isAllSelected);
+                }
+            }
+        }
 
-        //public ObservableCollection<ICollection<Schedule>> Schedules
-        //{
-        //    get => _schedules;
-        //    set
-        //    {
-        //        _schedules = value;
-        //        OnPropertyChanged(nameof(Schedules));
-        //    }
-        //}
+        private void SelectAllDevices(bool isSelected)
+        {
+            foreach(var item in Devices)
+            {
+                item.IsSelected = isSelected;
+            }
+        }
 
         public ManageViewModel()
         {
             Devices = new ObservableCollection<Device>();
-            ModifyWindowCommand = new RelayCommand<object>((p) => { return true; }, (p) => { ModifyWindow w = new ModifyWindow(); w.ShowDialog(); });
+            ModifyWindowCommand = new RelayCommand<object>((p) => { return true; },
+                (p) => 
+                { 
+                    var selectedDevices = Devices.Where(d => d.IsSelected).ToList();
+                    ModifyWindow w = new ModifyWindow();
+                    if (w.DataContext is ModifyViewModel modifyViewModel)
+                    {
+                        modifyViewModel.SelectedDevices = new ObservableCollection<Device>(selectedDevices);
+                    }
+                    w.ShowDialog();
+                });
         }
     }
 }

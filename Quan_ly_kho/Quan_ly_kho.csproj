@@ -102,7 +102,6 @@
     <Compile Include="Models\Device.cs">
       <DependentUpon>MainModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DeviceSchedule.cs" />
     <Compile Include="Models\DeviceState.cs">
       <DependentUpon>MainModel.tt</DependentUpon>
     </Compile>
@@ -150,6 +149,7 @@
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\ManageViewModel.cs" />
+    <Compile Include="ViewModels\ModifyViewModel.cs" />
     <Compile Include="VstData\BsonDataMap.cs" />
     <Compile Include="VstData\Collection.cs" />
     <Compile Include="VstData\Database.cs" />

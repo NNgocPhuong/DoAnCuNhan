@@ -21,7 +21,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         x:Name="window"
         
-        Title="Chọn thiết bị cần quản lý" Height="450" Width="800">
+        Title="Chọn thiết bị cần quản lý" Height="550" Width="650">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
@@ -64,7 +64,7 @@
                         <DataGridCheckBoxColumn Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}">
                             <DataGridCheckBoxColumn.Header>
                                 <Border Background="Transparent">
-                                    <CheckBox IsChecked="{Binding DataContext.IsAllSelected, RelativeSource={RelativeSource AncestorType={x:Type ListView}}}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <CheckBox IsChecked="{Binding DataContext.IsAllSelected, Mode=TwoWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 </Border>
                             </DataGridCheckBoxColumn.Header>
                             <DataGridCheckBoxColumn.HeaderStyle>
@@ -80,9 +80,7 @@
                         <materialDesign:DataGridTextColumn EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
                                                    Header="Tên thiết bị" IsReadOnly="True">
                             <materialDesign:DataGridTextColumn.Binding>
-                                <Binding Path="DeviceName">
-
-                                </Binding>
+                                <Binding Path="DeviceName"/>
                             </materialDesign:DataGridTextColumn.Binding>
                         </materialDesign:DataGridTextColumn>
                         <DataGridTextColumn IsReadOnly="True" Binding="{Binding DeviceStateName}" Header="Trạng thái" />

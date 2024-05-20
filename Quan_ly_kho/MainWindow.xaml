@@ -17,7 +17,7 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         x:Name="mainWindow"
         mc:Ignorable="d"
-        Title="Phần mềm quản lý lớp học" Height="400" Width="500"
+        Title="Phần mềm quản lý lớp học" Height="350" Width="450"
         DataContext="{StaticResource MainVM}"
         ResizeMode="NoResize" WindowStyle="None">
     <i:Interaction.Triggers>

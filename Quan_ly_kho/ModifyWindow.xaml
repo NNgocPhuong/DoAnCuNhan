@@ -6,20 +6,21 @@
         xmlns:local="clr-namespace:Quan_ly_kho"
         
         WindowStartupLocation="CenterScreen"
-   xmlns:uc ="clr-namespace:Quan_ly_kho.UserControlPhuong"
-   xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-   TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-TextElement.FontWeight="Regular"
-TextElement.FontSize="13"
-TextOptions.TextFormattingMode="Ideal"
-TextOptions.TextRenderingMode="Auto"
-Background="{DynamicResource MaterialDesignPaper}"
+        xmlns:uc ="clr-namespace:Quan_ly_kho.UserControlPhuong"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        DataContext="{StaticResource ModifyVM}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
         ResizeMode="NoResize"
         WindowStyle="None"
-FontFamily="{DynamicResource MaterialDesignFont}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
         x:Name="window"
         
-        Title="Quản lý thiết bị" Height="450" Width="800">
+        Title="Quản lý thiết bị" Height="450" Width="700">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
@@ -39,11 +40,9 @@ FontFamily="{DynamicResource MaterialDesignFont}"
             <!--các element binding từ selected item-->
             <materialDesign:Card Grid.Row="0" Margin="5">
                 <WrapPanel Margin="0 0 0 10">
-                    <TextBox Text="{Binding DisplayName, UpdateSourceTrigger=PropertyChanged}" Margin="5 5 15 5" materialDesign:HintAssist.Hint="Id" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                    <TextBox Text="{Binding DisplayName, UpdateSourceTrigger=PropertyChanged}" Margin="5 5 15 5" materialDesign:HintAssist.Hint="Loại thiết bị" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                    <TextBox Text="{Binding DisplayName, UpdateSourceTrigger=PropertyChanged}" Margin="5 5 15 5" materialDesign:HintAssist.Hint="Tên thiết bị" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                    <TextBox Text="{Binding QRCode, UpdateSourceTrigger=PropertyChanged}" Margin="5 5 15 5" materialDesign:HintAssist.Hint="Trạng thái" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                    <TextBox Text="{Binding BarCode, UpdateSourceTrigger=PropertyChanged}" Margin="5 5 15 5" materialDesign:HintAssist.Hint="Lịch hoạt động" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Text="{Binding DeviceType, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="5 5 15 5" materialDesign:HintAssist.Hint="Loại thiết bị" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Text="{Binding DeviceName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="5 5 15 5" materialDesign:HintAssist.Hint="Tên thiết bị" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox IsReadOnly="True" Text="{Binding DeviceState, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="5 5 15 5" materialDesign:HintAssist.Hint="Trạng thái" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 </WrapPanel>
             </materialDesign:Card>
 
@@ -60,41 +59,38 @@ FontFamily="{DynamicResource MaterialDesignFont}"
                         Height="40"
                         Width="60"
                         Kind="PlusCircleOutline" />
-                    <Button HorizontalAlignment="Right" Command="{Binding AddCommand}" Content="Thêm" Margin="5" Width="100"></Button>
+                    <Button HorizontalAlignment="Right" Command="{Binding AddCommand}" Content="Thêm" Margin="5" Width="80"></Button>
                 </Grid>
                 <Grid Grid.Column="1">
                     <materialDesign:PackIcon Height="40" Width="60" Kind="AutoFix" />
-                    <Button HorizontalAlignment="Right" Command="{Binding EditCommand}" Content="Sửa" Margin="5" Width="100"></Button>
+                    <Button HorizontalAlignment="Right" Command="{Binding EditCommand}" Content="Sửa" Margin="5" Width="80"></Button>
                 </Grid>
                 <Grid Grid.Column="2">
                     <materialDesign:PackIcon Width="60" Height="40" Kind="ClipboardRemoveOutline" />
-                    <Button HorizontalAlignment="Right" Command="{Binding DeleteCommand}" Content="Xóa" Margin="5" Width="100"></Button>
+                    <Button HorizontalAlignment="Right" Command="{Binding DeleteCommand}" Content="Xóa" Margin="5" Width="80"></Button>
                 </Grid>
                 <Grid Grid.Column="3">
                     <materialDesign:PackIcon Height="40" Width="60" Kind="AccessPointNetwork" />
-                    <Button HorizontalAlignment="Right" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Command="{Binding DeleteCommand}" Content="Bật" Margin="5" Width="100"></Button>
+                    <Button HorizontalAlignment="Right" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Command="{Binding DeleteCommand}" Content="Bật" Margin="5" Width="80"></Button>
                 </Grid>
                 <Grid Grid.Column="4">
                     <materialDesign:PackIcon Width="60" Height="40" Kind="AccessPointNetworkOff" />
-                    <Button HorizontalAlignment="Right" Background="OrangeRed" Command="{Binding DeleteCommand}" Content="Tắt" Margin="5" Width="100"></Button>
+                    <Button HorizontalAlignment="Right" Background="OrangeRed" Command="{Binding DeleteCommand}" Content="Tắt" Margin="5" Width="80"></Button>
                 </Grid>
 
             </Grid>
 
             <materialDesign:Card Grid.Row="2" Margin="5" VerticalAlignment="Stretch">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <ListView ItemsSource="{Binding List}" SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}"></GridViewColumn>
-                                <GridViewColumn Header="Loại thiết bị" DisplayMemberBinding="{Binding DisplayName}"></GridViewColumn>
-                                <GridViewColumn Header="Tên thiết bị" DisplayMemberBinding="{Binding Address}"></GridViewColumn>
-                                <GridViewColumn Header="Trạng thái" DisplayMemberBinding="{Binding Phone}"></GridViewColumn>
-                                <GridViewColumn Header="Lịch hoạt động" DisplayMemberBinding="{Binding Email}"></GridViewColumn>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </ScrollViewer>
+                <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding SelectedDevices}" SelectedItem="{Binding SelectedDevice}" 
+              CanUserAddRows="False" HeadersVisibility="Column" VerticalScrollBarVisibility="Auto">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn IsReadOnly="True" Header="Id" Binding="{Binding Id}" Width="*"/>
+                        <DataGridTextColumn IsReadOnly="True" Header="Loại thiết bị" Binding="{Binding DeviceType}" Width="*"/>
+                        <DataGridTextColumn IsReadOnly="True" Header="Tên thiết bị" Binding="{Binding DeviceName}" Width="*"/>
+                        <DataGridTextColumn IsReadOnly="True" Header="Trạng thái" Binding="{Binding DeviceStateName}" Width="*"/>
+                        <!-- Thêm các cột khác nếu cần -->
+                    </DataGrid.Columns>
+                </DataGrid>
             </materialDesign:Card>
         </Grid>
     </Grid>

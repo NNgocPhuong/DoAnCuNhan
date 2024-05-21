@@ -31,32 +31,34 @@
                             Command="{Binding MinimizeWindowCommand}"
                             CommandParameter="{Binding ElementName=ucControlBar}"
                             ToolBar.OverflowMode="AsNeeded"
-                             
+                            Background="LightGray"   
+                            Style="{StaticResource MaterialDesignToolButton}"
                             ToolTip="Thu nhỏ" />
                     <Separator />
                     <Button Content="{materialDesign:PackIcon Kind=WindowMaximize}" 
                             Command="{Binding MaximizeWindowCommand}"
                             CommandParameter="{Binding ElementName=ucControlBar}"
                             ToolBar.OverflowMode="AsNeeded"
-                            
+                            Background="LightGray"
+                            Style="{StaticResource MaterialDesignToolButton}"
                             ToolTip="Phóng to" />
                     <Separator />
                     <Button
                         Command="{Binding CloseWindowCommand}"
+                        Style="{StaticResource MaterialDesignToolForegroundButton}"
                         CommandParameter="{Binding ElementName=ucControlBar}"
                         Content="{materialDesign:PackIcon Kind=WindowClose}"
                         ToolBar.OverflowMode="AsNeeded"
-                        Background="OrangeRed"
+                        Background="Red"
                         ToolTip="Đóng" />
                 </StackPanel>
                 
                 <StackPanel
                     DockPanel.Dock="Left"
                     Orientation="Horizontal">
-                    <ToggleButton
-                        Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
+                    <Image Source="/Resource/Logo_Hust.png" Height="40"/>
                     <TextBlock
-                        Margin="16,0,0,0"
+                        Margin="10,0,0,0"
                         VerticalAlignment="Center"
                         Text="{Binding Tag, ElementName=ucControlBar}" />
                 </StackPanel>

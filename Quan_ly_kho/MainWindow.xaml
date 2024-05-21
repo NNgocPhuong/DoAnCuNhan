@@ -58,7 +58,7 @@
                               IsEditable="True"/>
                     <Button Margin="15" Content="Tìm kiếm"
                             Command="{Binding ManageWindowCommand}" IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
-                            Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                            Style="{StaticResource MaterialDesignPaperButton}"
                             ToolTip="Resource name: MaterialDesignRaisedLightDarkButton"/>
                 </StackPanel>
             </materialDesign:Card>

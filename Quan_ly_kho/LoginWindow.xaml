@@ -33,7 +33,7 @@
             <Grid>
                 <Grid.Resources>
                     <Style TargetType="Grid">
-                        <Setter Property="Margin" Value="15 20 15 0"></Setter>
+                        <Setter Property="Margin" Value="15 10 15 0"></Setter>
                     </Style>
                 </Grid.Resources>
                 <Grid.RowDefinitions>
@@ -42,20 +42,42 @@
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
-                    <TextBox
+                    <!--<TextBox
                         Text="{Binding UserName}"
                         VerticalAlignment="Center"
                         materialDesign:HintAssist.Hint="Tên đăng nhập"
                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                        />
+                        />-->
+                    <TextBox
+                        VerticalAlignment="Top"
+                        materialDesign:HintAssist.Hint="Tên đăng nhập"
+                        Style="{StaticResource MaterialDesignOutlinedTextBox}">
+                        <TextBox.Text>
+                            <Binding
+                                Path="UserName"
+                                UpdateSourceTrigger="PropertyChanged">
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
                 </Grid>
                 <Grid Grid.Row="1">
-                    <PasswordBox
+                    <!--<PasswordBox
                         x:Name="PasswordBox"
+                        materialDesign:HintAssist.Foreground="Green"
                         materialDesign:HintAssist.HelperText="Ít nhất 8 ký tự"
                         materialDesign:HintAssist.Hint="Mật khẩu"
                         materialDesign:TextFieldAssist.HasClearButton="True"
                         >
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PasswordChanged">
+                                <i:InvokeCommandAction Command="{Binding PasswordChangedCommand}" CommandParameter="{Binding ElementName=PasswordBox}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </PasswordBox>-->
+                    <PasswordBox VerticalAlignment="Top"
+                        materialDesign:HintAssist.Hint="Mật khẩu"
+                        x:Name="PasswordBox"
+                        Style="{StaticResource MaterialDesignOutlinedPasswordBox}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="PasswordChanged">
                                 <i:InvokeCommandAction Command="{Binding PasswordChangedCommand}" CommandParameter="{Binding ElementName=PasswordBox}"/>

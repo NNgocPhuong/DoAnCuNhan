@@ -59,15 +59,15 @@
                         Height="40"
                         Width="60"
                         Kind="PlusCircleOutline" />
-                    <Button HorizontalAlignment="Right" Command="{Binding AddCommand}" Content="Thêm" Margin="5" Width="80"></Button>
+                    <Button Style="{StaticResource MaterialDesignPaperButton}" HorizontalAlignment="Right" Command="{Binding AddCommand}" Content="Thêm" Margin="5" Width="80"></Button>
                 </Grid>
                 <Grid Grid.Column="1">
                     <materialDesign:PackIcon Height="40" Width="60" Kind="AutoFix" />
-                    <Button HorizontalAlignment="Right" Command="{Binding EditCommand}" Content="Sửa" Margin="5" Width="80"></Button>
+                    <Button Style="{StaticResource MaterialDesignPaperButton}" HorizontalAlignment="Right" Command="{Binding EditCommand}" Content="Sửa" Margin="5" Width="80"></Button>
                 </Grid>
                 <Grid Grid.Column="2">
                     <materialDesign:PackIcon Width="60" Height="40" Kind="ClipboardRemoveOutline" />
-                    <Button HorizontalAlignment="Right" Command="{Binding DeleteCommand}" Content="Xóa" Margin="5" Width="80"></Button>
+                    <Button Style="{StaticResource MaterialDesignPaperButton}" HorizontalAlignment="Right" Command="{Binding DeleteCommand}" Content="Xóa" Margin="5" Width="80"></Button>
                 </Grid>
                 <Grid Grid.Column="3">
                     <materialDesign:PackIcon Height="40" Width="60" Kind="AccessPointNetwork" />

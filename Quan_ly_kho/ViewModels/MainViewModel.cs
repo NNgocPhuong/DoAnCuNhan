@@ -94,7 +94,13 @@ namespace Quan_ly_kho.ViewModels
                     }
                 });
 
-            ManageWindowCommand = new RelayCommand<object>((p) => { return true; }, 
+            ManageWindowCommand = new RelayCommand<object>(
+                (p) =>
+                {
+                    if(SelectedRoom != null)
+                        return true;
+                    return false;
+                }, 
                 (p) => 
                 { 
                     ManageWindow w = new ManageWindow();

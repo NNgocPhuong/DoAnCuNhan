@@ -17,7 +17,7 @@
     </i:Interaction.Triggers>
 
     <Grid>
-        <materialDesign:ColorZone Mode="PrimaryLight">
+        <materialDesign:ColorZone Mode="SecondaryDark" materialDesign:ElevationAssist.Elevation="Dp2" CornerRadius="2">
             <DockPanel>
                 
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
@@ -31,14 +31,14 @@
                             Command="{Binding MinimizeWindowCommand}"
                             CommandParameter="{Binding ElementName=ucControlBar}"
                             ToolBar.OverflowMode="AsNeeded"
-                             Background="Yellow"
+                             
                             ToolTip="Thu nhỏ" />
                     <Separator />
                     <Button Content="{materialDesign:PackIcon Kind=WindowMaximize}" 
                             Command="{Binding MaximizeWindowCommand}"
                             CommandParameter="{Binding ElementName=ucControlBar}"
                             ToolBar.OverflowMode="AsNeeded"
-                            Background="LawnGreen"
+                            
                             ToolTip="Phóng to" />
                     <Separator />
                     <Button

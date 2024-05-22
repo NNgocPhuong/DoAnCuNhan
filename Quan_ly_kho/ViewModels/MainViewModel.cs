@@ -8,27 +8,41 @@ using System.Windows;
 using System.Collections.ObjectModel;
 using Quan_ly_kho.Models;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 
 namespace Quan_ly_kho.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
         private ObservableCollection<Building> _buildings;
-        public ObservableCollection<Building> Buildings { get => _buildings; set { _buildings = value; OnPropertyChanged(); } }
+        public ObservableCollection<Building> Buildings
+        {
+            get => _buildings;
+            set { _buildings = value; OnPropertyChanged(); }
+        }
 
         private ObservableCollection<Floor> _floors;
-        public ObservableCollection<Floor> Floors { get => _floors; set { _floors = value; OnPropertyChanged(); } }
-        
+        public ObservableCollection<Floor> Floors
+        {
+            get => _floors;
+            set { _floors = value; OnPropertyChanged(); }
+        }
+
         private ObservableCollection<Room> _rooms;
-        public ObservableCollection<Room> Rooms { get => _rooms; set { _rooms = value; OnPropertyChanged(); } }
+        public ObservableCollection<Room> Rooms
+        {
+            get => _rooms;
+            set { _rooms = value; OnPropertyChanged(); }
+        }
 
         private ObservableCollection<Device> _devices;
-        public ObservableCollection<Device> Devices { get => _devices; set { _devices = value; OnPropertyChanged(); } }
+        public ObservableCollection<Device> Devices
+        {
+            get => _devices;
+            set { _devices = value; OnPropertyChanged(); }
+        }
 
         private Building _selectedBuilding;
-        private Floor _selectedFloor;
-        private Room _selectedRoom;
-
         public Building SelectedBuilding
         {
             get => _selectedBuilding;
@@ -36,11 +50,13 @@ namespace Quan_ly_kho.ViewModels
             {
                 _selectedBuilding = value;
                 OnPropertyChanged();
-                UpdateFloor();
+                UpdateFloors();
                 SelectedFloor = null;
                 SelectedRoom = null;
             }
         }
+
+        private Floor _selectedFloor;
         public Floor SelectedFloor
         {
             get => _selectedFloor;
@@ -48,119 +64,106 @@ namespace Quan_ly_kho.ViewModels
             {
                 _selectedFloor = value;
                 OnPropertyChanged();
-                UpdateRoom();
+                UpdateRooms();
                 SelectedRoom = null;
             }
         }
 
+        private Room _selectedRoom;
         public Room SelectedRoom
         {
             get => _selectedRoom;
             set
             {
                 _selectedRoom = value;
-                UpdateDevice();
                 OnPropertyChanged();
+                UpdateDevices();
             }
         }
+
         public ICommand LoadedWindowCommand { get; set; }
         public ICommand ManageWindowCommand { get; set; }
-        public bool Isloaded { get; set; } = false;
+        public bool IsLoaded { get; set; } = false;
+
         public MainViewModel()
         {
-            LoadedWindowCommand = new RelayCommand<Window>((p) => { return true; },
-                (p) =>
-                {
-                    Isloaded = true;
-                    if (p == null)
-                        return;
-                    p.Hide();
-                    LoginWindow loginWindow = new LoginWindow();
-                    loginWindow.ShowDialog();
-
-                    if (loginWindow.DataContext == null)
-                    {
-                        return;
-                    }
-                    var LoginVM = loginWindow.DataContext as LoginViewModel;
-                    if (LoginVM.IsLogin)
-                    {
-                        p.Show();
-                        LoadBuildingData();
-                    }
-                    else
-                    {
-                        p.Close();
-                    }
-                });
-
-            ManageWindowCommand = new RelayCommand<object>(
-                (p) =>
-                {
-                    if(SelectedRoom != null)
-                        return true;
-                    return false;
-                }, 
-                (p) => 
-                { 
-                    ManageWindow w = new ManageWindow();
-                    if (w.DataContext is ManageViewModel manageViewModel)
-                    {
-                        manageViewModel.Devices = Devices;
-                        manageViewModel.SelectedRoom = SelectedRoom;
-                    }
-                    w.ShowDialog();
-                });
-        }
-        public void LoadBuildingData()
-        {
-            Buildings = new ObservableCollection<Building> { };
-            
-            var BuildingList = DataProvider.Ins.DB.Building.ToList();
-            foreach(var item in BuildingList)
+            LoadedWindowCommand = new RelayCommand<Window>((p) => true, async (p) =>
             {
-                Buildings.Add(item);
-            }
-            
+                IsLoaded = true;
+                if (p == null)
+                    return;
+                p.Hide();
+                var loginWindow = new LoginWindow();
+                loginWindow.ShowDialog();
+
+                if (loginWindow.DataContext is LoginViewModel loginVM && loginVM.IsLogin)
+                {
+                    p.Show();
+                    await LoadBuildingDataAsync();
+                }
+                else
+                {
+                    p.Close();
+                }
+            });
+
+            ManageWindowCommand = new RelayCommand<object>((p) => SelectedRoom != null, (p) =>
+            {
+                var manageWindow = new ManageWindow();
+                if (manageWindow.DataContext is ManageViewModel manageViewModel)
+                {
+                    manageViewModel.Devices = Devices;
+                    manageViewModel.SelectedRoom = SelectedRoom;
+                }
+                manageWindow.ShowDialog();
+            });
         }
 
-        public void UpdateFloor()
+        public async Task LoadBuildingDataAsync()
         {
-            Floors = new ObservableCollection<Floor> { };
-            Floors.Clear();
+            var buildingList = await DataProvider.Ins.DB.Building.ToListAsync();
+            Buildings = new ObservableCollection<Building>(buildingList);
+        }
+
+        public async void UpdateFloors()
+        {
             if (SelectedBuilding != null)
             {
-                var FloorList = DataProvider.Ins.DB.Floor.Where(x => x.BuildingId == SelectedBuilding.Id);
-                foreach (var item in FloorList)
-                {
-                    Floors.Add(item);
-                }
-            }
-        }
-        public void UpdateRoom()
-        {
-            Rooms = new ObservableCollection<Room> { };
-            Rooms.Clear();
-            if (SelectedFloor != null)
-            {
-                var RoomList = DataProvider.Ins.DB.Room.Where(x => x.FloorId == SelectedFloor.Id);
-                foreach (var item in RoomList)
-                {
-                    Rooms.Add(item);
-                }
-            }
-        }
-        public void UpdateDevice()
-        {
-            Devices = new ObservableCollection<Device> { };
-            if (SelectedRoom != null)
-            {
-                var DeviveList = DataProvider.Ins.DB.Device.Where(x => x.RoomId == SelectedRoom.Id).Include(x => x.DeviceState).Include(x => x.Schedule).ToList();
-                Devices = new ObservableCollection<Device>(DeviveList);
+                var floorList = await DataProvider.Ins.DB.Floor.Where(x => x.BuildingId == SelectedBuilding.Id).ToListAsync();
+                Floors = new ObservableCollection<Floor>(floorList);
             }
             else
             {
-                // Nếu SelectedRoom là null, chỉ tạo một ObservableCollection rỗng
+                Floors = new ObservableCollection<Floor>();
+            }
+        }
+
+        public async void UpdateRooms()
+        {
+            if (SelectedFloor != null)
+            {
+                var roomList = await DataProvider.Ins.DB.Room.Where(x => x.FloorId == SelectedFloor.Id).ToListAsync();
+                Rooms = new ObservableCollection<Room>(roomList);
+            }
+            else
+            {
+                Rooms = new ObservableCollection<Room>();
+            }
+        }
+
+        public async void UpdateDevices()
+        {
+            if (SelectedRoom != null)
+            {
+                var deviceList = await DataProvider.Ins.DB.Device
+                    .Where(x => x.RoomId == SelectedRoom.Id)
+                    .Include(x => x.DeviceState)
+                    .Include(x => x.Schedule)
+                    .ToListAsync();
+                Devices = new ObservableCollection<Device>(deviceList);
+            }
+            else
+            {
                 Devices = new ObservableCollection<Device>();
             }
         }

@@ -70,14 +70,37 @@ namespace Quan_ly_kho.ViewModels
                     {
                         modifyViewModel.SelectedDevices = new ObservableCollection<Device>(selectedDevices);
                         modifyViewModel.SelectedRoom = SelectedRoom;
-                        modifyViewModel.DeviceAdded += ModifyViewModel_DeviceAdded;
+                        modifyViewModel.DeviceAdded -= ModifyViewModel_DeviceAdded; // Đảm bảo hủy đăng ký trước khi đăng ký mới
+                        modifyViewModel.DeviceAdded += ModifyViewModel_DeviceAdded; // Đăng ký sự kiện
+                        modifyViewModel.DeviceEdited -= ModifyViewModel_DeviceEdited; // Đảm bảo hủy đăng ký trước khi đăng ký mới
+                        modifyViewModel.DeviceEdited += ModifyViewModel_DeviceEdited;
+                        modifyViewModel.DeviceDeleted -= ModifyViewModel_DeviceDeleted; // Đảm bảo hủy đăng ký trước khi đăng ký mới
+                        modifyViewModel.DeviceDeleted += ModifyViewModel_DeviceDeleted;
                     }
                     w.ShowDialog();
                 });
         }
         private void ModifyViewModel_DeviceAdded(object sender, Device e)
         {
-            Devices.Add(e);
+            if (!Devices.Contains(e))
+            {
+                Devices.Add(e);
+            }
+        }
+        private void ModifyViewModel_DeviceEdited(object sender, Device e)
+        {
+            if (Devices.Contains(e))
+            {
+                Devices.Remove(e);
+                Devices.Add(e);
+            }
+        }
+        private void ModifyViewModel_DeviceDeleted(object sender, Device e)
+        {
+            if (Devices.Contains(e))
+            {
+                Devices.Remove(e);
+            }
         }
 
     }

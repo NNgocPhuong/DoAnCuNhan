@@ -107,6 +107,7 @@ namespace Quan_ly_kho.ViewModels
                     if (w.DataContext is ManageViewModel manageViewModel)
                     {
                         manageViewModel.Devices = Devices;
+                        manageViewModel.SelectedRoom = SelectedRoom;
                     }
                     w.ShowDialog();
                 });

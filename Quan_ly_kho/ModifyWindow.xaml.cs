@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Quan_ly_kho.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,5 +24,7 @@ namespace Quan_ly_kho
         {
             InitializeComponent();
         }
+
+        
     }
 }

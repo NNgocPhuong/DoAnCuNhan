@@ -16,7 +16,7 @@ namespace System
         public string Username { get => GetString(nameof(Username)); set => Push(nameof(Username), value); }
         public string PasswordHash { get => GetString(nameof(PasswordHash)); set => Push(nameof(PasswordHash), value); }
         public int RoleId { get => GetValue<int>(nameof(RoleId)); set => Push(nameof(RoleId), value); }
-        public virtual Role Role { get => GetObject<Role>(nameof(Role)); set => Push(nameof(Role), value);}
+        public virtual Role Role { get => GetObject<Role>(nameof(Role)); set => Push(nameof(Role), value); }
     }
 }
 

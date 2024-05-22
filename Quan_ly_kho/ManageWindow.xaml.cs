@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Quan_ly_kho.Models;
+using Quan_ly_kho.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

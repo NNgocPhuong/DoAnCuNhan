@@ -27,25 +27,30 @@
                             <Setter Property="Width" Value="40"></Setter>
                         </Style>
                     </StackPanel.Resources>
-                    <Button Content="{materialDesign:PackIcon Kind=WindowMinimize}" 
+                    <Button Margin="3" Content="{materialDesign:PackIcon Kind=WindowMinimize}" 
                             Command="{Binding MinimizeWindowCommand}"
                             CommandParameter="{Binding ElementName=ucControlBar}"
                             ToolBar.OverflowMode="AsNeeded"
-                            Background="LightGray"   
-                            Style="{StaticResource MaterialDesignToolButton}"
+                            Background="GreenYellow"
+                            Height="25" Width="25"
+                            Style="{StaticResource MaterialDesignIconButton}"
                             ToolTip="Thu nhỏ" />
                     <Separator />
-                    <Button Content="{materialDesign:PackIcon Kind=WindowMaximize}" 
+                    <Button Margin="3" Content="{materialDesign:PackIcon Kind=WindowMaximize}" 
                             Command="{Binding MaximizeWindowCommand}"
                             CommandParameter="{Binding ElementName=ucControlBar}"
                             ToolBar.OverflowMode="AsNeeded"
-                            Background="LightGray"
-                            Style="{StaticResource MaterialDesignToolButton}"
+                            Background="LawnGreen"
+                            Height="25" Width="25"
+                            Style="{StaticResource MaterialDesignIconButton}"
                             ToolTip="Phóng to" />
                     <Separator />
                     <Button
+                        Margin="3"
                         Command="{Binding CloseWindowCommand}"
-                        Style="{StaticResource MaterialDesignToolForegroundButton}"
+                        Height="25"
+                        Width="25"
+                        Style="{StaticResource MaterialDesignIconButton}"
                         CommandParameter="{Binding ElementName=ucControlBar}"
                         Content="{materialDesign:PackIcon Kind=WindowClose}"
                         ToolBar.OverflowMode="AsNeeded"
@@ -56,7 +61,7 @@
                 <StackPanel
                     DockPanel.Dock="Left"
                     Orientation="Horizontal">
-                    <Image Source="/Resource/Logo_Hust.png" Height="40"/>
+                    <Image Source="/Resource/Logo_Hust.png" Height="43"/>
                     <TextBlock
                         Margin="10,0,0,0"
                         VerticalAlignment="Center"

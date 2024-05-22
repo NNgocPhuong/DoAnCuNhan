@@ -5,4 +5,5 @@
     <viewmodel:LoginViewModel x:Key="LoginVM"></viewmodel:LoginViewModel>
     <viewmodel:ManageViewModel x:Key="ManageVM"></viewmodel:ManageViewModel>
     <viewmodel:ModifyViewModel x:Key="ModifyVM"></viewmodel:ModifyViewModel>
+    
 </ResourceDictionary>

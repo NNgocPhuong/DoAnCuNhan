@@ -8,24 +8,32 @@
 //------------------------------------------------------------------------------
 using Quan_ly_kho.Models;
 
-namespace System
-{
-    partial class Document
-    {
+//namespace System
+//{
+//    partial class Document
+//    {
         
-    }
-}
+//    }
+//}
 
 namespace Quan_ly_kho.Models
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Schedule : Document
+    public partial class Schedule 
     {
+        //public System.DateTime StartTime { get; set; }
+        //public System.DateTime EndTime { get; set; }
+        //public string Action { get; set; }
+
+        public int Id { get; set; }
+        public int DeviceId { get; set; }
         public System.DateTime StartTime { get; set; }
         public System.DateTime EndTime { get; set; }
         public string Action { get; set; }
+
+        public virtual Device Device { get; set; }
     }
     public partial class Schedule
     {

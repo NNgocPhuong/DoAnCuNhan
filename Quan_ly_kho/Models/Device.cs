@@ -10,25 +10,25 @@ using Quan_ly_kho.Models;
 using Quan_ly_kho.ViewModels;
 using System.ComponentModel;
 
-namespace System
-{
-    partial class Document : INotifyPropertyChanged
-    {
-        public int RoomId { get => GetValue<int>(nameof(RoomId)); set => Push(nameof(RoomId), value); }
-        public string DeviceName { get => GetString(nameof(DeviceName)); set => Push(nameof(DeviceName), value); }
-        public string DeviceType { get => GetString(nameof(DeviceType)); set => Push(nameof(DeviceType), value); }
-        public virtual Room Room { get => GetObject<Room>(nameof(Room)); set => Push(nameof(Room), value); }
+//namespace System
+//{
+//    partial class Document : INotifyPropertyChanged
+//    {
+//        public int RoomId { get => GetValue<int>(nameof(RoomId)); set => Push(nameof(RoomId), value); }
+//        public string DeviceName { get => GetString(nameof(DeviceName)); set => Push(nameof(DeviceName), value); }
+//        public string DeviceType { get => GetString(nameof(DeviceType)); set => Push(nameof(DeviceType), value); }
+//        public virtual Room Room { get => GetObject<Room>(nameof(Room)); set => Push(nameof(Room), value); }
 
-        public bool IsSelected { get => GetValue<bool>(nameof(IsSelected)); set { Push(nameof(IsSelected), value); OnPropertyChanged(nameof(IsSelected));  } }
+//        public bool IsSelected { get => GetValue<bool>(nameof(IsSelected)); set { Push(nameof(IsSelected), value); OnPropertyChanged(nameof(IsSelected)); } }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+//        public event PropertyChangedEventHandler PropertyChanged;
+//        protected virtual void OnPropertyChanged(string propertyName)
+//        {
+//            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+//        }
 
-    }
-}
+//    }
+//}
 
 namespace Quan_ly_kho.Models
 {
@@ -37,23 +37,43 @@ namespace Quan_ly_kho.Models
     using System.Collections.ObjectModel;
     using System.Linq;
 
-    public partial class Device : Document
+    public partial class Device 
     {
+        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        //public Device()
+        //{
+        //    this.DeviceState = new HashSet<DeviceState>();
+        //    this.Schedule = new HashSet<Schedule>();
+        //}
+
+
+        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        //public virtual ICollection<DeviceState> DeviceState { get; set; }
+        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        //public virtual ICollection<Schedule> Schedule { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Device()
         {
             this.DeviceState = new HashSet<DeviceState>();
             this.Schedule = new HashSet<Schedule>();
         }
-    
-      
+
+        public int Id { get; set; }
+        public int RoomId { get; set; }
+        public string DeviceName { get; set; }
+        public string DeviceType { get; set; }
+
+        public virtual Room Room { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DeviceState> DeviceState { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Schedule> Schedule { get; set; }
     }
-    public partial class Device
+    public partial class Device : BaseViewModel
     {
+        private bool isSelected;
+        public bool IsSelected { get => isSelected; set { isSelected = value; OnPropertyChanged(); }  }
         public string DeviceStateName
         {
             get

@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows;
 using Quan_ly_kho.Models;
 using System.Collections.ObjectModel;
+using System.Data.Entity;
 
 namespace Quan_ly_kho.ViewModels
 {
@@ -24,7 +25,6 @@ namespace Quan_ly_kho.ViewModels
                 OnPropertyChanged(nameof(Devices));
             }
         }
-
         private bool _isAllSelected;
         public bool IsAllSelected
         {
@@ -40,9 +40,18 @@ namespace Quan_ly_kho.ViewModels
             }
         }
 
+        private Room _selectedRoom;
+        public Room SelectedRoom {
+            get => _selectedRoom;
+            set
+            {
+                _selectedRoom = value;
+                OnPropertyChanged(nameof(SelectedRoom));
+            }
+        }
         private void SelectAllDevices(bool isSelected)
         {
-            foreach(var item in Devices)
+            foreach (var item in Devices)
             {
                 item.IsSelected = isSelected;
             }
@@ -51,17 +60,25 @@ namespace Quan_ly_kho.ViewModels
         public ManageViewModel()
         {
             Devices = new ObservableCollection<Device>();
+            SelectedRoom = new Room();
             ModifyWindowCommand = new RelayCommand<object>((p) => { return true; },
-                (p) => 
-                { 
+                (p) =>
+                {
                     var selectedDevices = Devices.Where(d => d.IsSelected).ToList();
                     ModifyWindow w = new ModifyWindow();
                     if (w.DataContext is ModifyViewModel modifyViewModel)
                     {
                         modifyViewModel.SelectedDevices = new ObservableCollection<Device>(selectedDevices);
+                        modifyViewModel.SelectedRoom = SelectedRoom;
+                        modifyViewModel.DeviceAdded += ModifyViewModel_DeviceAdded;
                     }
                     w.ShowDialog();
                 });
         }
+        private void ModifyViewModel_DeviceAdded(object sender, Device e)
+        {
+            Devices.Add(e);
+        }
+
     }
 }

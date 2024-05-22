@@ -17,7 +17,7 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         x:Name="mainWindow"
         mc:Ignorable="d"
-        Title="Phần mềm quản lý lớp học" Height="350" Width="450"
+        Title="Phần mềm quản lý phòng học" Height="350" Width="450"
         DataContext="{StaticResource MainVM}"
         ResizeMode="NoResize" WindowStyle="None">
     <i:Interaction.Triggers>
@@ -57,6 +57,7 @@
                               materialDesign:HintAssist.HintOpacity=".26"
                               IsEditable="True"/>
                     <Button Margin="15" Content="Tìm kiếm"
+                            IsDefault="True"
                             Command="{Binding ManageWindowCommand}" IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                             Style="{StaticResource MaterialDesignPaperButton}"
                             ToolTip="Resource name: MaterialDesignRaisedLightDarkButton"/>

@@ -27,7 +27,7 @@ namespace Quan_ly_kho.Models
         {
             this.User = new HashSet<User>();
         }
-    
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<User> User { get; set; }
     }

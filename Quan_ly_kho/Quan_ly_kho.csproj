@@ -95,6 +95,7 @@
     <Compile Include="ManageWindow.xaml.cs">
       <DependentUpon>ManageWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Broker.cs" />
     <Compile Include="Models\Building.cs">
       <DependentUpon>MainModel.tt</DependentUpon>
     </Compile>
@@ -105,6 +106,7 @@
     <Compile Include="Models\DeviceState.cs">
       <DependentUpon>MainModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Document.cs" />
     <Compile Include="Models\Floor.cs">
       <DependentUpon>MainModel.tt</DependentUpon>
     </Compile>

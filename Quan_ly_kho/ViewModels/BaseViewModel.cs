@@ -11,6 +11,18 @@ namespace Quan_ly_kho.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
+        private static Broker broker;
+        public static Broker Broker
+        {
+            get => broker; 
+            set
+            {
+                if (broker == null)
+                    broker = new Broker();
+                broker = value;
+            }
+        }
+        
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

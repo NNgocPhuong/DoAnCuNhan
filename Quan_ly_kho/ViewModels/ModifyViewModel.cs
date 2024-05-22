@@ -67,6 +67,8 @@ namespace Quan_ly_kho.ViewModels
         public ICommand AddCommand { get; set; }
         public ICommand EditCommand { get; set; }
         public ICommand DeleteCommand { get; set; }
+        public ICommand OnCommand { get; set; }
+        public ICommand OffCommand { get; set; }
         public ModifyViewModel()
         {
             SelectedDevices = new ObservableCollection<Device>();
@@ -194,6 +196,24 @@ namespace Quan_ly_kho.ViewModels
                             SelectedDevices.Remove(device);
                             DeviceDeleted?.Invoke(this, device);
                         }
+                    }
+                });
+            OnCommand = new RelayCommand<object>(
+                (p) => SelectedDevices.Count > 0,
+                (p) =>
+                {
+                    var topic = "ESP32/20203535";
+                    Broker = new Broker();
+                    Broker.Connect();
+                    foreach (var device in SelectedDevices)
+                    {
+                        device.ControlType = "on";
+                        Document doc = new Document()
+                        {
+                            Id = device.Id,
+                            ControlType = device.ControlType,
+                        };
+                        Broker.Send(topic, doc);
                     }
                 });
         }

@@ -74,6 +74,9 @@ namespace Quan_ly_kho.Models
     {
         private bool isSelected;
         public bool IsSelected { get => isSelected; set { isSelected = value; OnPropertyChanged(); }  }
+
+        private string control_type;
+        public string ControlType { get => control_type; set { control_type = value; OnPropertyChanged(); } }
         public string DeviceStateName
         {
             get

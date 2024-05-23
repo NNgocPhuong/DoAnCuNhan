@@ -81,14 +81,14 @@ namespace Quan_ly_kho.Models
         {
             get
             {
-                // Lấy trạng thái từ một trong các DeviceState (giả sử là trạng thái của thiết bị là trạng thái của DeviceState đầu tiên)
+                // Lấy trạng thái từ một trong các DeviceState 
                 if (DeviceState != null && DeviceState.Count > 0)
                 {
                     // Chuyển ICollection thành danh sách List
                     var deviceStateList = DeviceState.ToList();
 
-                    // Truy cập vào phần tử đầu tiên của danh sách
-                    return deviceStateList[0].State;
+                    // Truy cập vào phần tử cuối của danh sách
+                    return deviceStateList[deviceStateList.Count - 1].State;
                 }
                 return null;
             }

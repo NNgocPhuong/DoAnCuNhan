@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Quan_ly_kho.ViewModels
@@ -99,17 +101,47 @@ namespace Quan_ly_kho.ViewModels
                             RoomId = room.Id,
                             IsSelected = true,
                         };
+
                         var newDeviceState = new DeviceState()
                         {
-                            DeviceId = newDevice.Id,
-                            State = "Tắt"
+                            State = "Tắt",
+                            Device = newDevice
                         };
-                        newDevice.DeviceState.Add(newDeviceState);
-                        // Thêm thiết bị mới vào cơ sở dữ liệu
-                        DataProvider.Ins.DB.Device.Add(newDevice);
+
+                        var newSchedule = new Schedule()
+                        {
+                            StartTime = DateTime.Now,
+                            EndTime = DateTime.Now.AddMinutes(1),
+                            Action = "Bật",
+                            Device = newDevice // Đảm bảo rằng bạn đã thiết lập thuộc tính Device
+                        };
+
+                        // Đảm bảo rằng bạn đã khởi tạo các danh sách con
+                        newDevice.DeviceState = new List<DeviceState> { newDeviceState };
+                        newDevice.Schedule = new List<Schedule> { newSchedule };
 
                         // Lưu thay đổi
-                        DataProvider.Ins.DB.SaveChanges();
+                        try
+                        {
+                            // Thêm thiết bị mới vào cơ sở dữ liệu
+                            DataProvider.Ins.DB.Device.Add(newDevice);
+
+                            // Lưu thay đổi
+                            DataProvider.Ins.DB.SaveChanges();
+                        }
+                        catch (DbEntityValidationException ex)
+                        {
+                            StringBuilder sb = new StringBuilder();
+                            foreach (var eve in ex.EntityValidationErrors)
+                            {
+                                sb.AppendLine($"Entity of type \"{eve.Entry.Entity.GetType().Name}\" in state \"{eve.Entry.State}\" has the following validation errors:");
+                                foreach (var ve in eve.ValidationErrors)
+                                {
+                                    sb.AppendLine($"- Property: \"{ve.PropertyName}\", Error: \"{ve.ErrorMessage}\"");
+                                }
+                            }
+                            MessageBox.Show(sb.ToString(), "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
 
                         // Cập nhật danh sách thiết bị được chọn
                         SelectedDevices.Add(newDevice);
@@ -203,11 +235,31 @@ namespace Quan_ly_kho.ViewModels
                 (p) =>
                 {
                     var topic = "ESP32/20203535";
-                    Broker = new Broker();
+                    
                     Broker.Connect();
+                    
                     foreach (var device in SelectedDevices)
                     {
                         device.ControlType = "on";
+                        Document doc = new Document()
+                        {
+                            Id = device.Id,
+                            ControlType = device.ControlType,
+                        };
+                        Broker.Send(topic, doc);
+                    }
+                });
+            OffCommand = new RelayCommand<object>(
+                (p) => SelectedDevices.Count > 0,
+                (p) =>
+                {
+                    var topic = "ESP32/20203535";
+
+                    Broker.Connect();
+
+                    foreach (var device in SelectedDevices)
+                    {
+                        device.ControlType = "off";
                         Document doc = new Document()
                         {
                             Id = device.Id,

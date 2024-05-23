@@ -22,6 +22,10 @@ namespace Quan_ly_kho.ViewModels
                 broker = value;
             }
         }
+        static BaseViewModel() 
+        {
+            Broker = new Broker();
+        }
         
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

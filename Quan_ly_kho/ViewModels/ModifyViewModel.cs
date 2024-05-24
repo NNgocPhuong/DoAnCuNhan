@@ -71,10 +71,12 @@ namespace Quan_ly_kho.ViewModels
         public ICommand DeleteCommand { get; set; }
         public ICommand OnCommand { get; set; }
         public ICommand OffCommand { get; set; }
-        public ModifyViewModel()
+       
+        public ModifyViewModel(Room selectedRoom)
         {
             SelectedDevices = new ObservableCollection<Device>();
-            SelectedRoom = new Room();
+            SelectedRoom = selectedRoom;
+            string firstTopic = (SelectedRoom.Floor.Building.BuildingName.ToLower() + SelectedRoom.RoomNumber).ToMD5();
             AddCommand = new RelayCommand<object>(
                 (p) =>
                 {
@@ -88,66 +90,46 @@ namespace Quan_ly_kho.ViewModels
 
                     return true;
                 },
-                (p) =>
-                {
-                    var room = DataProvider.Ins.DB.Room.FirstOrDefault(r => r.Id == SelectedRoom.Id);
+               async (p) =>
+               {
+                   var room = await DataProvider.Ins.DB.Room.FirstOrDefaultAsync(r => r.Id == SelectedRoom.Id);
 
-                    if (room != null)
-                    {
-                        var newDevice = new Device()
-                        {
-                            DeviceName = DeviceName,
-                            DeviceType = DeviceType,
-                            RoomId = room.Id,
-                            IsSelected = true,
-                        };
+                   if (room != null)
+                   {
+                       var newDevice = new Device()
+                       {
+                           DeviceName = DeviceName,
+                           DeviceType = DeviceType,
+                           RoomId = room.Id,
+                           IsSelected = true,
+                           DeviceState = new List<DeviceState> { new DeviceState { State = "Tắt" } },
+                           Schedule = new List<Schedule> { new Schedule { StartTime = DateTime.Now, EndTime = DateTime.Now.AddMinutes(1), Action = "Bật" } }
+                       };
+                       // Thêm thiết bị mới vào cơ sở dữ liệu
+                       DataProvider.Ins.DB.Device.Add(newDevice);
+                       try
+                       {
+                           await DataProvider.Ins.DB.SaveChangesAsync();
+                       }
+                       catch (DbEntityValidationException ex)
+                       {
+                           StringBuilder sb = new StringBuilder();
+                           foreach (var eve in ex.EntityValidationErrors)
+                           {
+                               sb.AppendLine($"Entity of type \"{eve.Entry.Entity.GetType().Name}\" in state \"{eve.Entry.State}\" has the following validation errors:");
+                               foreach (var ve in eve.ValidationErrors)
+                               {
+                                   sb.AppendLine($"- Property: \"{ve.PropertyName}\", Error: \"{ve.ErrorMessage}\"");
+                               }
+                           }
+                           MessageBox.Show(sb.ToString(), "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                       }
 
-                        var newDeviceState = new DeviceState()
-                        {
-                            State = "Tắt",
-                            Device = newDevice
-                        };
-
-                        var newSchedule = new Schedule()
-                        {
-                            StartTime = DateTime.Now,
-                            EndTime = DateTime.Now.AddMinutes(1),
-                            Action = "Bật",
-                            Device = newDevice // Đảm bảo rằng bạn đã thiết lập thuộc tính Device
-                        };
-
-                        // Đảm bảo rằng bạn đã khởi tạo các danh sách con
-                        newDevice.DeviceState = new List<DeviceState> { newDeviceState };
-                        newDevice.Schedule = new List<Schedule> { newSchedule };
-
-                        // Lưu thay đổi
-                        try
-                        {
-                            // Thêm thiết bị mới vào cơ sở dữ liệu
-                            DataProvider.Ins.DB.Device.Add(newDevice);
-
-                            // Lưu thay đổi
-                            DataProvider.Ins.DB.SaveChanges();
-                        }
-                        catch (DbEntityValidationException ex)
-                        {
-                            StringBuilder sb = new StringBuilder();
-                            foreach (var eve in ex.EntityValidationErrors)
-                            {
-                                sb.AppendLine($"Entity of type \"{eve.Entry.Entity.GetType().Name}\" in state \"{eve.Entry.State}\" has the following validation errors:");
-                                foreach (var ve in eve.ValidationErrors)
-                                {
-                                    sb.AppendLine($"- Property: \"{ve.PropertyName}\", Error: \"{ve.ErrorMessage}\"");
-                                }
-                            }
-                            MessageBox.Show(sb.ToString(), "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
-
-                        // Cập nhật danh sách thiết bị được chọn
-                        SelectedDevices.Add(newDevice);
-                        DeviceAdded?.Invoke(this, newDevice);
-                    }
-                });
+                       // Cập nhật danh sách thiết bị được chọn
+                       SelectedDevices.Add(newDevice);
+                       DeviceAdded?.Invoke(this, newDevice);
+                   }
+               });
 
             EditCommand = new RelayCommand<object>(
                 (p) =>

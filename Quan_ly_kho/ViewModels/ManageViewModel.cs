@@ -65,18 +65,18 @@ namespace Quan_ly_kho.ViewModels
                 (p) =>
                 {
                     var selectedDevices = Devices.Where(d => d.IsSelected).ToList();
-                    ModifyWindow w = new ModifyWindow();
-                    if (w.DataContext is ModifyViewModel modifyViewModel)
+                    var modifyViewModel = new ModifyViewModel(SelectedRoom)
                     {
-                        modifyViewModel.SelectedDevices = new ObservableCollection<Device>(selectedDevices);
-                        modifyViewModel.SelectedRoom = SelectedRoom;
-                        modifyViewModel.DeviceAdded -= ModifyViewModel_DeviceAdded; // Đảm bảo hủy đăng ký trước khi đăng ký mới
-                        modifyViewModel.DeviceAdded += ModifyViewModel_DeviceAdded; // Đăng ký sự kiện
-                        modifyViewModel.DeviceEdited -= ModifyViewModel_DeviceEdited; // Đảm bảo hủy đăng ký trước khi đăng ký mới
-                        modifyViewModel.DeviceEdited += ModifyViewModel_DeviceEdited;
-                        modifyViewModel.DeviceDeleted -= ModifyViewModel_DeviceDeleted; // Đảm bảo hủy đăng ký trước khi đăng ký mới
-                        modifyViewModel.DeviceDeleted += ModifyViewModel_DeviceDeleted;
-                    }
+                        SelectedDevices = new ObservableCollection<Device>(selectedDevices)
+                    };
+                    modifyViewModel.DeviceAdded -= ModifyViewModel_DeviceAdded; // Đảm bảo hủy đăng ký trước khi đăng ký mới
+                    modifyViewModel.DeviceAdded += ModifyViewModel_DeviceAdded; // Đăng ký sự kiện
+                    modifyViewModel.DeviceEdited -= ModifyViewModel_DeviceEdited; // Đảm bảo hủy đăng ký trước khi đăng ký mới
+                    modifyViewModel.DeviceEdited += ModifyViewModel_DeviceEdited;
+                    modifyViewModel.DeviceDeleted -= ModifyViewModel_DeviceDeleted; // Đảm bảo hủy đăng ký trước khi đăng ký mới
+                    modifyViewModel.DeviceDeleted += ModifyViewModel_DeviceDeleted;
+
+                    ModifyWindow w = new ModifyWindow(modifyViewModel);
                     w.ShowDialog();
                 });
         }

@@ -47,3 +47,5 @@ D:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\obj\Debug\Quan_ly_kho.pdb
 D:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\obj\Debug\Quan_ly_kho_Content.g.cs
 D:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\obj\Debug\ModifyWindow.g.cs
 D:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\obj\Debug\ModifyWindow.baml
+D:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\obj\Debug\ScheduleWindow.g.cs
+D:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\obj\Debug\ScheduleWindow.baml

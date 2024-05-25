@@ -1,4 +1,5 @@
-﻿using Quan_ly_kho.Models;
+﻿using Newtonsoft.Json.Linq;
+using Quan_ly_kho.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,6 +7,7 @@ using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Network;
 using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Threading.Tasks;
@@ -72,11 +74,26 @@ namespace Quan_ly_kho.ViewModels
         public ICommand OnCommand { get; set; }
         public ICommand OffCommand { get; set; }
        
-        public ModifyViewModel(Room selectedRoom)
+        public ModifyViewModel(Room selected_Room)
         {
             SelectedDevices = new ObservableCollection<Device>();
-            SelectedRoom = selectedRoom;
+            SelectedRoom = selected_Room;
             string firstTopic = (SelectedRoom.Floor.Building.BuildingName.ToLower() + SelectedRoom.RoomNumber).ToMD5();
+            SelectedRoom.Id_esp32 = "esp32/";
+            Broker.Connect();
+            Broker.Listen(firstTopic, (doc) =>
+            {
+                SelectedRoom.Id_esp32 += doc.ObjectId;
+            });
+            Broker.Unsubscribe(firstTopic);
+            Document doc1 = new Document()
+            {
+                Response = "received"
+            };
+            
+            Broker.Send(firstTopic, doc1);
+           
+            #region ADD EDIT DELETE COMMAND
             AddCommand = new RelayCommand<object>(
                 (p) =>
                 {
@@ -212,43 +229,43 @@ namespace Quan_ly_kho.ViewModels
                         }
                     }
                 });
+            #endregion
+            
             OnCommand = new RelayCommand<object>(
                 (p) => SelectedDevices.Count > 0,
                 (p) =>
                 {
-                    var topic = "ESP32/20203535";
-                    
-                    Broker.Connect();
-                    
+                    var aggregateDocument = new Document();
+                    var documentsArray = new JArray();
                     foreach (var device in SelectedDevices)
                     {
-                        device.ControlType = "on";
-                        Document doc = new Document()
+                        var doc = new JObject
                         {
-                            Id = device.Id,
-                            ControlType = device.ControlType,
+                            { "DeviceName", device.DeviceName },
+                            { "Power", "on" }
                         };
-                        Broker.Send(topic, doc);
+                        documentsArray.Add(doc);
                     }
+                    aggregateDocument.Add("Devices", documentsArray);
+                    Broker.Send(SelectedRoom.Id_esp32, aggregateDocument.ToString());
                 });
             OffCommand = new RelayCommand<object>(
                 (p) => SelectedDevices.Count > 0,
                 (p) =>
                 {
-                    var topic = "ESP32/20203535";
-
-                    Broker.Connect();
-
+                    var aggregateDocument = new Document();
+                    var documentsArray = new JArray();
                     foreach (var device in SelectedDevices)
                     {
-                        device.ControlType = "off";
-                        Document doc = new Document()
+                        var doc = new Document
                         {
-                            Id = device.Id,
-                            ControlType = device.ControlType,
+                            DeviceName = device.DeviceName,
+                            Power = "off"
                         };
-                        Broker.Send(topic, doc);
+                        documentsArray.Add(JObject.Parse(doc.ToString()));
                     }
+                    aggregateDocument.Add("Devices", documentsArray);
+                    Broker.Send(SelectedRoom.Id_esp32, aggregateDocument.ToString());
                 });
         }
 

@@ -49,5 +49,8 @@ namespace Quan_ly_kho.Models
         public virtual ICollection<Device> Device { get; set; }
         public virtual Floor Floor { get; set; }
     }
-
+    public partial class Room
+    {
+        public string Id_esp32 { get; set; }
+    }
 }

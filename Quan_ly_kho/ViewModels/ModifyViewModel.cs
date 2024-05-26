@@ -121,7 +121,7 @@ namespace Quan_ly_kho.ViewModels
                            RoomId = room.Id,
                            IsSelected = true,
                            DeviceState = new List<DeviceState> { new DeviceState { State = "Tắt" } },
-                           Schedule = new List<Schedule> { new Schedule { StartTime = DateTime.Now, EndTime = DateTime.Now.AddMinutes(1), Action = "Bật" } }
+                           //Schedule = new List<Schedule> { new Schedule { StartTime = DateTime.Now, EndTime = DateTime.Now.AddMinutes(1), Action = "Bật" } }
                        };
                        // Thêm thiết bị mới vào cơ sở dữ liệu
                        DataProvider.Ins.DB.Device.Add(newDevice);

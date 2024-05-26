@@ -52,7 +52,7 @@
                 <materialDesign:Card Margin="5" Grid.Column="1">
                     <WrapPanel>
                         <materialDesign:PackIcon Kind="HomeClockOutline" Height="40" Width="60" />
-                        <Button Style="{StaticResource MaterialDesignPaperButton}" Command="{Binding ModifyWindowCommand}" Content="Lập lịch hoạt động" Margin="5" Width="170"></Button>
+                        <Button Style="{StaticResource MaterialDesignPaperButton}" Command="{Binding ScheduleWindowCommand}" Content="Lập lịch hoạt động" Margin="5" Width="170"></Button>
                     </WrapPanel>
                 </materialDesign:Card>
             </Grid>

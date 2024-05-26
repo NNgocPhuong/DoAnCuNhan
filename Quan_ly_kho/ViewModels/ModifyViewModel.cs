@@ -10,6 +10,7 @@ using System.Linq;
 using System.Network;
 using System.Runtime.Remoting.Contexts;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -230,10 +231,10 @@ namespace Quan_ly_kho.ViewModels
                     }
                 });
             #endregion
-            
+
             OnCommand = new RelayCommand<object>(
                 (p) => SelectedDevices.Count > 0,
-                (p) =>
+                async (p) =>
                 {
                     var aggregateDocument = new Document();
                     var documentsArray = new JArray();
@@ -248,26 +249,108 @@ namespace Quan_ly_kho.ViewModels
                     }
                     aggregateDocument.Add("Devices", documentsArray);
                     Broker.Send(SelectedRoom.Id_esp32, aggregateDocument.ToString());
+
+                    await ListenForResponseAndUpdateState("on");
                 });
             OffCommand = new RelayCommand<object>(
                 (p) => SelectedDevices.Count > 0,
-                (p) =>
+                async (p) =>
                 {
                     var aggregateDocument = new Document();
                     var documentsArray = new JArray();
                     foreach (var device in SelectedDevices)
                     {
-                        var doc = new Document
+                        var doc = new JObject
                         {
-                            DeviceName = device.DeviceName,
-                            Power = "off"
+                            { "DeviceName", device.DeviceName },
+                            { "Power", "off" }
                         };
-                        documentsArray.Add(JObject.Parse(doc.ToString()));
+                        documentsArray.Add(doc);
                     }
                     aggregateDocument.Add("Devices", documentsArray);
                     Broker.Send(SelectedRoom.Id_esp32, aggregateDocument.ToString());
+
+                    await ListenForResponseAndUpdateState("off");
                 });
         }
 
+        private async Task ListenForResponseAndUpdateState(string command)
+        {
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(TimeSpan.FromSeconds(5));
+
+            var tcs = new TaskCompletionSource<string>();
+
+            Action<Document> responseHandler = null;
+            responseHandler = (doc) =>
+            {
+                if (doc["Response"]?.ToString() == "ok")
+                {
+                    tcs.TrySetResult("ok");
+                }
+            };
+
+            Broker.process_received_data += responseHandler;
+
+            try
+            {
+                var result = await Task.WhenAny(tcs.Task, Task.Delay(Timeout.Infinite, cts.Token));
+
+                if (result == tcs.Task && tcs.Task.Result == "ok")
+                {
+                    foreach (var device in SelectedDevices)
+                    {
+                        if(command == "on")
+                        {
+                            DeviceState itemState = new DeviceState { DeviceId = device.Id,
+                                State = "Bật"
+                            };
+                            device.DeviceState.Add(itemState);
+                        }
+                        else
+                        {
+                            DeviceState itemState = new DeviceState
+                            {
+                                DeviceId = device.Id,
+                                State = "Tắt"
+                            };
+                            device.DeviceState.Add(itemState);
+                        }    
+                        
+                    }
+                }
+                else
+                {
+                    foreach (var device in SelectedDevices)
+                    {
+                        DeviceState itemState = new DeviceState
+                        {
+                            DeviceId = device.Id,
+                            State = "Lỗi"
+                        };
+                        device.DeviceState.Add(itemState);
+                    }
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                foreach (var device in SelectedDevices)
+                {
+                    DeviceState itemState = new DeviceState
+                    {
+                        DeviceId = device.Id,
+                        State = "Lỗi"
+                    };
+                    device.DeviceState.Add(itemState);
+                }
+            }
+            finally
+            {
+                Broker.process_received_data -= responseHandler;
+            }
+        }
     }
 }
+
+    
+

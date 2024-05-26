@@ -143,6 +143,9 @@
     <Compile Include="ModifyWindow.xaml.cs">
       <DependentUpon>ModifyWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ScheduleWindow.xaml.cs">
+      <DependentUpon>ScheduleWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControlPhuong\ControlBarUC.xaml.cs">
       <DependentUpon>ControlBarUC.xaml</DependentUpon>
     </Compile>
@@ -152,6 +155,7 @@
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\ManageViewModel.cs" />
     <Compile Include="ViewModels\ModifyViewModel.cs" />
+    <Compile Include="ViewModels\ScheduleViewModel.cs" />
     <Compile Include="VstData\BsonDataMap.cs" />
     <Compile Include="VstData\Collection.cs" />
     <Compile Include="VstData\Database.cs" />
@@ -193,6 +197,10 @@
     <Page Include="ResourceXAML\MainResource.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ScheduleWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControlPhuong\ControlBarUC.xaml">
       <Generator>MSBuild:Compile</Generator>

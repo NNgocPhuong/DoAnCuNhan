@@ -8,6 +8,7 @@ using System.Windows;
 using Quan_ly_kho.Models;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
+using MaterialDesignThemes.Wpf;
 
 namespace Quan_ly_kho.ViewModels
 {
@@ -15,7 +16,7 @@ namespace Quan_ly_kho.ViewModels
     {
         public ICommand ModifyWindowCommand { get; set; }
         private ObservableCollection<Device> _devices;
-
+        public ICommand ScheduleWindowCommand { get; set; }
         public ObservableCollection<Device> Devices
         {
             get => _devices;
@@ -77,6 +78,17 @@ namespace Quan_ly_kho.ViewModels
                     modifyViewModel.DeviceDeleted += ModifyViewModel_DeviceDeleted;
 
                     ModifyWindow w = new ModifyWindow(modifyViewModel);
+                    w.ShowDialog();
+                });
+            ScheduleWindowCommand = new RelayCommand<object>((p) => { return true; }, 
+                (p) => 
+                {
+                    var selectedDevices = Devices.Where(d => d.IsSelected).ToList();
+                    var scheduleViewModel = new ScheduleViewModel(SelectedRoom)
+                    {
+                        SelectedDevices = new ObservableCollection<Device>(selectedDevices)
+                    };
+                    ScheduleWindow w = new ScheduleWindow(scheduleViewModel);
                     w.ShowDialog();
                 });
         }

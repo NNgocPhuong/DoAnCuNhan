@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Quan_ly_kho.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,10 @@ namespace Quan_ly_kho
     /// </summary>
     public partial class ScheduleWindow : Window
     {
-        public ScheduleWindow()
+        public ScheduleWindow(ScheduleViewModel viewModel)
         {
             InitializeComponent();
+            DataContext = viewModel;
         }
     }
 }

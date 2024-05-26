@@ -9,7 +9,7 @@
         xmlns:uc ="clr-namespace:Quan_ly_kho.UserControlPhuong"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        DataContext="{StaticResource ModifyVM}"
+        
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
         TextOptions.TextFormattingMode="Ideal"
@@ -20,7 +20,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         x:Name="window"
         
-        Title="Lập lịch cho thiết bị" Height="450" Width="700">
+        Title="Lập lịch" Height="450" Width="700">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
@@ -39,20 +39,49 @@
 
             <!--các element binding từ selected item-->
             <materialDesign:Card Grid.Row="0" Margin="5">
-                <Grid Margin="0 0 0 10">
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Text="{Binding DeviceType, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="5 5 15 5" materialDesign:HintAssist.Hint="Thời điểm bắt đầu" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                    <TextBox Grid.Column="1" Text="{Binding DeviceName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="5 5 15 5" materialDesign:HintAssist.Hint="Thời điểm kết thúc" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                    <TextBox Grid.Column="2" Text="{Binding DeviceState, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="5 5 15 5" materialDesign:HintAssist.Hint="Bật/Tắt" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <DatePicker Margin="0 5 0 0" Grid.Row="0" Width="180" materialDesign:DatePickerAssist.OutlinedBorderInactiveThickness="2"
+                                    materialDesign:HintAssist.FloatingOffset="0,-22"
+                                    materialDesign:HintAssist.Hint="Chọn ngày bắt đầu"
+                                    Style="{StaticResource MaterialDesignOutlinedDatePicker}" />
+                        <materialDesign:TimePicker Margin="0 5 0 2" Grid.Row="1" Width="180" materialDesign:HintAssist.HelperText="Helper text"
+                                                   materialDesign:HintAssist.Hint="Chọn giờ bắt đầu"
+                                                   Is24Hours="True"
+                                                   Style="{StaticResource MaterialDesignOutlinedTimePicker}" />
+                    </Grid>
+                    <Border Grid.Column="1" VerticalAlignment="Stretch" BorderBrush="Gray" BorderThickness="1,0,1,0"/>
+                    <Grid Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <DatePicker Margin="0 5 0 0" Grid.Row="0" Width="180" materialDesign:DatePickerAssist.OutlinedBorderInactiveThickness="2"
+                                    materialDesign:HintAssist.FloatingOffset="0,-22"
+                                    materialDesign:HintAssist.Hint="Chọn ngày kết thúc"
+                                    Style="{StaticResource MaterialDesignOutlinedDatePicker}" />
+                        <materialDesign:TimePicker Margin="0 5 0 2" Grid.Row="1" Width="180" materialDesign:HintAssist.HelperText="Helper text"
+                               materialDesign:HintAssist.Hint="Chọn giờ kết thúc"
+                               Is24Hours="True"
+                               Style="{StaticResource MaterialDesignOutlinedTimePicker}" />
+                    </Grid>
                 </Grid>
             </materialDesign:Card>
 
             <Grid Grid.Row="1">
-                <Button Grid.Column="1" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Command="{Binding OnCommand}" Content="Thêm lịch trình" Margin="5" Width="150"></Button>
+                
+                <Grid Grid.Column="0">
+                    <Button Style="{StaticResource MaterialDesignRaisedAccentButton}" HorizontalAlignment="Center" Command="{Binding AddCommand}" Content="Thêm lịch trình hoạt động" Margin="5" Width="200"></Button>
+                </Grid>
             </Grid>
 
             <materialDesign:Card Grid.Row="2" Margin="5" VerticalAlignment="Stretch">
@@ -63,7 +92,15 @@
                         <DataGridTextColumn IsReadOnly="True" Header="Loại thiết bị" Binding="{Binding DeviceType}" Width="*"/>
                         <DataGridTextColumn IsReadOnly="True" Header="Tên thiết bị" Binding="{Binding DeviceName}" Width="*"/>
                         <DataGridTextColumn IsReadOnly="True" Header="Trạng thái" Binding="{Binding DeviceStateName}" Width="*"/>
-                        <DataGridTextColumn IsReadOnly="True" Header="Lịch trình" Binding="{Binding DeviceStateName}" Width="*"/>
+
+                        <DataGridTemplateColumn Header="Lịch hoạt động" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox ItemsSource="{Binding Schedule}" DisplayMemberPath="ScheduleDescription" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
                         <!-- Thêm các cột khác nếu cần -->
                     </DataGrid.Columns>
                 </DataGrid>

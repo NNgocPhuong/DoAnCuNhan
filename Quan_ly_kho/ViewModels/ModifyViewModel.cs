@@ -60,15 +60,7 @@ namespace Quan_ly_kho.ViewModels
         public string DeviceState { get => _deviceState; set { _deviceState = value; OnPropertyChanged(); } }
 
         private Room _selectedRoom;
-        public Room SelectedRoom
-        {
-            get => _selectedRoom;
-            set
-            {
-                _selectedRoom = value;
-                OnPropertyChanged(nameof(SelectedRoom));
-            }
-        }
+        public Room SelectedRoom { get => _selectedRoom; set { _selectedRoom = value; OnPropertyChanged(nameof(SelectedRoom)); } }
         public ICommand AddCommand { get; set; }
         public ICommand EditCommand { get; set; }
         public ICommand DeleteCommand { get; set; }
@@ -102,7 +94,7 @@ namespace Quan_ly_kho.ViewModels
                     {
                         return false;
                     }
-                    var device = DataProvider.Ins.DB.Device.FirstOrDefault(x => x.DeviceName == DeviceName && x.RoomId == SelectedRoom.Id);
+                    var device = DataProvider.Ins.DB.Device.FirstOrDefault(x => x.DeviceName == DeviceName && x.RoomId == SelectedRoom.Id && x.DeviceType == DeviceType);
                     if (device != null)
                         return false;
 
@@ -236,19 +228,47 @@ namespace Quan_ly_kho.ViewModels
                 (p) => SelectedDevices.Count > 0,
                 async (p) =>
                 {
-                    var aggregateDocument = new Document();
-                    var documentsArray = new JArray();
+                    var controlMessage = new JObject
+                    {
+                        { "Code", "Control" }
+                    };
+
+                    var doorsArray = new JArray();
+                    var lightsArray = new JArray();
+                    var fansArray = new JArray();
+                    var airConditioningArray = new JArray();
+
                     foreach (var device in SelectedDevices)
                     {
-                        var doc = new JObject
+                        var deviceDetails = new JObject
                         {
-                            { "DeviceName", device.DeviceName },
-                            { "Power", "on" }
+                            { "id_esp", device.DeviceName },  
+                            { "power", "on" }
                         };
-                        documentsArray.Add(doc);
+                        if (device.DeviceType.StartsWith("Cửa"))
+                        {
+                            doorsArray.Add(deviceDetails);
+                        }
+                        else if (device.DeviceType.StartsWith("Đèn"))
+                        {
+                            lightsArray.Add(deviceDetails);
+                        }
+                        else if (device.DeviceType.StartsWith("Quạt"))
+                        {
+                            fansArray.Add(deviceDetails);
+                        }
+                        else if (device.DeviceType.StartsWith("Điều hoà"))
+                        {
+                            airConditioningArray.Add(deviceDetails);
+                        }
                     }
-                    aggregateDocument.Add("Devices", documentsArray);
-                    Broker.Send(SelectedRoom.Id_esp32, aggregateDocument.ToString());
+
+                    controlMessage.Add("Doors", doorsArray);
+                    controlMessage.Add("Lights", lightsArray);
+                    controlMessage.Add("Fans", fansArray);
+                    controlMessage.Add("Air Conditionings", airConditioningArray);
+
+                    Broker.Send(SelectedRoom.Id_esp32, controlMessage.ToString());
 
                     await ListenForResponseAndUpdateState("on");
                 });
@@ -256,19 +276,47 @@ namespace Quan_ly_kho.ViewModels
                 (p) => SelectedDevices.Count > 0,
                 async (p) =>
                 {
-                    var aggregateDocument = new Document();
-                    var documentsArray = new JArray();
+                    var controlMessage = new JObject
+                    {
+                        { "Code", "Control" }
+                    };
+
+                    var doorsArray = new JArray();
+                    var lightsArray = new JArray();
+                    var fansArray = new JArray();
+                    var airConditioningArray = new JArray();
+
                     foreach (var device in SelectedDevices)
                     {
-                        var doc = new JObject
+                        var deviceDetails = new JObject
                         {
-                            { "DeviceName", device.DeviceName },
-                            { "Power", "off" }
+                            { "id_esp", device.DeviceName },
+                            { "power", "off" }
                         };
-                        documentsArray.Add(doc);
+                        if (device.DeviceType.StartsWith("Cửa"))
+                        {
+                            doorsArray.Add(deviceDetails);
+                        }
+                        else if (device.DeviceType.StartsWith("Đèn"))
+                        {
+                            lightsArray.Add(deviceDetails);
+                        }
+                        else if (device.DeviceType.StartsWith("Quạt"))
+                        {
+                            fansArray.Add(deviceDetails);
+                        }
+                        else if (device.DeviceType.StartsWith("Điều hoà"))
+                        {
+                            airConditioningArray.Add(deviceDetails);
+                        }
                     }
-                    aggregateDocument.Add("Devices", documentsArray);
-                    Broker.Send(SelectedRoom.Id_esp32, aggregateDocument.ToString());
+
+                    controlMessage.Add("Doors", doorsArray);
+                    controlMessage.Add("Lights", lightsArray);
+                    controlMessage.Add("Fans", fansArray);
+                    controlMessage.Add("Air Conditionings", airConditioningArray);
+
+                    Broker.Send(SelectedRoom.Id_esp32, controlMessage.ToString());
 
                     await ListenForResponseAndUpdateState("off");
                 });
@@ -302,7 +350,9 @@ namespace Quan_ly_kho.ViewModels
                     {
                         if(command == "on")
                         {
-                            DeviceState itemState = new DeviceState { DeviceId = device.Id,
+                            DeviceState itemState = new DeviceState 
+                            {
+                                DeviceId = device.Id,
                                 State = "Bật"
                             };
                             device.DeviceState.Add(itemState);

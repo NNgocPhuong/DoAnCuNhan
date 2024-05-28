@@ -141,13 +141,16 @@ namespace Quan_ly_kho.ViewModels
         {
             foreach (var device in SelectedDevices)
             {
-                device.Schedule.Add(new Schedule
+                Schedule newSchedule = new Schedule
                 {
                     StartTime = StartDateTime.Value,
                     EndTime = EndDateTime.Value,
                     Action = "Bật"
-                });
+                };
+                device.Schedule.Add(newSchedule);
+                DataProvider.Ins.DB.Schedule.Add(newSchedule);
             }
+            DataProvider.Ins.DB.SaveChanges();
         });
         }
         private bool IsOverlapping(Schedule existingSchedule, Schedule newSchedule)

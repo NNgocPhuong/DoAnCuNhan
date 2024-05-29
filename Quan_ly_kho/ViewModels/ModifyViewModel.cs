@@ -23,7 +23,7 @@ namespace Quan_ly_kho.ViewModels
         public event EventHandler<Device> DeviceEdited;
         public event EventHandler<Device> DeviceDeleted;
         private ObservableCollection<Device> _selectedDevices;
-
+        private bool _errorMessageShown = false;
         public ObservableCollection<Device> SelectedDevices
         {
             get => _selectedDevices;
@@ -66,7 +66,9 @@ namespace Quan_ly_kho.ViewModels
         public ICommand DeleteCommand { get; set; }
         public ICommand OnCommand { get; set; }
         public ICommand OffCommand { get; set; }
-       
+        private Timer _keepAliveTimer;
+        private DateTime _lastKeepAliveReceived;
+
         public ModifyViewModel(Room selected_Room)
         {
             SelectedDevices = new ObservableCollection<Device>();
@@ -95,11 +97,20 @@ namespace Quan_ly_kho.ViewModels
             //        }
             //    });
             //}
+            // Khởi tạo Timer để kiểm tra keep-alive mỗi 60 giây
+
+            Task.Delay(60000).ContinueWith(_ =>
+            {
+                _keepAliveTimer = new Timer(CheckKeepAlive, null, 0, 60000);
+            });
+
+            // Lắng nghe trên topic của phòng
+            Broker.Listen(SelectedRoom.Id_esp32, OnBrokerMessageReceived);
             #region ADD EDIT DELETE COMMAND
             AddCommand = new RelayCommand<object>(
                 (p) =>
                 {
-                    if (string.IsNullOrEmpty(DeviceName))
+                    if (string.IsNullOrEmpty(DeviceName))   
                     {
                         return false;
                     }
@@ -355,19 +366,72 @@ namespace Quan_ly_kho.ViewModels
                 });
         }
 
+        private void OnBrokerMessageReceived(Document doc)
+        {
+            // Kiểm tra nếu là bản tin keep-alive
+            if (doc["Type"]?.ToString() == "keep-alive")
+            {
+                _lastKeepAliveReceived = DateTime.Now;
+            }
+        }
+        private void CheckKeepAlive(object state)
+        {
+            if ((DateTime.Now - _lastKeepAliveReceived).TotalSeconds > 65)
+            {
+                // Nếu quá 65 giây mà không nhận được bản tin keep-alive, cập nhật trạng thái thiết bị
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    foreach (var device in SelectedDevices)
+                    {
+                        var deviceState = device.DeviceState.FirstOrDefault();
+                        if (deviceState != null)
+                        {
+                            deviceState.State = "Lỗi";
+                        }
+                        else
+                        {
+                            device.DeviceState.Add(new DeviceState { DeviceId = device.Id, State = "Lỗi" });
+                        }
+                    }
+
+                    OnPropertyChanged(nameof(SelectedDevices));
+
+                    // Hiển thị thông báo lỗi
+                    if (!_errorMessageShown)
+                    {
+                        MessageBox.Show("Các thiết bị lỗi", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        _errorMessageShown = true;
+                        foreach (var device in SelectedDevices)
+                        {
+                            DeviceState itemState = new DeviceState
+                            {
+                                DeviceId = device.Id,
+                                State = "Lỗi"
+                            };
+                            device.DeviceState.Add(itemState);
+                            OnPropertyChanged();
+                        }
+                        // Dừng và xoá timer
+                        _keepAliveTimer?.Change(Timeout.Infinite, Timeout.Infinite);
+                        _keepAliveTimer?.Dispose();
+                    }
+
+                });
+            }
+        }
         private async Task ListenForResponseAndUpdateState(string command)
         {
             var cts = new CancellationTokenSource();
-            cts.CancelAfter(TimeSpan.FromMinutes(1.5));
+            cts.CancelAfter(TimeSpan.FromSeconds(5));
 
-            var tcs = new TaskCompletionSource<string>();
+            var tcs = new TaskCompletionSource<bool>();
 
             Action<Document> responseHandler = null;
             responseHandler = (doc) =>
             {
-                if (doc["Response"]?.ToString() == "ok")
+                if (doc["Type"]?.ToString() == "ack-control" && doc["Response"]?.ToString() == "control-success")
                 {
-                    tcs.TrySetResult("ok");
+                    tcs.TrySetResult(true);
                 }
             };
 
@@ -375,33 +439,21 @@ namespace Quan_ly_kho.ViewModels
 
             try
             {
+                // Ensure listening on the correct topic
+                Broker.Listen(SelectedRoom.Id_esp32, responseHandler);
+
                 var result = await Task.WhenAny(tcs.Task, Task.Delay(Timeout.Infinite, cts.Token));
 
-                if (result == tcs.Task && tcs.Task.Result == "ok")
+                if (result == tcs.Task && tcs.Task.Result)
                 {
                     foreach (var device in SelectedDevices)
                     {
-                        if(command == "on")
+                        DeviceState itemState = new DeviceState
                         {
-                            DeviceState itemState = new DeviceState 
-                            {
-                                DeviceId = device.Id,
-                                State = "Bật"
-                            };
-                            device.DeviceState.Add(itemState);
-                            OnPropertyChanged(nameof(SelectedDevices));
-                        }
-                        else
-                        {
-                            DeviceState itemState = new DeviceState
-                            {
-                                DeviceId = device.Id,
-                                State = "Tắt"
-                            };
-                            device.DeviceState.Add(itemState);
-                            OnPropertyChanged(nameof(SelectedDevices));
-                        }
-
+                            DeviceId = device.Id,
+                            State = command == "on" ? "Bật" : "Tắt"
+                        };
+                        device.DeviceState.Add(itemState);
                     }
                 }
                 else
@@ -414,7 +466,6 @@ namespace Quan_ly_kho.ViewModels
                             State = "Lỗi"
                         };
                         device.DeviceState.Add(itemState);
-                        OnPropertyChanged(nameof(SelectedDevices));
                     }
                 }
             }
@@ -428,12 +479,14 @@ namespace Quan_ly_kho.ViewModels
                         State = "Lỗi"
                     };
                     device.DeviceState.Add(itemState);
-                    OnPropertyChanged(nameof(SelectedDevices));
                 }
             }
             finally
             {
+                OnPropertyChanged(nameof(SelectedDevices));
                 Broker.process_received_data -= responseHandler;
+
+                _lastKeepAliveReceived = DateTime.Now;
             }
         }
     }

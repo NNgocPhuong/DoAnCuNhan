@@ -29,7 +29,7 @@
         <Grid Grid.Row="0">
             <uc:ControlBarUC Tag="{Binding Title, ElementName=loginWindow}"></uc:ControlBarUC>
         </Grid>
-        <materialDesign:Card Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="300" Height="200">
+        <materialDesign:Card Background="#A0E3F2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="300" Height="200">
             <Grid>
                 <Grid.Resources>
                     <Style TargetType="Grid">
@@ -98,7 +98,7 @@
                             IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                             Style="{StaticResource MaterialDesignRaisedSecondaryButton}"
                             ToolTip="Resource name: MaterialDesignRaisedButton"
-                            Background="DeepSkyBlue"
+                            Background="#0487D9"
                             />
                     <Button Grid.Column="1"
                             Command="{Binding CloseCommand}"
@@ -107,7 +107,7 @@
                             IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             ToolTip="Resource name: MaterialDesignRaisedButton"
-                            Background="OrangeRed"
+                            Background="#BF2604"
                             />
                 </Grid>
             </Grid>

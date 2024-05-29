@@ -17,7 +17,7 @@
     </i:Interaction.Triggers>
 
     <Grid>
-        <materialDesign:ColorZone Mode="SecondaryDark" materialDesign:ElevationAssist.Elevation="Dp2" CornerRadius="2">
+        <materialDesign:ColorZone Background="#06A9AE" Mode="SecondaryDark" materialDesign:ElevationAssist.Elevation="Dp2" CornerRadius="2">
             <DockPanel>
                 
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">

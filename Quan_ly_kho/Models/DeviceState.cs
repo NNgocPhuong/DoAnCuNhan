@@ -20,15 +20,17 @@ using Quan_ly_kho.Models;
 
 namespace Quan_ly_kho.Models
 {
+    using Quan_ly_kho.ViewModels;
     using System;
     using System.Collections.Generic;
     
-    public partial class DeviceState 
+    public partial class DeviceState : BaseViewModel
     {
         //public Nullable<System.DateTime> Timestamp { get; set; }
         public int Id { get; set; }
         public int DeviceId { get; set; }
-        public string State { get; set; }
+        private string _state;
+        public string State { get => _state; set { _state = value; OnPropertyChanged(); } }
         public Nullable<System.DateTime> Timestamp { get; set; }
 
         public virtual Device Device { get; set; }

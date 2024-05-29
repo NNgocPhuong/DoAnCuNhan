@@ -77,6 +77,8 @@ namespace Quan_ly_kho.Models
 
         private string control_type;
         public string ControlType { get => control_type; set { control_type = value; OnPropertyChanged(); } }
+
+        private string _deviceStateName;
         public string DeviceStateName
         {
             get
@@ -91,6 +93,16 @@ namespace Quan_ly_kho.Models
                     return deviceStateList[deviceStateList.Count - 1].State;
                 }
                 return null;
+            }
+            set
+            {
+                _deviceStateName = value;
+                DeviceState.Add(new DeviceState()
+                {
+                    State = _deviceStateName,
+                    DeviceId = Id
+                });
+                OnPropertyChanged();
             }
         }
 

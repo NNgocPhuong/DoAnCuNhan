@@ -73,30 +73,7 @@ namespace Quan_ly_kho.ViewModels
         {
             SelectedDevices = new ObservableCollection<Device>();
             SelectedRoom = selected_Room;
-            //string firstTopic = (SelectedRoom.Floor.Building.BuildingName.ToLower() + SelectedRoom.RoomNumber).ToMD5();
-            //SelectedRoom.Id_esp32 = "esp32/";
-            ////Broker.Connect();
-            ////string temp = " ";
-            //bool isSend = false;
-            //if (SelectedRoom.Id_esp32 == "esp32/")
-            //{
-            //    Broker.Listen(firstTopic, (doc) =>
-            //    {
-            //        if (!isSend)
-            //        {
-            //            SelectedRoom.Id_esp32 += doc.ObjectId;
-            //            Broker.Unsubscribe(firstTopic);
-            //            Document doc1 = new Document()
-            //            {
-            //                Response = "received",
-            //                //Type = "software"
-            //            };
-
-            //            Broker.Send(firstTopic, doc1);
-            //            isSend = true;
-            //        }
-            //    });
-            //}
+            
             // Khởi tạo Timer để kiểm tra keep-alive mỗi 60 giây
 
             Task.Delay(60000).ContinueWith(_ =>
@@ -391,6 +368,7 @@ namespace Quan_ly_kho.ViewModels
                         else
                         {
                             device.DeviceState.Add(new DeviceState { DeviceId = device.Id, State = "Lỗi" });
+                            DataProvider.Ins.DB.SaveChanges();
                         }
                     }
 
@@ -399,7 +377,7 @@ namespace Quan_ly_kho.ViewModels
                     // Hiển thị thông báo lỗi
                     if (!_errorMessageShown)
                     {
-                        MessageBox.Show("Các thiết bị lỗi", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Vi xử lý bị lỗi", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                         _errorMessageShown = true;
                         foreach (var device in SelectedDevices)
                         {
@@ -409,6 +387,7 @@ namespace Quan_ly_kho.ViewModels
                                 State = "Lỗi"
                             };
                             device.DeviceState.Add(itemState);
+                            DataProvider.Ins.DB.SaveChanges();
                             OnPropertyChanged();
                         }
                         // Dừng và xoá timer
@@ -448,24 +427,44 @@ namespace Quan_ly_kho.ViewModels
                 {
                     foreach (var device in SelectedDevices)
                     {
-                        DeviceState itemState = new DeviceState
+                        var deviceState = device.DeviceState.FirstOrDefault();
+                        if (deviceState != null)
                         {
-                            DeviceId = device.Id,
-                            State = command == "on" ? "Bật" : "Tắt"
-                        };
-                        device.DeviceState.Add(itemState);
+                            deviceState.State = command == "on" ? "Bật" : "Tắt";
+                        }
+                        else
+                        {
+                            device.DeviceState.Add(new DeviceState
+                            {
+                                DeviceId = device.Id,
+                                State = command == "on" ? "Bật" : "Tắt"
+                            });
+                            DataProvider.Ins.DB.SaveChanges();
+                        }
+                        OnPropertyChanged();
+                        
                     }
                 }
                 else
                 {
                     foreach (var device in SelectedDevices)
                     {
-                        DeviceState itemState = new DeviceState
+                        var deviceState = device.DeviceState.FirstOrDefault();
+                        if (deviceState != null)
                         {
-                            DeviceId = device.Id,
-                            State = "Lỗi"
-                        };
-                        device.DeviceState.Add(itemState);
+                            deviceState.State = "Lỗi";
+                        }
+                        else
+                        {
+                            device.DeviceState.Add(new DeviceState
+                            {
+                                DeviceId = device.Id,
+                                State = "Lỗi"
+                            });
+                            DataProvider.Ins.DB.SaveChanges();
+                        }
+                        OnPropertyChanged();
+                        
                     }
                 }
             }
@@ -473,12 +472,21 @@ namespace Quan_ly_kho.ViewModels
             {
                 foreach (var device in SelectedDevices)
                 {
-                    DeviceState itemState = new DeviceState
+                    var deviceState = device.DeviceState.FirstOrDefault();
+                    if (deviceState != null)
                     {
-                        DeviceId = device.Id,
-                        State = "Lỗi"
-                    };
-                    device.DeviceState.Add(itemState);
+                        deviceState.State = "Lỗi";
+                    }
+                    else
+                    {
+                        device.DeviceState.Add(new DeviceState
+                        {
+                            DeviceId = device.Id,
+                            State = "Lỗi"
+                        });
+                        DataProvider.Ins.DB.SaveChanges();
+                    }
+                    OnPropertyChanged();
                 }
             }
             finally

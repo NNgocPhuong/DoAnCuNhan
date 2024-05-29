@@ -155,6 +155,7 @@
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\ManageViewModel.cs" />
     <Compile Include="ViewModels\ModifyViewModel.cs" />
+    <Compile Include="ViewModels\ScheduledTaskService.cs" />
     <Compile Include="ViewModels\ScheduleViewModel.cs" />
     <Compile Include="VstData\BsonDataMap.cs" />
     <Compile Include="VstData\Collection.cs" />

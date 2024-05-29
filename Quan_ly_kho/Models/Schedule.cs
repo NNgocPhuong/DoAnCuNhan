@@ -18,10 +18,11 @@ using Quan_ly_kho.Models;
 
 namespace Quan_ly_kho.Models
 {
+    using Quan_ly_kho.ViewModels;
     using System;
     using System.Collections.Generic;
     
-    public partial class Schedule 
+    public partial class Schedule : BaseViewModel
     {
         //public System.DateTime StartTime { get; set; }
         //public System.DateTime EndTime { get; set; }
@@ -37,8 +38,14 @@ namespace Quan_ly_kho.Models
     }
     public partial class Schedule
     {
+        private string _scheduleDescription;
         public string ScheduleDescription
         {
+            set 
+            { 
+                _scheduleDescription = value;
+                OnPropertyChanged();
+            }
             get
             {
                 return $"{StartTime:dd/MM/yyyy HH:mm} - {EndTime:dd/MM/yyyy HH:mm}";

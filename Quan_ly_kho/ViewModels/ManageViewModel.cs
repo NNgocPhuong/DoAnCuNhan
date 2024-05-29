@@ -84,6 +84,11 @@ namespace Quan_ly_kho.ViewModels
                 (p) => 
                 {
                     var selectedDevices = Devices.Where(d => d.IsSelected).ToList();
+                    //var modifyViewModel = new ModifyViewModel(SelectedRoom)
+                    //{
+                    //    SelectedDevices = new ObservableCollection<Device>(selectedDevices)
+                    //};
+                    //var scheduledTaskService = new ScheduledTaskService(SelectedRoom);
                     var scheduleViewModel = new ScheduleViewModel(SelectedRoom)
                     {
                         SelectedDevices = new ObservableCollection<Device>(selectedDevices)

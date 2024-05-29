@@ -71,21 +71,30 @@ namespace Quan_ly_kho.ViewModels
         {
             SelectedDevices = new ObservableCollection<Device>();
             SelectedRoom = selected_Room;
-            string firstTopic = (SelectedRoom.Floor.Building.BuildingName.ToLower() + SelectedRoom.RoomNumber).ToMD5();
-            SelectedRoom.Id_esp32 = "esp32/";
-            Broker.Connect();
-            Broker.Listen(firstTopic, (doc) =>
-            {
-                SelectedRoom.Id_esp32 += doc.ObjectId;
-            });
-            Broker.Unsubscribe(firstTopic);
-            Document doc1 = new Document()
-            {
-                Response = "received"
-            };
-            
-            Broker.Send(firstTopic, doc1);
-           
+            //string firstTopic = (SelectedRoom.Floor.Building.BuildingName.ToLower() + SelectedRoom.RoomNumber).ToMD5();
+            //SelectedRoom.Id_esp32 = "esp32/";
+            ////Broker.Connect();
+            ////string temp = " ";
+            //bool isSend = false;
+            //if (SelectedRoom.Id_esp32 == "esp32/")
+            //{
+            //    Broker.Listen(firstTopic, (doc) =>
+            //    {
+            //        if (!isSend)
+            //        {
+            //            SelectedRoom.Id_esp32 += doc.ObjectId;
+            //            Broker.Unsubscribe(firstTopic);
+            //            Document doc1 = new Document()
+            //            {
+            //                Response = "received",
+            //                //Type = "software"
+            //            };
+
+            //            Broker.Send(firstTopic, doc1);
+            //            isSend = true;
+            //        }
+            //    });
+            //}
             #region ADD EDIT DELETE COMMAND
             AddCommand = new RelayCommand<object>(
                 (p) =>
@@ -229,22 +238,28 @@ namespace Quan_ly_kho.ViewModels
                 async (p) =>
                 {
                     var controlMessage = new JObject
-                    {
-                        { "Code", "Control" }
-                    };
+{
+                    { "Type", "control" }
+};
 
+                    // Tạo đối tượng Devices
+                    var devicesObject = new JObject();
+
+                    // Tạo các mảng cho từng loại thiết bị
                     var doorsArray = new JArray();
                     var lightsArray = new JArray();
                     var fansArray = new JArray();
                     var airConditioningArray = new JArray();
 
+                    // Thêm các thiết bị vào các mảng tương ứng
                     foreach (var device in SelectedDevices)
                     {
                         var deviceDetails = new JObject
                         {
-                            { "id_esp", device.DeviceName },  
-                            { "power", "on" }
+                            { "id_esp", device.DeviceName },
+                            { "power", "on" } // hoặc giá trị power mà bạn muốn
                         };
+
                         if (device.DeviceType.StartsWith("Cửa"))
                         {
                             doorsArray.Add(deviceDetails);
@@ -263,13 +278,19 @@ namespace Quan_ly_kho.ViewModels
                         }
                     }
 
-                    controlMessage.Add("Doors", doorsArray);
-                    controlMessage.Add("Lights", lightsArray);
-                    controlMessage.Add("Fans", fansArray);
-                    controlMessage.Add("Air Conditionings", airConditioningArray);
+                    // Thêm các mảng vào đối tượng Devices
+                    devicesObject.Add("Doors", doorsArray);
+                    devicesObject.Add("Lights", lightsArray);
+                    devicesObject.Add("Fans", fansArray);
+                    devicesObject.Add("AirConditionings", airConditioningArray); // Sửa lại thành "AirConditionings"
 
+                    // Thêm đối tượng Devices vào thông điệp điều khiển
+                    controlMessage.Add("Devices", devicesObject);
+
+                    // Gửi thông điệp
                     Broker.Send(SelectedRoom.Id_esp32, controlMessage.ToString());
 
+                    // Chờ phản hồi và cập nhật trạng thái
                     await ListenForResponseAndUpdateState("on");
                 });
             OffCommand = new RelayCommand<object>(
@@ -277,22 +298,28 @@ namespace Quan_ly_kho.ViewModels
                 async (p) =>
                 {
                     var controlMessage = new JObject
-                    {
-                        { "Code", "Control" }
-                    };
+{
+                    { "Type", "control" }
+};
 
+                    // Tạo đối tượng Devices
+                    var devicesObject = new JObject();
+
+                    // Tạo các mảng cho từng loại thiết bị
                     var doorsArray = new JArray();
                     var lightsArray = new JArray();
                     var fansArray = new JArray();
                     var airConditioningArray = new JArray();
 
+                    // Thêm các thiết bị vào các mảng tương ứng
                     foreach (var device in SelectedDevices)
                     {
                         var deviceDetails = new JObject
                         {
                             { "id_esp", device.DeviceName },
-                            { "power", "off" }
+                            { "power", "off" } 
                         };
+
                         if (device.DeviceType.StartsWith("Cửa"))
                         {
                             doorsArray.Add(deviceDetails);
@@ -311,13 +338,19 @@ namespace Quan_ly_kho.ViewModels
                         }
                     }
 
-                    controlMessage.Add("Doors", doorsArray);
-                    controlMessage.Add("Lights", lightsArray);
-                    controlMessage.Add("Fans", fansArray);
-                    controlMessage.Add("Air Conditionings", airConditioningArray);
+                    // Thêm các mảng vào đối tượng Devices
+                    devicesObject.Add("Doors", doorsArray);
+                    devicesObject.Add("Lights", lightsArray);
+                    devicesObject.Add("Fans", fansArray);
+                    devicesObject.Add("AirConditionings", airConditioningArray); // Sửa lại thành "AirConditionings"
 
+                    // Thêm đối tượng Devices vào thông điệp điều khiển
+                    controlMessage.Add("Devices", devicesObject);
+
+                    // Gửi thông điệp
                     Broker.Send(SelectedRoom.Id_esp32, controlMessage.ToString());
 
+                    // Chờ phản hồi và cập nhật trạng thái
                     await ListenForResponseAndUpdateState("off");
                 });
         }
@@ -325,7 +358,7 @@ namespace Quan_ly_kho.ViewModels
         private async Task ListenForResponseAndUpdateState(string command)
         {
             var cts = new CancellationTokenSource();
-            cts.CancelAfter(TimeSpan.FromSeconds(5));
+            cts.CancelAfter(TimeSpan.FromMinutes(1.5));
 
             var tcs = new TaskCompletionSource<string>();
 
@@ -356,6 +389,7 @@ namespace Quan_ly_kho.ViewModels
                                 State = "Bật"
                             };
                             device.DeviceState.Add(itemState);
+                            OnPropertyChanged(nameof(SelectedDevices));
                         }
                         else
                         {
@@ -365,8 +399,9 @@ namespace Quan_ly_kho.ViewModels
                                 State = "Tắt"
                             };
                             device.DeviceState.Add(itemState);
-                        }    
-                        
+                            OnPropertyChanged(nameof(SelectedDevices));
+                        }
+
                     }
                 }
                 else
@@ -379,6 +414,7 @@ namespace Quan_ly_kho.ViewModels
                             State = "Lỗi"
                         };
                         device.DeviceState.Add(itemState);
+                        OnPropertyChanged(nameof(SelectedDevices));
                     }
                 }
             }
@@ -392,6 +428,7 @@ namespace Quan_ly_kho.ViewModels
                         State = "Lỗi"
                     };
                     device.DeviceState.Add(itemState);
+                    OnPropertyChanged(nameof(SelectedDevices));
                 }
             }
             finally

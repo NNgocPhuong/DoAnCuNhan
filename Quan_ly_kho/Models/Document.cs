@@ -12,5 +12,7 @@ namespace System
         public string Response {  get => GetString(nameof(Response)); set => Push(nameof(Response), value);}
         public string DeviceName {  get => GetString(nameof(DeviceName)); set => Push(nameof(DeviceName), value);}
         public string Power { get => GetString(nameof(Power)); set => Push(nameof(Power), value); }
+
+        public string Type {  get => GetString(nameof(Type)); set => Push(nameof(Type), value);}
     }
 }

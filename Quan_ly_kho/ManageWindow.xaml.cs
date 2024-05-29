@@ -21,9 +21,10 @@ namespace Quan_ly_kho
     /// </summary>
     public partial class ManageWindow : Window
     {
-        public ManageWindow()
+        public ManageWindow(ManageViewModel viewModel)
         {
             InitializeComponent();
+            DataContext = viewModel;
         }
     }
 }

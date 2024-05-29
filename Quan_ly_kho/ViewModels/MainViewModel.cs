@@ -87,6 +87,7 @@ namespace Quan_ly_kho.ViewModels
 
         public MainViewModel()
         {
+            Broker.Connect();
             LoadedWindowCommand = new RelayCommand<Window>((p) => true, async (p) =>
             {
                 IsLoaded = true;
@@ -95,7 +96,6 @@ namespace Quan_ly_kho.ViewModels
                 p.Hide();
                 var loginWindow = new LoginWindow();
                 loginWindow.ShowDialog();
-
                 if (loginWindow.DataContext is LoginViewModel loginVM && loginVM.IsLogin)
                 {
                     p.Show();
@@ -109,12 +109,18 @@ namespace Quan_ly_kho.ViewModels
 
             ManageWindowCommand = new RelayCommand<object>((p) => SelectedRoom != null, (p) =>
             {
-                var manageWindow = new ManageWindow();
-                if (manageWindow.DataContext is ManageViewModel manageViewModel)
+                //var devices = Devices.Where(d => d.IsSelected).ToList();
+                var devices = SelectedRoom.Device.Where(d => d.RoomId == SelectedRoom.Id).ToList();
+                var manageViewModel = new ManageViewModel(SelectedRoom)
                 {
-                    manageViewModel.Devices = Devices;
-                    manageViewModel.SelectedRoom = SelectedRoom;
-                }
+                    Devices = new ObservableCollection<Device>(devices)
+                };
+                var manageWindow = new ManageWindow(manageViewModel);
+                //if (manageWindow.DataContext is ManageViewModel manageViewModel)
+                //{
+                //    manageViewModel.Devices = Devices;
+                //    manageViewModel.SelectedRoom = SelectedRoom;
+                //}
                 manageWindow.ShowDialog();
             });
         }

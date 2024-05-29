@@ -58,10 +58,33 @@ namespace Quan_ly_kho.ViewModels
             }
         }
 
-        public ManageViewModel()
+        public ManageViewModel(Room selected_Room)
         {
             Devices = new ObservableCollection<Device>();
-            SelectedRoom = new Room();
+            SelectedRoom = selected_Room;
+          
+            string firstTopic = (SelectedRoom.Floor.Building.BuildingName.ToLower() + SelectedRoom.RoomNumber).ToMD5();
+            SelectedRoom.Id_esp32 = "esp32/";
+            //Broker.Connect();
+            //string temp = " ";
+            bool isSend = false;
+            Broker.Listen(firstTopic, (doc) =>
+            {
+                if (!isSend)
+                {
+                    SelectedRoom.Id_esp32 += doc.ObjectId;
+                    Broker.Unsubscribe(firstTopic);
+                    Document doc1 = new Document()
+                    {
+                        Response = "received",
+                        //Type = "software"
+                    };
+
+                    Broker.Send(firstTopic, doc1);
+                    isSend = true;
+                }
+            });
+
             ModifyWindowCommand = new RelayCommand<object>((p) => { return true; },
                 (p) =>
                 {

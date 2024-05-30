@@ -132,14 +132,11 @@ namespace Quan_ly_kho.ViewModels
         }
         private void UpdateRoomIdEsp32(int roomId, string idEsp32)
         {
-            using (var context = DataProvider.Ins.DB)
+            var room = DataProvider.Ins.DB.Room.Find(roomId);
+            if (room != null)
             {
-                var room = context.Room.Find(roomId);
-                if (room != null)
-                {
-                    room.Id_esp32 = idEsp32;
-                    context.SaveChanges();
-                }
+                room.Id_esp32 = idEsp32;
+                DataProvider.Ins.DB.SaveChanges();
             }
         }
         private void ModifyViewModel_DeviceAdded(object sender, Device e)

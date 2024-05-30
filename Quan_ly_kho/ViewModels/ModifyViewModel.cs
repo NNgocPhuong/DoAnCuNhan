@@ -248,19 +248,19 @@ namespace Quan_ly_kho.ViewModels
                             { "power", "on" } 
                         };
 
-                        if (device.DeviceType.StartsWith("Cửa"))
+                        if (device.DeviceType.StartsWith("Cửa") || device.DeviceType.StartsWith("cua"))
                         {
                             doorsArray.Add(deviceDetails);
                         }
-                        else if (device.DeviceType.StartsWith("Đèn"))
+                        else if (device.DeviceType.StartsWith("Đèn") || device.DeviceType.StartsWith("den"))
                         {
                             lightsArray.Add(deviceDetails);
                         }
-                        else if (device.DeviceType.StartsWith("Quạt"))
+                        else if (device.DeviceType.StartsWith("Quạt") || device.DeviceType.StartsWith("quat"))
                         {
                             fansArray.Add(deviceDetails);
                         }
-                        else if (device.DeviceType.StartsWith("Điều hoà"))
+                        else if (device.DeviceType.StartsWith("Điều hoà") || device.DeviceType.StartsWith("dieu hoa") || device.DeviceType.StartsWith("điều hoà"))
                         {
                             airConditioningArray.Add(deviceDetails);
                         }
@@ -308,19 +308,19 @@ namespace Quan_ly_kho.ViewModels
                             { "power", "off" } 
                         };
 
-                        if (device.DeviceType.StartsWith("Cửa"))
+                        if (device.DeviceType.StartsWith("Cửa") || device.DeviceType.StartsWith("cua"))
                         {
                             doorsArray.Add(deviceDetails);
                         }
-                        else if (device.DeviceType.StartsWith("Đèn"))
+                        else if (device.DeviceType.StartsWith("Đèn") || device.DeviceType.StartsWith("den"))
                         {
                             lightsArray.Add(deviceDetails);
                         }
-                        else if (device.DeviceType.StartsWith("Quạt"))
+                        else if (device.DeviceType.StartsWith("Quạt") || device.DeviceType.StartsWith("quat"))
                         {
                             fansArray.Add(deviceDetails);
                         }
-                        else if (device.DeviceType.StartsWith("Điều hoà"))
+                        else if (device.DeviceType.StartsWith("Điều hoà") || device.DeviceType.StartsWith("dieu hoa") || device.DeviceType.StartsWith("điều hoà"))
                         {
                             airConditioningArray.Add(deviceDetails);
                         }

@@ -64,30 +64,37 @@ namespace Quan_ly_kho.ViewModels
             SelectedRoom = selected_Room;
           
             string firstTopic = (SelectedRoom.Floor.Building.BuildingName.ToLower() + SelectedRoom.RoomNumber).ToMD5();
-            SelectedRoom.Id_esp32 = "esp32/";
-            bool isSend = false;
-            Broker.Listen(firstTopic, (doc) =>
+            
+            if (SelectedRoom.Id_esp32 != null && SelectedRoom.Id_esp32 != "esp32/")
             {
-                if (!isSend)
+                Document doc1 = new Document()
                 {
-                    SelectedRoom.Id_esp32 += doc.ObjectId;
-                    Broker.Unsubscribe(firstTopic);
-                    Document doc1 = new Document()
-                    {
-                        Response = "received",
-                    };
+                    Response = "received",
+                };
 
-                    Broker.Send(firstTopic, doc1);
-                    isSend = true;
-
-                    if (SelectedRoom.Id_esp32 != "esp32/")
+                Broker.Send(firstTopic, doc1);
+            }
+            else
+            {
+                SelectedRoom.Id_esp32 = "esp32/";
+                bool isSend = false;
+                Broker.Listen(firstTopic, (doc) =>
+                {
+                    if (!isSend)
                     {
-                        // Lưu Id_esp32 vào cơ sở dữ liệu
-                        UpdateRoomIdEsp32(SelectedRoom.Id, SelectedRoom.Id_esp32);
+                        SelectedRoom.Id_esp32 += doc.ObjectId;
+                        Broker.Unsubscribe(firstTopic);
+                        Document doc1 = new Document()
+                        {
+                            Response = "received",
+                        };
+
+                        Broker.Send(firstTopic, doc1);
+                        isSend = true;
                     }
-                }
-            });
-
+                });
+                UpdateRoomIdEsp32(SelectedRoom.Id, SelectedRoom.Id_esp32);
+            }
             ModifyWindowCommand = new RelayCommand<object>((p) => { return true; },
                 (p) =>
                 {

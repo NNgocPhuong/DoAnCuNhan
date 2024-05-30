@@ -109,7 +109,6 @@ namespace Quan_ly_kho.ViewModels
 
             ManageWindowCommand = new RelayCommand<object>((p) => SelectedRoom != null, (p) =>
             {
-                //var devices = Devices.Where(d => d.IsSelected).ToList();
                 var devices = SelectedRoom.Device.Where(d => d.RoomId == SelectedRoom.Id).ToList();
                 var manageViewModel = new ManageViewModel(SelectedRoom)
                 {

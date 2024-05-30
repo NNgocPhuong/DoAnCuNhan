@@ -65,8 +65,6 @@ namespace Quan_ly_kho.ViewModels
           
             string firstTopic = (SelectedRoom.Floor.Building.BuildingName.ToLower() + SelectedRoom.RoomNumber).ToMD5();
             SelectedRoom.Id_esp32 = "esp32/";
-            //Broker.Connect();
-            //string temp = " ";
             bool isSend = false;
             Broker.Listen(firstTopic, (doc) =>
             {
@@ -77,11 +75,16 @@ namespace Quan_ly_kho.ViewModels
                     Document doc1 = new Document()
                     {
                         Response = "received",
-                        //Type = "software"
                     };
 
                     Broker.Send(firstTopic, doc1);
                     isSend = true;
+
+                    if (SelectedRoom.Id_esp32 != "esp32/")
+                    {
+                        // Lưu Id_esp32 vào cơ sở dữ liệu
+                        UpdateRoomIdEsp32(SelectedRoom.Id, SelectedRoom.Id_esp32);
+                    }
                 }
             });
 
@@ -119,6 +122,18 @@ namespace Quan_ly_kho.ViewModels
                     ScheduleWindow w = new ScheduleWindow(scheduleViewModel);
                     w.ShowDialog();
                 });
+        }
+        private void UpdateRoomIdEsp32(int roomId, string idEsp32)
+        {
+            using (var context = DataProvider.Ins.DB)
+            {
+                var room = context.Room.Find(roomId);
+                if (room != null)
+                {
+                    room.Id_esp32 = idEsp32;
+                    context.SaveChanges();
+                }
+            }
         }
         private void ModifyViewModel_DeviceAdded(object sender, Device e)
         {

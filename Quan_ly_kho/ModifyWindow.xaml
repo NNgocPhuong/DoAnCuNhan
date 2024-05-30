@@ -39,11 +39,16 @@
 
             <!--các element binding từ selected item-->
             <materialDesign:Card Grid.Row="0" Margin="5">
-                <WrapPanel Margin="0 0 0 10">
-                    <TextBox Text="{Binding DeviceType, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="5 5 15 5" materialDesign:HintAssist.Hint="Loại thiết bị" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                    <TextBox Text="{Binding DeviceName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="5 5 15 5" materialDesign:HintAssist.Hint="Tên thiết bị" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                    <TextBox IsReadOnly="True" Text="{Binding DeviceState, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="5 5 15 5" materialDesign:HintAssist.Hint="Trạng thái" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                </WrapPanel>
+                <Grid Margin="0 0 0 10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Text="{Binding DeviceType, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="5 5 15 5" materialDesign:HintAssist.Hint="Loại thiết bị" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="1" Text="{Binding DeviceName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="5 5 15 5" materialDesign:HintAssist.Hint="Tên thiết bị" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="2" IsReadOnly="True" Text="{Binding DeviceState, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="5 5 15 5" materialDesign:HintAssist.Hint="Trạng thái" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                </Grid>
             </materialDesign:Card>
 
             <Grid Grid.Row="1">

@@ -30,9 +30,9 @@ namespace Quan_ly_kho.Models
         public virtual DbSet<DeviceState> DeviceState { get; set; }
         public virtual DbSet<Floor> Floor { get; set; }
         public virtual DbSet<Role> Role { get; set; }
-        public virtual DbSet<Room> Room { get; set; }
         public virtual DbSet<Schedule> Schedule { get; set; }
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<Room> Room { get; set; }
     }
 }

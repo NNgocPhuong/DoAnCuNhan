@@ -46,15 +46,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Room">
-      <EntityTypeMapping TypeName="QuanLyPhongHocModel.Room">
-        <MappingFragment StoreEntitySet="Room">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="FloorId" ColumnName="FloorId" />
-          <ScalarProperty Name="RoomNumber" ColumnName="RoomNumber" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Schedule">
       <EntityTypeMapping TypeName="QuanLyPhongHocModel.Schedule">
         <MappingFragment StoreEntitySet="Schedule">
@@ -84,6 +75,16 @@
           <ScalarProperty Name="Username" ColumnName="Username" />
           <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
           <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Room">
+      <EntityTypeMapping TypeName="QuanLyPhongHocModel.Room">
+        <MappingFragment StoreEntitySet="Room">
+          <ScalarProperty Name="Id_esp32" ColumnName="Id_esp32" />
+          <ScalarProperty Name="RoomNumber" ColumnName="RoomNumber" />
+          <ScalarProperty Name="FloorId" ColumnName="FloorId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

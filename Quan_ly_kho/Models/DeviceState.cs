@@ -8,15 +8,7 @@
 //------------------------------------------------------------------------------
 using Quan_ly_kho.Models;
 
-//namespace System
-//{
-//    partial class Document
-//    {
-//        public int DeviceId { get => GetValue<int>(nameof(DeviceId)); set => Push(nameof(DeviceId), value); }
-//        public string State { get => GetString(nameof(State)); set => Push(nameof(State), value); }
-//        public virtual Device Device { get => GetObject<Device>(nameof(Device)); set => Push(nameof(Device), value); }
-//    }
-//}
+
 
 namespace Quan_ly_kho.Models
 {
@@ -26,7 +18,6 @@ namespace Quan_ly_kho.Models
     
     public partial class DeviceState : BaseViewModel
     {
-        //public Nullable<System.DateTime> Timestamp { get; set; }
         public int Id { get; set; }
         public int DeviceId { get; set; }
         private string _state;

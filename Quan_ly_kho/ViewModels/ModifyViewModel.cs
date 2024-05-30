@@ -245,7 +245,7 @@ namespace Quan_ly_kho.ViewModels
                         var deviceDetails = new JObject
                         {
                             { "id_esp", device.DeviceName },
-                            { "power", "on" } // hoặc giá trị power mà bạn muốn
+                            { "power", "on" } 
                         };
 
                         if (device.DeviceType.StartsWith("Cửa"))
@@ -270,7 +270,7 @@ namespace Quan_ly_kho.ViewModels
                     devicesObject.Add("Doors", doorsArray);
                     devicesObject.Add("Lights", lightsArray);
                     devicesObject.Add("Fans", fansArray);
-                    devicesObject.Add("AirConditionings", airConditioningArray); // Sửa lại thành "AirConditionings"
+                    devicesObject.Add("AirConditionings", airConditioningArray); 
 
                     // Thêm đối tượng Devices vào thông điệp điều khiển
                     controlMessage.Add("Devices", devicesObject);
@@ -330,7 +330,7 @@ namespace Quan_ly_kho.ViewModels
                     devicesObject.Add("Doors", doorsArray);
                     devicesObject.Add("Lights", lightsArray);
                     devicesObject.Add("Fans", fansArray);
-                    devicesObject.Add("AirConditionings", airConditioningArray); // Sửa lại thành "AirConditionings"
+                    devicesObject.Add("AirConditionings", airConditioningArray); 
 
                     // Thêm đối tượng Devices vào thông điệp điều khiển
                     controlMessage.Add("Devices", devicesObject);

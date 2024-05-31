@@ -360,7 +360,7 @@ namespace Quan_ly_kho.ViewModels
                 {
                     foreach (var device in SelectedDevices)
                     {
-                        var deviceState = device.DeviceState.FirstOrDefault();
+                        var deviceState = device.DeviceState.Last();
                         if (deviceState != null)
                         {
                             deviceState.State = "Lỗi";
@@ -368,6 +368,8 @@ namespace Quan_ly_kho.ViewModels
                         else
                         {
                             device.DeviceState.Add(new DeviceState { DeviceId = device.Id, State = "Lỗi" });
+                            //var firstState = device.DeviceState.First();
+                            //device.DeviceState.Remove(firstState);
                             DataProvider.Ins.DB.SaveChanges();
                         }
                     }
@@ -379,17 +381,7 @@ namespace Quan_ly_kho.ViewModels
                     {
                         MessageBox.Show("Vi xử lý bị lỗi", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                         _errorMessageShown = true;
-                        foreach (var device in SelectedDevices)
-                        {
-                            DeviceState itemState = new DeviceState
-                            {
-                                DeviceId = device.Id,
-                                State = "Lỗi"
-                            };
-                            device.DeviceState.Add(itemState);
-                            DataProvider.Ins.DB.SaveChanges();
-                            OnPropertyChanged();
-                        }
+                        
                         // Dừng và xoá timer
                         _keepAliveTimer?.Change(Timeout.Infinite, Timeout.Infinite);
                         _keepAliveTimer?.Dispose();
@@ -439,6 +431,8 @@ namespace Quan_ly_kho.ViewModels
                                 DeviceId = device.Id,
                                 State = command == "on" ? "Bật" : "Tắt"
                             });
+                            //var firstState = device.DeviceState.First();
+                            //device.DeviceState.Remove(firstState);
                             DataProvider.Ins.DB.SaveChanges();
                         }
                         OnPropertyChanged();
@@ -461,6 +455,8 @@ namespace Quan_ly_kho.ViewModels
                                 DeviceId = device.Id,
                                 State = "Lỗi"
                             });
+                            //var firstState = device.DeviceState.First();
+                            //device.DeviceState.Remove(firstState);
                             DataProvider.Ins.DB.SaveChanges();
                         }
                         OnPropertyChanged();
@@ -484,6 +480,8 @@ namespace Quan_ly_kho.ViewModels
                             DeviceId = device.Id,
                             State = "Lỗi"
                         });
+                        //var firstState = device.DeviceState.First();
+                        //device.DeviceState.Remove(firstState);
                         DataProvider.Ins.DB.SaveChanges();
                     }
                     OnPropertyChanged();

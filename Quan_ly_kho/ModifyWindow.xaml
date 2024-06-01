@@ -92,7 +92,6 @@
                         <DataGridTextColumn IsReadOnly="True" Header="Id" Binding="{Binding Id}" Width="*"/>
                         <DataGridTextColumn IsReadOnly="True" Header="Loại thiết bị" Binding="{Binding DeviceType}" Width="*"/>
                         <DataGridTextColumn IsReadOnly="True" Header="Tên thiết bị" Binding="{Binding DeviceName}" Width="*"/>
-                        <DataGridTextColumn IsReadOnly="True" Header="Trạng thái" Binding="{Binding DeviceStateName}" Width="*"/>
                         <!-- Thêm các cột khác nếu cần -->
                     </DataGrid.Columns>
                 </DataGrid>

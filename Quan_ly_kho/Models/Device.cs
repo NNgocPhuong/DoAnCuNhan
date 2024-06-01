@@ -94,16 +94,6 @@ namespace Quan_ly_kho.Models
                 }
                 return null;
             }
-            set
-            {
-                _deviceStateName = value;
-                DeviceState.Add(new DeviceState()
-                {
-                    State = _deviceStateName,
-                    DeviceId = Id
-                });
-                OnPropertyChanged();
-            }
         }
 
 

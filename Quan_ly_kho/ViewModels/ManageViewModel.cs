@@ -16,7 +16,8 @@ namespace Quan_ly_kho.ViewModels
     {
         public ICommand ModifyWindowCommand { get; set; }
         private ObservableCollection<Device> _devices;
-        public ICommand ScheduleWindowCommand { get; set; }
+        public ICommand ScheduleRoomCommand { get; set; }
+        public ICommand ScheduleBuildingCommand { get; set; }
         public ObservableCollection<Device> Devices
         {
             get => _devices;
@@ -50,6 +51,16 @@ namespace Quan_ly_kho.ViewModels
                 OnPropertyChanged(nameof(SelectedRoom));
             }
         }
+        private Building _selectedBuilding;
+        public Building SelectedBuilding
+        {
+            get => _selectedBuilding;
+            set
+            {
+                _selectedBuilding = value;
+                OnPropertyChanged();
+            }
+        }
         private void SelectAllDevices(bool isSelected)
         {
             foreach (var item in Devices)
@@ -58,10 +69,12 @@ namespace Quan_ly_kho.ViewModels
             }
         }
 
-        public ManageViewModel(Room selected_Room)
+        public ManageViewModel(Room selected_Room, Building selected_Building)
         {
+            
             Devices = new ObservableCollection<Device>();
             SelectedRoom = selected_Room;
+            SelectedBuilding = selected_Building;
           
             string firstTopic = (SelectedRoom.Floor.Building.BuildingName.ToLower() + SelectedRoom.RoomNumber).ToMD5();
             
@@ -113,20 +126,22 @@ namespace Quan_ly_kho.ViewModels
                     ModifyWindow w = new ModifyWindow(modifyViewModel);
                     w.ShowDialog();
                 });
-            ScheduleWindowCommand = new RelayCommand<object>((p) => { return true; }, 
+            ScheduleRoomCommand = new RelayCommand<object>((p) => { return true; }, 
                 (p) => 
                 {
                     var selectedDevices = Devices.Where(d => d.IsSelected).ToList();
-                    //var modifyViewModel = new ModifyViewModel(SelectedRoom)
-                    //{
-                    //    SelectedDevices = new ObservableCollection<Device>(selectedDevices)
-                    //};
-                    //var scheduledTaskService = new ScheduledTaskService(SelectedRoom);
                     var scheduleViewModel = new ScheduleViewModel(SelectedRoom)
                     {
                         SelectedDevices = new ObservableCollection<Device>(selectedDevices)
                     };
                     ScheduleWindow w = new ScheduleWindow(scheduleViewModel);
+                    w.ShowDialog();
+                });
+            ScheduleBuildingCommand = new RelayCommand<object>((p) => { return true; },
+                (p) =>
+                {
+                    var buildingScheduleViewModel = new BuildingScheduleViewModel(SelectedBuilding);
+                    BuildingScheduleWindow w = new BuildingScheduleWindow(buildingScheduleViewModel);
                     w.ShowDialog();
                 });
         }

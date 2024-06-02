@@ -26,5 +26,14 @@ namespace Quan_ly_kho
             InitializeComponent();
             DataContext = viewModel;
         }
+        private void ScheduleButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button != null && button.ContextMenu != null)
+            {
+                button.ContextMenu.PlacementTarget = button;
+                button.ContextMenu.IsOpen = true;
+            }
+        }
     }
 }

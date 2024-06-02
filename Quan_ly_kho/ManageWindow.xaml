@@ -52,7 +52,14 @@
                 <materialDesign:Card Margin="5" Grid.Column="1">
                     <WrapPanel>
                         <materialDesign:PackIcon Kind="HomeClockOutline" Height="40" Width="60" />
-                        <Button Style="{StaticResource MaterialDesignPaperButton}" Command="{Binding ScheduleWindowCommand}" Content="Lập lịch hoạt động" Margin="5" Width="170"></Button>
+                        <Button Style="{StaticResource MaterialDesignPaperButton}" Content="Lập lịch hoạt động" Margin="5" Width="170" Click="ScheduleButton_Click">
+                            <Button.ContextMenu>
+                                <ContextMenu x:Name="ScheduleContextMenu">
+                                    <MenuItem Header="Thiết bị đã chọn" Command="{Binding ScheduleRoomCommand}" />
+                                    <MenuItem Header="Cả toà nhà" Command="{Binding ScheduleBuildingCommand}" />
+                                </ContextMenu>
+                            </Button.ContextMenu>
+                        </Button>
                     </WrapPanel>
                 </materialDesign:Card>
             </Grid>

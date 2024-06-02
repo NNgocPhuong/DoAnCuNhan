@@ -49,3 +49,5 @@ D:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\obj\Debug\ModifyWindow.g.cs
 D:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\obj\Debug\ModifyWindow.baml
 D:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\obj\Debug\ScheduleWindow.baml
 D:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\obj\Debug\ScheduleWindow.g.cs
+D:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\obj\Debug\BuildingScheduleWindow.g.cs
+D:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\obj\Debug\BuildingScheduleWindow.baml

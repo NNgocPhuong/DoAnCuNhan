@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="QuanLyPhongHocModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="QuanLyPhongHocModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Building">
           <Key>
             <PropertyRef Name="Id" />
@@ -52,6 +52,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="FloorId" Type="int" Nullable="false" />
           <Property Name="RoomNumber" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Id_esp32" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="Schedule">
           <Key>
@@ -189,8 +190,7 @@
             <End Role="User" EntitySet="User" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="QuanLyPhongHocModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -210,9 +210,9 @@
           <Property Name="RoomId" Type="Int32" Nullable="false" />
           <Property Name="DeviceName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="DeviceType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Room" Relationship="Self.FK__Device__RoomId__440B1D61" FromRole="Device" ToRole="Room" />
           <NavigationProperty Name="DeviceState" Relationship="Self.FK__DeviceSta__Devic__47DBAE45" FromRole="Device" ToRole="DeviceState" />
           <NavigationProperty Name="Schedule" Relationship="Self.FK__Schedule__Device__4AB81AF0" FromRole="Device" ToRole="Schedule" />
+          <NavigationProperty Name="Room" Relationship="QuanLyPhongHocModel.FK__Device__RoomId__440B1D61" FromRole="Device" ToRole="Room" />
         </EntityType>
         <EntityType Name="DeviceState">
           <Key>
@@ -232,7 +232,7 @@
           <Property Name="BuildingId" Type="Int32" Nullable="false" />
           <Property Name="FloorNumber" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Building" Relationship="Self.FK__Floor__BuildingI__3E52440B" FromRole="Floor" ToRole="Building" />
-          <NavigationProperty Name="Room" Relationship="Self.FK__Room__FloorId__412EB0B6" FromRole="Floor" ToRole="Room" />
+          <NavigationProperty Name="Room" Relationship="QuanLyPhongHocModel.FK__Room__FloorId__412EB0B6" FromRole="Floor" ToRole="Room" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -241,16 +241,6 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="RoleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="User" Relationship="Self.FK__User__RoleId__398D8EEE" FromRole="Role" ToRole="User" />
-        </EntityType>
-        <EntityType Name="Room">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FloorId" Type="Int32" Nullable="false" />
-          <Property Name="RoomNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Device" Relationship="Self.FK__Device__RoomId__440B1D61" FromRole="Room" ToRole="Device" />
-          <NavigationProperty Name="Floor" Relationship="Self.FK__Room__FloorId__412EB0B6" FromRole="Room" ToRole="Floor" />
         </EntityType>
         <EntityType Name="Schedule">
           <Key>
@@ -295,18 +285,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Device__RoomId__440B1D61">
-          <End Role="Room" Type="Self.Room" Multiplicity="1" />
-          <End Role="Device" Type="Self.Device" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Room">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Device">
-              <PropertyRef Name="RoomId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__DeviceSta__Devic__47DBAE45">
           <End Role="Device" Type="Self.Device" Multiplicity="1" />
           <End Role="DeviceState" Type="Self.DeviceState" Multiplicity="*" />
@@ -331,18 +309,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Room__FloorId__412EB0B6">
-          <End Role="Floor" Type="Self.Floor" Multiplicity="1" />
-          <End Role="Room" Type="Self.Room" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Floor">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Room">
-              <PropertyRef Name="FloorId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__User__RoleId__398D8EEE">
           <End Role="Role" Type="Self.Role" Multiplicity="1" />
           <End Role="User" Type="Self.User" Multiplicity="*" />
@@ -361,17 +327,12 @@
           <EntitySet Name="DeviceState" EntityType="Self.DeviceState" />
           <EntitySet Name="Floor" EntityType="Self.Floor" />
           <EntitySet Name="Role" EntityType="Self.Role" />
-          <EntitySet Name="Room" EntityType="Self.Room" />
           <EntitySet Name="Schedule" EntityType="Self.Schedule" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
           <EntitySet Name="User" EntityType="Self.User" />
           <AssociationSet Name="FK__Floor__BuildingI__3E52440B" Association="Self.FK__Floor__BuildingI__3E52440B">
             <End Role="Building" EntitySet="Building" />
             <End Role="Floor" EntitySet="Floor" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Device__RoomId__440B1D61" Association="Self.FK__Device__RoomId__440B1D61">
-            <End Role="Room" EntitySet="Room" />
-            <End Role="Device" EntitySet="Device" />
           </AssociationSet>
           <AssociationSet Name="FK__DeviceSta__Devic__47DBAE45" Association="Self.FK__DeviceSta__Devic__47DBAE45">
             <End Role="Device" EntitySet="Device" />
@@ -381,15 +342,55 @@
             <End Role="Device" EntitySet="Device" />
             <End Role="Schedule" EntitySet="Schedule" />
           </AssociationSet>
-          <AssociationSet Name="FK__Room__FloorId__412EB0B6" Association="Self.FK__Room__FloorId__412EB0B6">
-            <End Role="Floor" EntitySet="Floor" />
-            <End Role="Room" EntitySet="Room" />
-          </AssociationSet>
           <AssociationSet Name="FK__User__RoleId__398D8EEE" Association="Self.FK__User__RoleId__398D8EEE">
             <End Role="Role" EntitySet="Role" />
             <End Role="User" EntitySet="User" />
           </AssociationSet>
+          <EntitySet Name="Room" EntityType="QuanLyPhongHocModel.Room" />
+          <AssociationSet Name="FK__Device__RoomId__440B1D61" Association="QuanLyPhongHocModel.FK__Device__RoomId__440B1D61">
+            <End Role="Room" EntitySet="Room" />
+            <End Role="Device" EntitySet="Device" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Room__FloorId__412EB0B6" Association="QuanLyPhongHocModel.FK__Room__FloorId__412EB0B6">
+            <End Role="Floor" EntitySet="Floor" />
+            <End Role="Room" EntitySet="Room" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Room">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FloorId" Type="Int32" Nullable="false" />
+          <Property Name="RoomNumber" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Id_esp32" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Device" Relationship="QuanLyPhongHocModel.FK__Device__RoomId__440B1D61" FromRole="Room" ToRole="Device" />
+          <NavigationProperty Name="Floor" Relationship="QuanLyPhongHocModel.FK__Room__FloorId__412EB0B6" FromRole="Room" ToRole="Floor" />
+        </EntityType>
+        <Association Name="FK__Device__RoomId__440B1D61">
+          <End Type="QuanLyPhongHocModel.Room" Role="Room" Multiplicity="1" />
+          <End Type="QuanLyPhongHocModel.Device" Role="Device" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Room">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Device">
+              <PropertyRef Name="RoomId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Room__FloorId__412EB0B6">
+          <End Type="QuanLyPhongHocModel.Floor" Role="Floor" Multiplicity="1" />
+          <End Type="QuanLyPhongHocModel.Room" Role="Room" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Floor">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Room">
+              <PropertyRef Name="FloorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -441,15 +442,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Room">
-            <EntityTypeMapping TypeName="QuanLyPhongHocModel.Room">
-              <MappingFragment StoreEntitySet="Room">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="FloorId" ColumnName="FloorId" />
-                <ScalarProperty Name="RoomNumber" ColumnName="RoomNumber" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Schedule">
             <EntityTypeMapping TypeName="QuanLyPhongHocModel.Schedule">
               <MappingFragment StoreEntitySet="Schedule">
@@ -479,6 +471,16 @@
                 <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
                 <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Room">
+            <EntityTypeMapping TypeName="QuanLyPhongHocModel.Room">
+              <MappingFragment StoreEntitySet="Room">
+                <ScalarProperty Name="Id_esp32" ColumnName="Id_esp32" />
+                <ScalarProperty Name="RoomNumber" ColumnName="RoomNumber" />
+                <ScalarProperty Name="FloorId" ColumnName="FloorId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

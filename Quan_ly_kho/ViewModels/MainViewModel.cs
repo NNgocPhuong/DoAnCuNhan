@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using Quan_ly_kho.Models;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using Quan_ly_kho.Views;
 
 namespace Quan_ly_kho.ViewModels
 {
@@ -109,18 +110,13 @@ namespace Quan_ly_kho.ViewModels
 
             ManageWindowCommand = new RelayCommand<object>((p) => SelectedRoom != null, (p) =>
             {
-                //var devices = Devices.Where(d => d.IsSelected).ToList();
                 var devices = SelectedRoom.Device.Where(d => d.RoomId == SelectedRoom.Id).ToList();
-                var manageViewModel = new ManageViewModel(SelectedRoom)
+                var manageViewModel = new ManageViewModel(SelectedRoom, SelectedBuilding)
                 {
                     Devices = new ObservableCollection<Device>(devices)
                 };
                 var manageWindow = new ManageWindow(manageViewModel);
-                //if (manageWindow.DataContext is ManageViewModel manageViewModel)
-                //{
-                //    manageViewModel.Devices = Devices;
-                //    manageViewModel.SelectedRoom = SelectedRoom;
-                //}
+                
                 manageWindow.ShowDialog();
             });
         }

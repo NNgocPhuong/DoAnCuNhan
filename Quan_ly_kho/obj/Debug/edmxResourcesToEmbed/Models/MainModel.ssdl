@@ -47,6 +47,7 @@
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="FloorId" Type="int" Nullable="false" />
     <Property Name="RoomNumber" Type="nvarchar" MaxLength="10" Nullable="false" />
+    <Property Name="Id_esp32" Type="nvarchar" MaxLength="255" />
   </EntityType>
   <EntityType Name="Schedule">
     <Key>

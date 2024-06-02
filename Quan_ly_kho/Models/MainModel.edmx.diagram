@@ -10,16 +10,16 @@
         <EntityTypeShape EntityType="QuanLyPhongHocModel.DeviceState" Width="1.5" PointX="9.75" PointY="1.125" IsExpanded="true" />
         <EntityTypeShape EntityType="QuanLyPhongHocModel.Floor" Width="1.5" PointX="3" PointY="2.5" IsExpanded="true" />
         <EntityTypeShape EntityType="QuanLyPhongHocModel.Role" Width="1.5" PointX="0.75" PointY="6.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="QuanLyPhongHocModel.Room" Width="1.5" PointX="5.25" PointY="2.5" IsExpanded="true" />
         <EntityTypeShape EntityType="QuanLyPhongHocModel.Schedule" Width="1.5" PointX="9.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="QuanLyPhongHocModel.sysdiagrams" Width="1.5" PointX="5.75" PointY="5.75" IsExpanded="true" />
         <EntityTypeShape EntityType="QuanLyPhongHocModel.User" Width="1.5" PointX="3" PointY="5.875" IsExpanded="true" />
         <AssociationConnector Association="QuanLyPhongHocModel.FK__Floor__BuildingI__3E52440B" ManuallyRouted="false" />
-        <AssociationConnector Association="QuanLyPhongHocModel.FK__Device__RoomId__440B1D61" ManuallyRouted="false" />
         <AssociationConnector Association="QuanLyPhongHocModel.FK__DeviceSta__Devic__47DBAE45" ManuallyRouted="false" />
         <AssociationConnector Association="QuanLyPhongHocModel.FK__Schedule__Device__4AB81AF0" ManuallyRouted="false" />
-        <AssociationConnector Association="QuanLyPhongHocModel.FK__Room__FloorId__412EB0B6" ManuallyRouted="false" />
         <AssociationConnector Association="QuanLyPhongHocModel.FK__User__RoleId__398D8EEE" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="QuanLyPhongHocModel.Room" Width="1.5" PointX="5.25" PointY="2.375" />
+        <AssociationConnector Association="QuanLyPhongHocModel.FK__Device__RoomId__440B1D61" />
+        <AssociationConnector Association="QuanLyPhongHocModel.FK__Room__FloorId__412EB0B6" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

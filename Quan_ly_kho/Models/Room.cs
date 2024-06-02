@@ -12,25 +12,21 @@ namespace Quan_ly_kho.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Room 
+    public partial class Room
     {
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Room()
         {
             this.Device = new HashSet<Device>();
         }
-
+    
         public int Id { get; set; }
         public int FloorId { get; set; }
         public string RoomNumber { get; set; }
-
+        public string Id_esp32 { get; set; }
+    
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Device> Device { get; set; }
         public virtual Floor Floor { get; set; }
-    }
-    public partial class Room
-    {
-        public string Id_esp32 { get; set; }
     }
 }

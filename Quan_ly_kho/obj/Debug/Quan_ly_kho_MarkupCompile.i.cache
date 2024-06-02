@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 D:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\App.xaml
-7-536259936
+81106795887
 2-842672889
-50-889064978
+52411385927
 25-1963037214
-LoginWindow.xaml;MainWindow.xaml;ManageWindow.xaml;ModifyWindow.xaml;ResourceXAML\MainResource.xaml;ScheduleWindow.xaml;UserControlPhuong\ControlBarUC.xaml;
+Views\BuildingScheduleWindow.xaml;Views\LoginWindow.xaml;MainWindow.xaml;Views\ManageWindow.xaml;Views\ModifyWindow.xaml;ResourceXAML\MainResource.xaml;Views\ScheduleWindow.xaml;UserControlPhuong\ControlBarUC.xaml;
 
 False
 

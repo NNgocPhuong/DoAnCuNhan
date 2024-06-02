@@ -1,10 +1,11 @@
 ﻿
 FD:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\App.xaml;;
-FD:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\LoginWindow.xaml;;
+FD:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\Views\BuildingScheduleWindow.xaml;;
+FD:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\Views\LoginWindow.xaml;;
 FD:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\MainWindow.xaml;;
-FD:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\ManageWindow.xaml;;
-FD:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\ModifyWindow.xaml;;
+FD:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\Views\ManageWindow.xaml;;
+FD:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\Views\ModifyWindow.xaml;;
 FD:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\ResourceXAML\MainResource.xaml;;
+FD:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\Views\ScheduleWindow.xaml;;
 FD:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\UserControlPhuong\ControlBarUC.xaml;;
-FD:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\ScheduleWindow.xaml;;
 

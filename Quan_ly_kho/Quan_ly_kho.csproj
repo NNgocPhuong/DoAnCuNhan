@@ -89,10 +89,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="LoginWindow.xaml.cs">
+    <Compile Include="Views\BuildingScheduleWindow.xaml.cs">
+      <DependentUpon>BuildingScheduleWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ManageWindow.xaml.cs">
+    <Compile Include="Views\ManageWindow.xaml.cs">
       <DependentUpon>ManageWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Broker.cs" />
@@ -140,16 +143,17 @@
     <Compile Include="Models\User.cs">
       <DependentUpon>MainModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="ModifyWindow.xaml.cs">
+    <Compile Include="Views\ModifyWindow.xaml.cs">
       <DependentUpon>ModifyWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ScheduleWindow.xaml.cs">
+    <Compile Include="Views\ScheduleWindow.xaml.cs">
       <DependentUpon>ScheduleWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControlPhuong\ControlBarUC.xaml.cs">
       <DependentUpon>ControlBarUC.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\BuildingScheduleViewModel.cs" />
     <Compile Include="ViewModels\ControlBarViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
@@ -171,7 +175,11 @@
     <Compile Include="VstJson\StringExtension.cs" />
     <Compile Include="VstJson\TypeExtension.cs" />
     <Compile Include="VstJson\VietUnicode.cs" />
-    <Page Include="LoginWindow.xaml">
+    <Page Include="Views\BuildingScheduleWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LoginWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -187,11 +195,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="ManageWindow.xaml">
+    <Page Include="Views\ManageWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ModifyWindow.xaml">
+    <Page Include="Views\ModifyWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -199,7 +207,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ScheduleWindow.xaml">
+    <Page Include="Views\ScheduleWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

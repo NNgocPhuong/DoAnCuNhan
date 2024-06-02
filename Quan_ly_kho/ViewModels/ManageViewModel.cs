@@ -9,14 +9,17 @@ using Quan_ly_kho.Models;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using MaterialDesignThemes.Wpf;
+using Quan_ly_kho.Views;
 
 namespace Quan_ly_kho.ViewModels
 {
     public class ManageViewModel : BaseViewModel
     {
+        #region Khai báo biến
         public ICommand ModifyWindowCommand { get; set; }
         private ObservableCollection<Device> _devices;
-        public ICommand ScheduleWindowCommand { get; set; }
+        public ICommand ScheduleRoomCommand { get; set; }
+        public ICommand ScheduleBuildingCommand { get; set; }
         public ObservableCollection<Device> Devices
         {
             get => _devices;
@@ -50,6 +53,16 @@ namespace Quan_ly_kho.ViewModels
                 OnPropertyChanged(nameof(SelectedRoom));
             }
         }
+        private Building _selectedBuilding;
+        public Building SelectedBuilding
+        {
+            get => _selectedBuilding;
+            set
+            {
+                _selectedBuilding = value;
+                OnPropertyChanged();
+            }
+        }
         private void SelectAllDevices(bool isSelected)
         {
             foreach (var item in Devices)
@@ -57,34 +70,47 @@ namespace Quan_ly_kho.ViewModels
                 item.IsSelected = isSelected;
             }
         }
+        #endregion
 
-        public ManageViewModel(Room selected_Room)
+        public ManageViewModel(Room selected_Room, Building selected_Building)
         {
+            
             Devices = new ObservableCollection<Device>();
             SelectedRoom = selected_Room;
+            SelectedBuilding = selected_Building;
           
             string firstTopic = (SelectedRoom.Floor.Building.BuildingName.ToLower() + SelectedRoom.RoomNumber).ToMD5();
-            SelectedRoom.Id_esp32 = "esp32/";
-            //Broker.Connect();
-            //string temp = " ";
-            bool isSend = false;
-            Broker.Listen(firstTopic, (doc) =>
+            
+            if (SelectedRoom.Id_esp32 != null && SelectedRoom.Id_esp32 != "esp32/")
             {
-                if (!isSend)
+                Document doc1 = new Document()
                 {
-                    SelectedRoom.Id_esp32 += doc.ObjectId;
-                    Broker.Unsubscribe(firstTopic);
-                    Document doc1 = new Document()
+                    Response = "received",
+                };
+
+                Broker.Send(firstTopic, doc1);
+            }
+            else
+            {
+                SelectedRoom.Id_esp32 = "esp32/";
+                bool isSend = false;
+                Broker.Listen(firstTopic, (doc) =>
+                {
+                    if (!isSend)
                     {
-                        Response = "received",
-                        //Type = "software"
-                    };
+                        SelectedRoom.Id_esp32 += doc.ObjectId;
+                        Broker.Unsubscribe(firstTopic);
+                        Document doc1 = new Document()
+                        {
+                            Response = "received",
+                        };
 
-                    Broker.Send(firstTopic, doc1);
-                    isSend = true;
-                }
-            });
-
+                        Broker.Send(firstTopic, doc1);
+                        isSend = true;
+                    }
+                });
+                UpdateRoomIdEsp32(SelectedRoom.Id, SelectedRoom.Id_esp32);
+            }
             ModifyWindowCommand = new RelayCommand<object>((p) => { return true; },
                 (p) =>
                 {
@@ -103,15 +129,10 @@ namespace Quan_ly_kho.ViewModels
                     ModifyWindow w = new ModifyWindow(modifyViewModel);
                     w.ShowDialog();
                 });
-            ScheduleWindowCommand = new RelayCommand<object>((p) => { return true; }, 
+            ScheduleRoomCommand = new RelayCommand<object>((p) => { return true; }, 
                 (p) => 
                 {
                     var selectedDevices = Devices.Where(d => d.IsSelected).ToList();
-                    //var modifyViewModel = new ModifyViewModel(SelectedRoom)
-                    //{
-                    //    SelectedDevices = new ObservableCollection<Device>(selectedDevices)
-                    //};
-                    //var scheduledTaskService = new ScheduledTaskService(SelectedRoom);
                     var scheduleViewModel = new ScheduleViewModel(SelectedRoom)
                     {
                         SelectedDevices = new ObservableCollection<Device>(selectedDevices)
@@ -119,6 +140,22 @@ namespace Quan_ly_kho.ViewModels
                     ScheduleWindow w = new ScheduleWindow(scheduleViewModel);
                     w.ShowDialog();
                 });
+            ScheduleBuildingCommand = new RelayCommand<object>((p) => { return true; },
+                (p) =>
+                {
+                    var buildingScheduleViewModel = new BuildingScheduleViewModel(SelectedBuilding);
+                    BuildingScheduleWindow w = new BuildingScheduleWindow(buildingScheduleViewModel);
+                    w.ShowDialog();
+                });
+        }
+        private void UpdateRoomIdEsp32(int roomId, string idEsp32)
+        {
+            var room = DataProvider.Ins.DB.Room.Find(roomId);
+            if (room != null)
+            {
+                room.Id_esp32 = idEsp32;
+                DataProvider.Ins.DB.SaveChanges();
+            }
         }
         private void ModifyViewModel_DeviceAdded(object sender, Device e)
         {

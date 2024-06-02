@@ -1,9 +1,9 @@
-﻿<Window x:Class="Quan_ly_kho.ManageWindow"
+﻿<Window x:Class="Quan_ly_kho.Views.ManageWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Quan_ly_kho"
+        xmlns:local="clr-namespace:Quan_ly_kho.Views"
         mc:Ignorable="d"
         
         
@@ -52,7 +52,14 @@
                 <materialDesign:Card Margin="5" Grid.Column="1">
                     <WrapPanel>
                         <materialDesign:PackIcon Kind="HomeClockOutline" Height="40" Width="60" />
-                        <Button Style="{StaticResource MaterialDesignPaperButton}" Command="{Binding ScheduleWindowCommand}" Content="Lập lịch hoạt động" Margin="5" Width="170"></Button>
+                        <Button Style="{StaticResource MaterialDesignPaperButton}" Content="Lập lịch hoạt động" Margin="5" Width="170" Click="ScheduleButton_Click">
+                            <Button.ContextMenu>
+                                <ContextMenu x:Name="ScheduleContextMenu">
+                                    <MenuItem Header="Thiết bị đã chọn" Command="{Binding ScheduleRoomCommand}" />
+                                    <MenuItem Header="Cả toà nhà" Command="{Binding ScheduleBuildingCommand}" />
+                                </ContextMenu>
+                            </Button.ContextMenu>
+                        </Button>
                     </WrapPanel>
                 </materialDesign:Card>
             </Grid>

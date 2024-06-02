@@ -10,25 +10,6 @@ using Quan_ly_kho.Models;
 using Quan_ly_kho.ViewModels;
 using System.ComponentModel;
 
-//namespace System
-//{
-//    partial class Document : INotifyPropertyChanged
-//    {
-//        public int RoomId { get => GetValue<int>(nameof(RoomId)); set => Push(nameof(RoomId), value); }
-//        public string DeviceName { get => GetString(nameof(DeviceName)); set => Push(nameof(DeviceName), value); }
-//        public string DeviceType { get => GetString(nameof(DeviceType)); set => Push(nameof(DeviceType), value); }
-//        public virtual Room Room { get => GetObject<Room>(nameof(Room)); set => Push(nameof(Room), value); }
-
-//        public bool IsSelected { get => GetValue<bool>(nameof(IsSelected)); set { Push(nameof(IsSelected), value); OnPropertyChanged(nameof(IsSelected)); } }
-
-//        public event PropertyChangedEventHandler PropertyChanged;
-//        protected virtual void OnPropertyChanged(string propertyName)
-//        {
-//            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-//        }
-
-//    }
-//}
 
 namespace Quan_ly_kho.Models
 {

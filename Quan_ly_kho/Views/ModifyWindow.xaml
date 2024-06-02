@@ -37,7 +37,6 @@
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
 
-            <!--các element binding từ selected item-->
             <materialDesign:Card Grid.Row="0" Margin="5">
                 <Grid Margin="0 0 0 10">
                     <Grid.ColumnDefinitions>

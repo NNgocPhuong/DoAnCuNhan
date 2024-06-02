@@ -13,8 +13,18 @@ using System.Windows.Input;
 
 namespace Quan_ly_kho.ViewModels
 {
+    public static class ModifyViewModelState
+    {
+        public static Timer ListenTimer { get; set; }
+        public static ObservableCollection<Device> SelectedDevices { get; set; } = new ObservableCollection<Device>();
+        public static Timer KeepAliveTimer { get; set; }
+        public static DateTime LastKeepAliveReceived { get; set; }
+        public static bool ErrorMessageShown { get; set; } = false;
+    }
+
     public class ModifyViewModel : BaseViewModel
     {
+        #region Các biến, event và Command
         public event EventHandler<Device> DeviceAdded;
         public event EventHandler<Device> DeviceEdited;
         public event EventHandler<Device> DeviceDeleted;
@@ -96,12 +106,25 @@ namespace Quan_ly_kho.ViewModels
         public ICommand DeleteCommand { get; set; }
         public ICommand OnCommand { get; set; }
         public ICommand OffCommand { get; set; }
-
+        #endregion
         public ModifyViewModel(Room selectedRoom)
         {
-            SelectedDevices = new ObservableCollection<Device>();
+            SelectedDevices = ModifyViewModelState.SelectedDevices ?? new ObservableCollection<Device>();
             SelectedRoom = selectedRoom;
+            if (ModifyViewModelState.KeepAliveTimer == null)
+            {
+                ModifyViewModelState.KeepAliveTimer = new Timer(CheckKeepAlive, null, 0, 60000);
+                ModifyViewModelState.LastKeepAliveReceived = DateTime.Now;
+            }
+            if (ModifyViewModelState.ListenTimer == null)
+            {
+                ModifyViewModelState.ListenTimer = new Timer(ListenToBroker, null, 0, 60000);
+                ModifyViewModelState.LastKeepAliveReceived = DateTime.Now;
+            }
 
+            Broker.process_received_data -= OnBrokerMessageReceived;
+            Broker.process_received_data += OnBrokerMessageReceived;
+            Broker.Listen(SelectedRoom.Id_esp32, OnBrokerMessageReceived);
             AddCommand = new RelayCommand<object>(
                 (p) => !string.IsNullOrEmpty(DeviceName) && DataProvider.Ins.DB.Device.FirstOrDefault(x => x.DeviceName == DeviceName && x.RoomId == SelectedRoom.Id && x.DeviceType == DeviceType) == null,
                 async (p) =>
@@ -162,7 +185,39 @@ namespace Quan_ly_kho.ViewModels
                 (p) => SelectedDevices.Count > 0,
                 async (p) => await SendControlMessage("off"));
         }
+        private void ListenToBroker(object state)
+        {
+            Broker.Listen(SelectedRoom.Id_esp32, OnBrokerMessageReceived);
+        }
 
+        private void OnBrokerMessageReceived(Document doc)
+        {
+            if (doc["Type"]?.ToString() == "keep-alive")
+            {
+                ModifyViewModelState.LastKeepAliveReceived = DateTime.Now;
+            }
+        }
+        private void CheckKeepAlive(object state)
+        {
+            if ((DateTime.Now - ModifyViewModelState.LastKeepAliveReceived).TotalMinutes > 2)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    foreach (var device in SelectedDevices)
+                    {
+                        device.DeviceState.Add(new DeviceState { DeviceId = device.Id, State = "Lỗi" });
+                    }
+                    DataProvider.Ins.DB.SaveChangesAsync();
+                    OnPropertyChanged(nameof(SelectedDevices));
+
+                    if (!ModifyViewModelState.ErrorMessageShown)
+                    {
+                        MessageBox.Show("Vi xử lý bị lỗi", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        ModifyViewModelState.ErrorMessageShown = true;
+                    }
+                });
+            }
+        }
         private async Task SendControlMessage(string command)
         {
             var controlMessage = new JObject
@@ -220,7 +275,7 @@ namespace Quan_ly_kho.ViewModels
             catch (Exception ex)
             {
                 // Handle any exceptions (log them if necessary)
-                UpdateDeviceStates("Lỗi");
+                UpdateDeviceStates("Lỗi " + ex.ToString());
             }
             finally
             {

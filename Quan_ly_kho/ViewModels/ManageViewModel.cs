@@ -15,6 +15,7 @@ namespace Quan_ly_kho.ViewModels
 {
     public class ManageViewModel : BaseViewModel
     {
+        #region Khai báo biến
         public ICommand ModifyWindowCommand { get; set; }
         private ObservableCollection<Device> _devices;
         public ICommand ScheduleRoomCommand { get; set; }
@@ -69,6 +70,7 @@ namespace Quan_ly_kho.ViewModels
                 item.IsSelected = isSelected;
             }
         }
+        #endregion
 
         public ManageViewModel(Room selected_Room, Building selected_Building)
         {

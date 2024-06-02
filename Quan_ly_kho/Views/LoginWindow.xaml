@@ -42,12 +42,6 @@
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
-                    <!--<TextBox
-                        Text="{Binding UserName}"
-                        VerticalAlignment="Center"
-                        materialDesign:HintAssist.Hint="Tên đăng nhập"
-                        Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                        />-->
                     <TextBox
                         VerticalAlignment="Top"
                         materialDesign:HintAssist.Hint="Tên đăng nhập"

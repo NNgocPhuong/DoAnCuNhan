@@ -6,7 +6,6 @@
         xmlns:local="clr-namespace:Quan_ly_kho.Views"
         mc:Ignorable="d"
         
-        
         WindowStartupLocation="CenterScreen"
         xmlns:uc ="clr-namespace:Quan_ly_kho.UserControlPhuong"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -101,53 +100,6 @@
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-
-                <!--<materialDesign:Card Grid.Row="2" Margin="5" VerticalAlignment="Stretch">
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <ListView ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}">
-                <ListView.View>
-                    <GridView>
-              
-                            -->
-                <!-- Checkbox column -->
-                <!--
-                        <GridViewColumn Width="50">
-                            <GridViewColumn.HeaderTemplate>
-                                <DataTemplate>
-                                    <CheckBox IsChecked="{Binding DataContext.IsAllSelected, RelativeSource={RelativeSource AncestorType={x:Type ListView}}}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                </DataTemplate>
-                            </GridViewColumn.HeaderTemplate>
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <CheckBox IsChecked="{Binding IsSelected}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-
-                        -->
-                <!-- Device Type column -->
-                <!--
-                        <GridViewColumn Header="Loại thiết bị" DisplayMemberBinding="{Binding DeviceType}" Width="150"/>
-
-                        -->
-                <!-- Device Name column -->
-                <!--
-                        <GridViewColumn Header="Tên thiết bị" DisplayMemberBinding="{Binding DeviceName}" Width="150"/>
-
-                        -->
-                <!-- Device State column -->
-                <!--
-                        <GridViewColumn Header="Trạng thái" DisplayMemberBinding="{Binding DeviceState}" Width="100"/>
-
-                        -->
-                <!-- Schedule column -->
-                <!--
-                        <GridViewColumn Header="Lịch hoạt động" DisplayMemberBinding="{Binding Schedule}" Width="200"/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
-        </ScrollViewer>
-    </materialDesign:Card>-->
             </Grid>
         </Grid>
 

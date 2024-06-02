@@ -13,14 +13,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Quan_ly_kho
+namespace Quan_ly_kho.Views
 {
     /// <summary>
-    /// Interaction logic for BuildingScheduleWindow.xaml
+    /// Interaction logic for ScheduleWindow.xaml
     /// </summary>
-    public partial class BuildingScheduleWindow : Window
+    public partial class ScheduleWindow : Window
     {
-        public BuildingScheduleWindow(BuildingScheduleViewModel viewModel)
+        public ScheduleWindow(ScheduleViewModel viewModel)
         {
             InitializeComponent();
             DataContext = viewModel;

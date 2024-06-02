@@ -1,4 +1,5 @@
-﻿using Quan_ly_kho.ViewModels;
+﻿using Quan_ly_kho.Models;
+using Quan_ly_kho.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,14 +14,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Quan_ly_kho
+namespace Quan_ly_kho.Views
 {
     /// <summary>
-    /// Interaction logic for ScheduleWindow.xaml
+    /// Interaction logic for ModifyWindow.xaml
     /// </summary>
-    public partial class ScheduleWindow : Window
+    public partial class ModifyWindow : Window
     {
-        public ScheduleWindow(ScheduleViewModel viewModel)
+        public ModifyWindow(ModifyViewModel viewModel)
         {
             InitializeComponent();
             DataContext = viewModel;

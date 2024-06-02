@@ -9,6 +9,7 @@ using Quan_ly_kho.Models;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using MaterialDesignThemes.Wpf;
+using Quan_ly_kho.Views;
 
 namespace Quan_ly_kho.ViewModels
 {

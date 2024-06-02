@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using Quan_ly_kho.Models;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using Quan_ly_kho.Views;
 
 namespace Quan_ly_kho.ViewModels
 {

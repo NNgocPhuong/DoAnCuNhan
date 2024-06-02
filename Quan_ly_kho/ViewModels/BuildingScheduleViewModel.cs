@@ -1,6 +1,7 @@
 ﻿using Quan_ly_kho.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,10 @@ using System.Windows.Input;
 
 namespace Quan_ly_kho.ViewModels
 {
+    public static class BuildingScheduleViewModelState
+    {
+        public static ObservableCollection<Schedule> BuildingSchedules { get; set; } = new ObservableCollection<Schedule>();
+    }
     public class BuildingScheduleViewModel : BaseViewModel
     {
         private Building _selectedBuilding;
@@ -21,6 +26,17 @@ namespace Quan_ly_kho.ViewModels
                 OnPropertyChanged();
             }
         }
+        private ObservableCollection<Schedule> _buildingSchedules;
+        public ObservableCollection<Schedule> BuildingSchedules
+        {
+            get => _buildingSchedules;
+            set
+            {
+                _buildingSchedules = value;
+                OnPropertyChanged();
+            }
+        }
+
         private DateTime? _startDate;
         public DateTime? StartDate
         {
@@ -91,9 +107,11 @@ namespace Quan_ly_kho.ViewModels
             }
         }
         public ICommand AddCommand { get; set; }
+        public ICommand DeleteBuildingScheduleCommand { get; set; }
         public BuildingScheduleViewModel(Building selected_Building)
         {
             SelectedBuilding = selected_Building;
+            BuildingSchedules = BuildingScheduleViewModelState.BuildingSchedules;
             var DeviceList = DataProvider.Ins.DB.Building
                 .Where(b => b.Id == SelectedBuilding.Id)
                 .SelectMany(b => b.Floor)
@@ -127,22 +145,44 @@ namespace Quan_ly_kho.ViewModels
             return false;},
             (p) =>
             {
-            foreach (var device in DeviceList)
-            {
                 Schedule newSchedule = new Schedule
                 {
                     StartTime = StartDateTime.Value,
                     EndTime = EndDateTime.Value,
                     Action = "Bật"
                 };
-                device.Schedule.Add(newSchedule);
-                DataProvider.Ins.DB.Schedule.Add(newSchedule);
+                foreach (var device in DeviceList)
+                {
+                    device.Schedule.Add(new Schedule
+                    {
+                        StartTime = StartDateTime.Value,
+                        EndTime = EndDateTime.Value,
+                        Action = "Bật"
+                    });
+                //DataProvider.Ins.DB.Schedule.Add(newSchedule);
                 //_scheduledTaskService.AddSchedule(newSchedule);
-            }
-            DataProvider.Ins.DB.SaveChanges();
-
+                }
+                DataProvider.Ins.DB.SaveChanges();
+                BuildingScheduleViewModelState.BuildingSchedules.Add(newSchedule);
+                BuildingSchedules = BuildingScheduleViewModelState.BuildingSchedules;
             });
-
+            DeleteBuildingScheduleCommand = new RelayCommand<Schedule>(
+                (s) => {
+                if(s != null)
+                {
+                    return true;
+                }
+                return false;
+            },
+                (schedule) =>
+            {
+                if (schedule != null)
+                {
+                    BuildingSchedules.Remove(schedule);
+                    DataProvider.Ins.DB.Schedule.Remove(schedule);// lỗi ở dòng này
+                    DataProvider.Ins.DB.SaveChanges();
+                }
+            });
         }
         private bool IsOverlapping(Schedule existingSchedule, Schedule newSchedule)
         {

@@ -117,7 +117,7 @@ namespace Quan_ly_kho.ViewModels
                 };
                 var manageWindow = new ManageWindow(manageViewModel);
                 
-                manageWindow.ShowDialog();
+                manageWindow.Show();
             });
         }
 

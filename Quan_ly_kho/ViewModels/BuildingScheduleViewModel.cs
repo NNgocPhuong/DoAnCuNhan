@@ -145,44 +145,54 @@ namespace Quan_ly_kho.ViewModels
             return false;},
             (p) =>
             {
+                foreach (var device in DeviceList)
+                {
+                    Schedule newSc = new Schedule
+                    {
+                        StartTime = StartDateTime.Value,
+                        EndTime = EndDateTime.Value,
+                        Action = "Bật"
+                    };
+                    device.Schedule.Add(newSc);
+                DataProvider.Ins.DB.Schedule.Add(newSc);
+                //_scheduledTaskService.AddSchedule(newSchedule);
+                }
                 Schedule newSchedule = new Schedule
                 {
                     StartTime = StartDateTime.Value,
                     EndTime = EndDateTime.Value,
                     Action = "Bật"
                 };
-                foreach (var device in DeviceList)
-                {
-                    device.Schedule.Add(new Schedule
-                    {
-                        StartTime = StartDateTime.Value,
-                        EndTime = EndDateTime.Value,
-                        Action = "Bật"
-                    });
-                //DataProvider.Ins.DB.Schedule.Add(newSchedule);
-                //_scheduledTaskService.AddSchedule(newSchedule);
-                }
                 DataProvider.Ins.DB.SaveChanges();
                 BuildingScheduleViewModelState.BuildingSchedules.Add(newSchedule);
                 BuildingSchedules = BuildingScheduleViewModelState.BuildingSchedules;
             });
             DeleteBuildingScheduleCommand = new RelayCommand<Schedule>(
-                (s) => {
-                if(s != null)
+                (s) =>
                 {
-                    return true;
-                }
-                return false;
-            },
+                    if (s != null)
+                    {
+                        return true;
+                    }
+                    return false;
+                },
                 (schedule) =>
-            {
-                if (schedule != null)
                 {
+                    BuildingScheduleViewModelState.BuildingSchedules.Remove(schedule);
                     BuildingSchedules.Remove(schedule);
-                    DataProvider.Ins.DB.Schedule.Remove(schedule);// lỗi ở dòng này
+                    foreach (var device in DeviceList)
+                    {
+                        var existingSchedule = device.Schedule.FirstOrDefault(sc => sc.StartTime == schedule.StartTime &&
+                                                                         sc.EndTime == schedule.EndTime &&
+                                                                         sc.Action == schedule.Action);
+                        if (existingSchedule != null)
+                        {
+                            device.Schedule.Remove(existingSchedule);
+                            DataProvider.Ins.DB.Schedule.Remove(existingSchedule);
+                        }
+                    }
                     DataProvider.Ins.DB.SaveChanges();
-                }
-            });
+                });
         }
         private bool IsOverlapping(Schedule existingSchedule, Schedule newSchedule)
         {

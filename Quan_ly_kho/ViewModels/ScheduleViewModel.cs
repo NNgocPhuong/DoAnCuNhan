@@ -159,7 +159,7 @@ namespace Quan_ly_kho.ViewModels
                     Action = "Bật"
                 };
                 device.Schedule.Add(newSchedule);
-                //DataProvider.Ins.DB.Schedule.Add(newSchedule);
+                DataProvider.Ins.DB.Schedule.Add(newSchedule);
                 //_scheduledTaskService.AddSchedule(newSchedule);
             }
             DataProvider.Ins.DB.SaveChanges();

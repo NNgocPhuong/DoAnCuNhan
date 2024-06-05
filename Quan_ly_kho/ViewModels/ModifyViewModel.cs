@@ -234,10 +234,10 @@ namespace Quan_ly_kho.ViewModels
         {
             var devicesObject = new JObject
             {
-                { "Doors", new JArray(SelectedDevices.Where(d => d.DeviceType.StartsWith("Cửa")).Select(d => new JObject { { "id_esp", d.DeviceName }, { "power", command } })) },
-                { "Lights", new JArray(SelectedDevices.Where(d => d.DeviceType.StartsWith("Đèn")).Select(d => new JObject { { "id_esp", d.DeviceName }, { "power", command } })) },
-                { "Fans", new JArray(SelectedDevices.Where(d => d.DeviceType.StartsWith("Quạt")).Select(d => new JObject { { "id_esp", d.DeviceName }, { "power", command } })) },
-                { "AirConditionings", new JArray(SelectedDevices.Where(d => d.DeviceType.StartsWith("Điều hoà")).Select(d => new JObject { { "id_esp", d.DeviceName }, { "power", command } })) }
+                { "Doors", new JArray(SelectedDevices.Where(d => d.DeviceType.StartsWith("Cửa")).Select(d => new JObject { { "id_esp", d.DeviceName }, { "status", command } })) },
+                { "Lights", new JArray(SelectedDevices.Where(d => d.DeviceType.StartsWith("Đèn")).Select(d => new JObject { { "id_esp", d.DeviceName }, { "status", command } })) },
+                { "Fans", new JArray(SelectedDevices.Where(d => d.DeviceType.StartsWith("Quạt")).Select(d => new JObject { { "id_esp", d.DeviceName }, { "status", command } })) },
+                { "AirConditionings", new JArray(SelectedDevices.Where(d => d.DeviceType.StartsWith("Điều hoà")).Select(d => new JObject { { "id_esp", d.DeviceName }, { "status", command } })) }
             };
             return devicesObject;
         }

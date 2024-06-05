@@ -12,11 +12,9 @@ using System.Windows.Input;
 
 namespace Quan_ly_kho.ViewModels
 {
+    
     public class ScheduleViewModel : BaseViewModel
     {
-        private System.Timers.Timer _timer;
-        //private ScheduledTaskService _scheduledTaskService;
-        //private ModifyViewModel _modifyViewModel;
         private ObservableCollection<Device> _selectedDevices;
 
         public ObservableCollection<Device> SelectedDevices
@@ -115,11 +113,8 @@ namespace Quan_ly_kho.ViewModels
         {
             SelectedDevices = new ObservableCollection<Device>();
             SelectedRoom = selected_Room;
-            //_scheduledTaskService = scheduledTaskService;
 
-            //_timer = new Timer(60000); // Kiểm tra mỗi phút
-            //_timer.Elapsed += OnTimerElapsed;
-            //_timer.Start();
+           
 
 
             AddCommand = new RelayCommand<object>(
@@ -160,7 +155,7 @@ namespace Quan_ly_kho.ViewModels
                 };
                 device.Schedule.Add(newSchedule);
                 DataProvider.Ins.DB.Schedule.Add(newSchedule);
-                //_scheduledTaskService.AddSchedule(newSchedule);
+                
             }
             DataProvider.Ins.DB.SaveChanges();
             
@@ -200,6 +195,6 @@ namespace Quan_ly_kho.ViewModels
                 EndDateTime = new DateTime(EndDate.Value.Year, EndDate.Value.Month, EndDate.Value.Day, EndTime.Value.Hour, EndTime.Value.Minute, EndTime.Value.Second);
             }
         }
-       
+        
     }
 }

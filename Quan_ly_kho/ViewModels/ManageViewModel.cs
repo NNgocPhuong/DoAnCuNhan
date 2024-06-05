@@ -111,6 +111,8 @@ namespace Quan_ly_kho.ViewModels
                 });
                 UpdateRoomIdEsp32(SelectedRoom.Id, SelectedRoom.Id_esp32);
             }
+            // Xoá các lịch trình đã thực hiện
+            RemoveExpiredSchedules();
             ModifyWindowCommand = new RelayCommand<object>((p) => { return true; },
                 (p) =>
                 {
@@ -133,6 +135,7 @@ namespace Quan_ly_kho.ViewModels
                 (p) => 
                 {
                     var selectedDevices = Devices.Where(d => d.IsSelected).ToList();
+                    
                     var scheduleViewModel = new ScheduleViewModel(SelectedRoom)
                     {
                         SelectedDevices = new ObservableCollection<Device>(selectedDevices)
@@ -147,6 +150,20 @@ namespace Quan_ly_kho.ViewModels
                     BuildingScheduleWindow w = new BuildingScheduleWindow(buildingScheduleViewModel);
                     w.ShowDialog();
                 });
+        }
+        private void RemoveExpiredSchedules()
+        {
+            var now = DateTime.Now;
+            var expiredSchedules = DataProvider.Ins.DB.Schedule
+                                    .Where(s => DbFunctions.TruncateTime(s.EndTime) < DbFunctions.TruncateTime(now))
+                                    .ToList();
+
+            foreach (var schedule in expiredSchedules)
+            {
+                DataProvider.Ins.DB.Schedule.Remove(schedule);
+            }
+
+            DataProvider.Ins.DB.SaveChanges();
         }
         private void UpdateRoomIdEsp32(int roomId, string idEsp32)
         {

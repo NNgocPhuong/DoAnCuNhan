@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Data.Entity;
 using MaterialDesignThemes.Wpf;
 using Quan_ly_kho.Views;
+using Newtonsoft.Json.Linq;
 
 namespace Quan_ly_kho.ViewModels
 {
@@ -74,43 +75,12 @@ namespace Quan_ly_kho.ViewModels
 
         public ManageViewModel(Room selected_Room, Building selected_Building)
         {
-            
+            Broker.Listen("connect", received_callback);
             Devices = new ObservableCollection<Device>();
             SelectedRoom = selected_Room;
             SelectedBuilding = selected_Building;
           
-            string firstTopic = (SelectedRoom.Floor.Building.BuildingName.ToLower() + SelectedRoom.RoomNumber).ToMD5();
             
-            if (SelectedRoom.Id_esp32 != null && SelectedRoom.Id_esp32 != "esp32/")
-            {
-                Document doc1 = new Document()
-                {
-                    Response = "received",
-                };
-
-                Broker.Send(firstTopic, doc1);
-            }
-            else
-            {
-                SelectedRoom.Id_esp32 = "esp32/";
-                bool isSend = false;
-                Broker.Listen(firstTopic, (doc) =>
-                {
-                    if (!isSend)
-                    {
-                        SelectedRoom.Id_esp32 += doc.ObjectId;
-                        Broker.Unsubscribe(firstTopic);
-                        Document doc1 = new Document()
-                        {
-                            Response = "received",
-                        };
-
-                        Broker.Send(firstTopic, doc1);
-                        isSend = true;
-                    }
-                });
-                UpdateRoomIdEsp32(SelectedRoom.Id, SelectedRoom.Id_esp32);
-            }
             // Xoá các lịch trình đã thực hiện
             RemoveExpiredSchedules();
             ModifyWindowCommand = new RelayCommand<object>((p) => { return true; },
@@ -196,6 +166,62 @@ namespace Quan_ly_kho.ViewModels
                 Devices.Remove(e);
             }
         }
+        public void received_callback(Document doc)
+        {
+            var token = doc["Token"].ToString();
+            var devices = doc["Devices"] as JObject;
 
+            if (token == SelectedRoom.Id_esp32)
+            {
+                UpdateDeviceState((JArray)devices["Lights"], "Đèn");
+                UpdateDeviceState((JArray)devices["Doors"], "Cửa");
+                UpdateDeviceState((JArray)devices["Fans"], "Quạt");
+                // gửi lại bản tin connected
+                Document doc1 = new Document()
+                {
+                    Type = "connected"
+                };
+                Broker.Send(SelectedRoom.Id_esp32, doc1);
+                UpdateDevicesView();
+            }
+            DataProvider.Ins.DB.SaveChanges();
+            OnPropertyChanged(nameof(Devices));
+
+            Broker.Unsubscribe("connect");
+        }
+        public void UpdateDeviceState(JArray deviceState, string deviceType)
+        {
+            foreach (JObject item in deviceState)
+            {
+                int deviceIdEsp = item["id_esp"].Value<int>();
+                string status = item["status"].ToString();
+
+                var device = DataProvider.Ins.DB.Device.FirstOrDefault(d => d.DeviceName == deviceIdEsp.ToString() && d.DeviceType == deviceType && d.Room.Id_esp32 == SelectedRoom.Id_esp32);
+                if (device != null)
+                {
+                    var newDeviceState = new DeviceState
+                    {
+                        DeviceId = device.Id,
+                        State = status == "on" ? "Bật" : "Tắt"
+                    };
+                    DataProvider.Ins.DB.DeviceState.Add(newDeviceState);
+                }
+            }
+        }
+        public void UpdateDevicesView()
+        {
+            foreach (var device in Devices)
+            {
+                var latestState = DataProvider.Ins.DB.DeviceState
+                    .Where(ds => ds.DeviceId == device.Id)
+                    .OrderByDescending(ds => ds.Timestamp)
+                    .FirstOrDefault();
+
+                if (latestState != null)
+                {
+                    device.DeviceStateName = latestState.State;
+                }
+            }
+        }
     }
 }

@@ -75,6 +75,14 @@ namespace Quan_ly_kho.Models
                 }
                 return null;
             }
+            set
+            {
+                if (_deviceStateName != value)
+                {
+                    _deviceStateName = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
 

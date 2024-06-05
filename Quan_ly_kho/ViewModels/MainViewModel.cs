@@ -15,6 +15,7 @@ namespace Quan_ly_kho.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
+        #region Các biến
         private ObservableCollection<Building> _buildings;
         public ObservableCollection<Building> Buildings
         {
@@ -85,7 +86,7 @@ namespace Quan_ly_kho.ViewModels
         public ICommand LoadedWindowCommand { get; set; }
         public ICommand ManageWindowCommand { get; set; }
         public bool IsLoaded { get; set; } = false;
-
+        #endregion
         public MainViewModel()
         {
             Broker.Connect();

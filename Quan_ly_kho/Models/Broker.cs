@@ -30,7 +30,7 @@ namespace System
 
         public void Listen(string topic, Action<Document> received_callback)
         {
-            process_received_data += received_callback;
+            process_received_data = received_callback;
             if (last_topic != null)
             {
                 Unsubscribe(last_topic);

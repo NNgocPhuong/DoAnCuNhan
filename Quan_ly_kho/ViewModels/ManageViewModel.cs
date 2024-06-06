@@ -75,11 +75,16 @@ namespace Quan_ly_kho.ViewModels
 
         public ManageViewModel(Room selected_Room, Building selected_Building)
         {
-            Broker.Listen("connect", received_callback);
             Devices = new ObservableCollection<Device>();
             SelectedRoom = selected_Room;
             SelectedBuilding = selected_Building;
-          
+            
+            Broker.Listen(SelectedRoom.Id_esp32, received_callback);
+            Document doc = new Document()
+            {
+                Type = "request-infor"
+            };
+            Broker.Send(SelectedRoom.Id_esp32, doc);
             
             // Xoá các lịch trình đã thực hiện
             RemoveExpiredSchedules();
@@ -168,26 +173,20 @@ namespace Quan_ly_kho.ViewModels
         }
         public void received_callback(Document doc)
         {
-            var token = doc["Token"].ToString();
+            var token = doc["Type"].ToString();
             var devices = doc["Devices"] as JObject;
 
-            if (token == SelectedRoom.Id_esp32)
+            if (token != null && token == "response")
             {
                 UpdateDeviceState((JArray)devices["Lights"], "Đèn");
                 UpdateDeviceState((JArray)devices["Doors"], "Cửa");
                 UpdateDeviceState((JArray)devices["Fans"], "Quạt");
-                // gửi lại bản tin connected
-                Document doc1 = new Document()
-                {
-                    Type = "connected"
-                };
-                Broker.Send(SelectedRoom.Id_esp32, doc1);
+                
                 UpdateDevicesView();
             }
             DataProvider.Ins.DB.SaveChanges();
             OnPropertyChanged(nameof(Devices));
 
-            Broker.Unsubscribe("connect");
         }
         public void UpdateDeviceState(JArray deviceState, string deviceType)
         {

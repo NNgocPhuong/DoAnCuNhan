@@ -20,18 +20,6 @@ namespace Quan_ly_kho.Models
 
     public partial class Device 
     {
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        //public Device()
-        //{
-        //    this.DeviceState = new HashSet<DeviceState>();
-        //    this.Schedule = new HashSet<Schedule>();
-        //}
-
-
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        //public virtual ICollection<DeviceState> DeviceState { get; set; }
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        //public virtual ICollection<Schedule> Schedule { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Device()
@@ -64,14 +52,9 @@ namespace Quan_ly_kho.Models
         {
             get
             {
-                // Lấy trạng thái từ một trong các DeviceState 
                 if (DeviceState != null && DeviceState.Count > 0)
                 {
-                    // Chuyển ICollection thành danh sách List
-                    var deviceStateList = DeviceState.ToList();
-
-                    // Truy cập vào phần tử cuối của danh sách
-                    return deviceStateList[deviceStateList.Count - 1].State;
+                    return DeviceState.Last().State;
                 }
                 return null;
             }

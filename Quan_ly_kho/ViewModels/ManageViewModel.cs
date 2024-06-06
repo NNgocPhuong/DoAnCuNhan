@@ -20,7 +20,7 @@ namespace Quan_ly_kho.ViewModels
         public ICommand ModifyWindowCommand { get; set; }
         private ObservableCollection<Device> _devices;
         public ICommand ScheduleRoomCommand { get; set; }
-        public ICommand ScheduleBuildingCommand { get; set; }
+        //public ICommand ScheduleBuildingCommand { get; set; }
         public ObservableCollection<Device> Devices
         {
             get => _devices;
@@ -113,13 +113,13 @@ namespace Quan_ly_kho.ViewModels
                     ScheduleWindow w = new ScheduleWindow(scheduleViewModel);
                     w.ShowDialog();
                 });
-            ScheduleBuildingCommand = new RelayCommand<object>((p) => { return true; },
-                (p) =>
-                {
-                    var buildingScheduleViewModel = new BuildingScheduleViewModel(SelectedBuilding);
-                    BuildingScheduleWindow w = new BuildingScheduleWindow(buildingScheduleViewModel);
-                    w.ShowDialog();
-                });
+            //ScheduleBuildingCommand = new RelayCommand<object>((p) => { return true; },
+            //    (p) =>
+            //    {
+            //        var buildingScheduleViewModel = new BuildingScheduleViewModel(SelectedBuilding);
+            //        BuildingScheduleWindow w = new BuildingScheduleWindow(buildingScheduleViewModel);
+            //        w.ShowDialog();
+            //    });
         }
         private void RemoveExpiredSchedules()
         {

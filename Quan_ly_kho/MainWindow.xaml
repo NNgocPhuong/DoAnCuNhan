@@ -58,9 +58,17 @@
                               IsEditable="True"/>
                     <Button Margin="15" Content="Tìm kiếm"
                             IsDefault="True"
+                            Background="#1974D3"
                             Command="{Binding ManageWindowCommand}" IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                             Style="{StaticResource MaterialDesignPaperButton}"
                             ToolTip="Resource name: MaterialDesignRaisedLightDarkButton"/>
+                    <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Button Style="{StaticResource MaterialDesignRaisedButton}" 
+                        Content="Lập lịch cho toà nhà" 
+                        Width="200" Height="50" Background="#53CCEC" 
+                        Command="{Binding ScheduleBuildingCommand}"
+                        Margin="10"/>
+                    </WrapPanel>
                 </StackPanel>
             </materialDesign:Card>
 

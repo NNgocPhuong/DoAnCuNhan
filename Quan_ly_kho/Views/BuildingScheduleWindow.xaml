@@ -20,7 +20,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         x:Name="window"
         
-        Title="Lập lịch cho toà nhà" Height="350" Width="460">
+        Title="Lập lịch cho toà nhà" Height="400" Width="500">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
@@ -84,15 +84,18 @@
                 <Button Style="{StaticResource MaterialDesignRaisedAccentButton}" HorizontalAlignment="Center" Command="{Binding AddCommand}" Content="Thêm lịch trình hoạt động" Margin="5" Width="200"></Button>
             </Grid>
             <DataGrid Grid.Row="2" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="All"
-                ItemsSource="{Binding BuildingSchedules}" Margin="5">
+                    ItemsSource="{Binding BuildingSchedules}" Margin="5">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding StartTime}" Header="Thời gian bắt đầu" />
-                    <DataGridTextColumn Binding="{Binding EndTime}" Header="Thời gian kết thúc" />
+                    <DataGridTextColumn Binding="{Binding ScheduleDescription}" Header="Mô tả lịch trình" />
                     <DataGridTemplateColumn Header="Xoá">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="Xoá" Command="{Binding DataContext.DeleteBuildingScheduleCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                CommandParameter="{Binding}" />
+                                <Button Command="{Binding DataContext.DeleteBuildingScheduleCommand,
+                                    RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                    Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+                                    Background="Red"
+                                        Width="25" Height="25"
+                                    CommandParameter="{Binding}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

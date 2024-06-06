@@ -20,7 +20,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         x:Name="window"
         
-        Title="Chọn thiết bị cần quản lý" Height="550" Width="650">
+        Title="Chọn thiết bị cần quản lý" Height="500" Width="650">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
@@ -32,23 +32,20 @@
 
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto"></RowDefinition>
-                <RowDefinition Height="auto"></RowDefinition>
                 <RowDefinition></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <materialDesign:Card Margin="5" Grid.Column="0">
-                    <WrapPanel>
+            <Grid Grid.Row="2">
+                
+                <materialDesign:Card Margin="5">
+                    <WrapPanel HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="OfficeBuildingCogOutline" Width="60" Height="40"/>
                         <Button Style="{StaticResource MaterialDesignPaperButton}" Command="{Binding ModifyWindowCommand}" Content="Quản lý" Margin="5" Width="100"></Button>
                     </WrapPanel>
                 </materialDesign:Card>
-                <materialDesign:Card Margin="5" Grid.Column="1">
+                <!--<materialDesign:Card Margin="5" Grid.Column="1">
                     <WrapPanel>
                         <materialDesign:PackIcon Kind="HomeClockOutline" Height="40" Width="60" />
                         <Button Style="{StaticResource MaterialDesignPaperButton}" Content="Lập lịch hoạt động" Margin="5" Width="170" Click="ScheduleButton_Click">
@@ -60,9 +57,10 @@
                             </Button.ContextMenu>
                         </Button>
                     </WrapPanel>
-                </materialDesign:Card>
+                </materialDesign:Card>-->
             </Grid>
-            <Grid Grid.Row="2">
+            
+            <Grid Grid.Row="0">
                 <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="All"
                           ItemsSource="{Binding Devices}"
                           SelectionUnit="{Binding ElementName=selectionUnitComboBox, Path=SelectedValue}">

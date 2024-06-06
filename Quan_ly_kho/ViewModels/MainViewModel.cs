@@ -16,6 +16,7 @@ namespace Quan_ly_kho.ViewModels
     public class MainViewModel : BaseViewModel
     {
         #region Các biến
+        public ICommand ScheduleBuildingCommand { get; set; }
         private ObservableCollection<Building> _buildings;
         public ObservableCollection<Building> Buildings
         {
@@ -120,6 +121,14 @@ namespace Quan_ly_kho.ViewModels
                 
                 manageWindow.Show();
             });
+
+            ScheduleBuildingCommand = new RelayCommand<object>((p) => SelectedBuilding != null,
+                (p) =>
+                {
+                    var buildingScheduleViewModel = new BuildingScheduleViewModel(SelectedBuilding);
+                    BuildingScheduleWindow w = new BuildingScheduleWindow(buildingScheduleViewModel);
+                    w.ShowDialog();
+                });
         }
 
         public async Task LoadBuildingDataAsync()

@@ -199,7 +199,7 @@ namespace Quan_ly_kho.ViewModels
         }
         private void CheckKeepAlive(object state)
         {
-            if ((DateTime.Now - ModifyViewModelState.LastKeepAliveReceived).TotalMinutes > 2)
+            if ((DateTime.Now - ModifyViewModelState.LastKeepAliveReceived).TotalMinutes > 2.5)
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
@@ -287,17 +287,20 @@ namespace Quan_ly_kho.ViewModels
 
         private void UpdateDeviceStates(string state)
         {
-            foreach (var device in SelectedDevices)
+            Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                device.DeviceState.Add(new DeviceState
+                foreach (var device in SelectedDevices)
                 {
-                    DeviceId = device.Id,
-                    State = state
-                });
-                DeviceEdited?.Invoke(this, device);
-            }
-            DataProvider.Ins.DB.SaveChanges();
-            OnPropertyChanged(nameof(SelectedDevices));
+                    device.DeviceState.Add(new DeviceState
+                    {
+                        DeviceId = device.Id,
+                        State = state
+                    });
+                    DeviceEdited?.Invoke(this, device);
+                }
+                DataProvider.Ins.DB.SaveChanges();
+                OnPropertyChanged(nameof(SelectedDevices));
+            });
         }
 
         private async Task SaveChangesAsync()

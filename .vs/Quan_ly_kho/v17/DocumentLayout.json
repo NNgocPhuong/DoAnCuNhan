@@ -3,23 +3,27 @@
   "WorkspaceRootPath": "D:\\CodeProjectMini\\Quan_ly_kho\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{B418C050-D032-40A4-BC29-4FA387B488F4}|Quan_ly_kho\\Quan_ly_kho.csproj|d:\\codeprojectmini\\quan_ly_kho\\quan_ly_kho\\models\\broker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B418C050-D032-40A4-BC29-4FA387B488F4}|Quan_ly_kho\\Quan_ly_kho.csproj|solutionrelative:quan_ly_kho\\models\\broker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{B418C050-D032-40A4-BC29-4FA387B488F4}|Quan_ly_kho\\Quan_ly_kho.csproj|d:\\codeprojectmini\\quan_ly_kho\\quan_ly_kho\\viewmodels\\modifyviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B418C050-D032-40A4-BC29-4FA387B488F4}|Quan_ly_kho\\Quan_ly_kho.csproj|solutionrelative:quan_ly_kho\\viewmodels\\modifyviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B418C050-D032-40A4-BC29-4FA387B488F4}|Quan_ly_kho\\Quan_ly_kho.csproj|d:\\codeprojectmini\\quan_ly_kho\\quan_ly_kho\\viewmodels\\manageviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{B418C050-D032-40A4-BC29-4FA387B488F4}|Quan_ly_kho\\Quan_ly_kho.csproj|D:\\CodeProjectMini\\Quan_ly_kho\\quan_ly_kho\\viewmodels\\manageviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B418C050-D032-40A4-BC29-4FA387B488F4}|Quan_ly_kho\\Quan_ly_kho.csproj|solutionrelative:quan_ly_kho\\viewmodels\\manageviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B418C050-D032-40A4-BC29-4FA387B488F4}|Quan_ly_kho\\Quan_ly_kho.csproj|d:\\codeprojectmini\\quan_ly_kho\\quan_ly_kho\\viewmodels\\mainviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{B418C050-D032-40A4-BC29-4FA387B488F4}|Quan_ly_kho\\Quan_ly_kho.csproj|D:\\CodeProjectMini\\Quan_ly_kho\\quan_ly_kho\\viewmodels\\mainviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B418C050-D032-40A4-BC29-4FA387B488F4}|Quan_ly_kho\\Quan_ly_kho.csproj|solutionrelative:quan_ly_kho\\viewmodels\\mainviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B418C050-D032-40A4-BC29-4FA387B488F4}|Quan_ly_kho\\Quan_ly_kho.csproj|d:\\codeprojectmini\\quan_ly_kho\\quan_ly_kho\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{B418C050-D032-40A4-BC29-4FA387B488F4}|Quan_ly_kho\\Quan_ly_kho.csproj|D:\\CodeProjectMini\\Quan_ly_kho\\quan_ly_kho\\views\\loginwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{B418C050-D032-40A4-BC29-4FA387B488F4}|Quan_ly_kho\\Quan_ly_kho.csproj|solutionrelative:quan_ly_kho\\views\\loginwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B418C050-D032-40A4-BC29-4FA387B488F4}|Quan_ly_kho\\Quan_ly_kho.csproj|D:\\CodeProjectMini\\Quan_ly_kho\\quan_ly_kho\\views\\modifywindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{B418C050-D032-40A4-BC29-4FA387B488F4}|Quan_ly_kho\\Quan_ly_kho.csproj|solutionrelative:quan_ly_kho\\views\\modifywindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B418C050-D032-40A4-BC29-4FA387B488F4}|Quan_ly_kho\\Quan_ly_kho.csproj|D:\\CodeProjectMini\\Quan_ly_kho\\quan_ly_kho\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{B418C050-D032-40A4-BC29-4FA387B488F4}|Quan_ly_kho\\Quan_ly_kho.csproj|solutionrelative:quan_ly_kho\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     }
   ],
@@ -30,7 +34,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -50,20 +54,29 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Broker.cs",
-              "DocumentMoniker": "D:\\CodeProjectMini\\Quan_ly_kho\\Quan_ly_kho\\Models\\Broker.cs",
-              "RelativeDocumentMoniker": "Quan_ly_kho\\Models\\Broker.cs",
-              "ToolTip": "D:\\CodeProjectMini\\Quan_ly_kho\\Quan_ly_kho\\Models\\Broker.cs",
-              "RelativeToolTip": "Quan_ly_kho\\Models\\Broker.cs",
-              "ViewState": "AQIAAA8AAAAAAAAAAAAYwCIAAAANAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-06T08:59:55.511Z",
-              "EditorCaption": ""
+              "DocumentIndex": 3,
+              "Title": "LoginWindow.xaml",
+              "DocumentMoniker": "D:\\CodeProjectMini\\Quan_ly_kho\\Quan_ly_kho\\Views\\LoginWindow.xaml",
+              "RelativeDocumentMoniker": "Quan_ly_kho\\Views\\LoginWindow.xaml",
+              "ToolTip": "D:\\CodeProjectMini\\Quan_ly_kho\\Quan_ly_kho\\Views\\LoginWindow.xaml",
+              "RelativeToolTip": "Quan_ly_kho\\Views\\LoginWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-06-06T09:30:29.758Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
+              "Title": "ModifyWindow.xaml",
+              "DocumentMoniker": "D:\\CodeProjectMini\\Quan_ly_kho\\Quan_ly_kho\\Views\\ModifyWindow.xaml",
+              "RelativeDocumentMoniker": "Quan_ly_kho\\Views\\ModifyWindow.xaml",
+              "ToolTip": "D:\\CodeProjectMini\\Quan_ly_kho\\Quan_ly_kho\\Views\\ModifyWindow.xaml",
+              "RelativeToolTip": "Quan_ly_kho\\Views\\ModifyWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-06-06T09:30:21.802Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "MainViewModel.cs",
               "DocumentMoniker": "D:\\CodeProjectMini\\Quan_ly_kho\\Quan_ly_kho\\ViewModels\\MainViewModel.cs",
               "RelativeDocumentMoniker": "Quan_ly_kho\\ViewModels\\MainViewModel.cs",
@@ -76,41 +89,40 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "ManageViewModel.cs",
               "DocumentMoniker": "D:\\CodeProjectMini\\Quan_ly_kho\\Quan_ly_kho\\ViewModels\\ManageViewModel.cs",
               "RelativeDocumentMoniker": "Quan_ly_kho\\ViewModels\\ManageViewModel.cs",
               "ToolTip": "D:\\CodeProjectMini\\Quan_ly_kho\\Quan_ly_kho\\ViewModels\\ManageViewModel.cs",
               "RelativeToolTip": "Quan_ly_kho\\ViewModels\\ManageViewModel.cs",
-              "ViewState": "AQIAANAAAAAAAAAAAAArwLkAAAANAAAA",
+              "ViewState": "AQIAAMwAAAAAAAAAAAAQwNMAAAA8AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-06-06T08:04:02.255Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "ModifyViewModel.cs",
               "DocumentMoniker": "D:\\CodeProjectMini\\Quan_ly_kho\\Quan_ly_kho\\ViewModels\\ModifyViewModel.cs",
               "RelativeDocumentMoniker": "Quan_ly_kho\\ViewModels\\ModifyViewModel.cs",
               "ToolTip": "D:\\CodeProjectMini\\Quan_ly_kho\\Quan_ly_kho\\ViewModels\\ModifyViewModel.cs",
               "RelativeToolTip": "Quan_ly_kho\\ViewModels\\ModifyViewModel.cs",
-              "ViewState": "AQIAAPUAAAAAAAAAAAAiwDcBAAA+AAAA",
+              "ViewState": "AQIAABwBAAAAAAAAAAAmwCYBAAAVAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-06-06T08:26:50.647Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "MainWindow.xaml",
               "DocumentMoniker": "D:\\CodeProjectMini\\Quan_ly_kho\\Quan_ly_kho\\MainWindow.xaml",
               "RelativeDocumentMoniker": "Quan_ly_kho\\MainWindow.xaml",
               "ToolTip": "D:\\CodeProjectMini\\Quan_ly_kho\\Quan_ly_kho\\MainWindow.xaml",
               "RelativeToolTip": "Quan_ly_kho\\MainWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-06-06T08:00:46.969Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-06T08:00:46.969Z"
             }
           ]
         }

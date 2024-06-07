@@ -209,18 +209,21 @@ namespace Quan_ly_kho.ViewModels
         }
         public void UpdateDevicesView()
         {
-            foreach (var device in Devices)
+            Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                var latestState = DataProvider.Ins.DB.DeviceState
-                    .Where(ds => ds.DeviceId == device.Id)
-                    .OrderByDescending(ds => ds.Timestamp)
-                    .FirstOrDefault();
-
-                if (latestState != null)
+                foreach (var device in Devices)
                 {
-                    device.DeviceStateName = latestState.State;
+                    var latestState = DataProvider.Ins.DB.DeviceState
+                        .Where(ds => ds.DeviceId == device.Id)
+                        .OrderByDescending(ds => ds.Timestamp)
+                        .FirstOrDefault();
+
+                    if (latestState != null)
+                    {
+                        device.DeviceStateName = latestState.State;
+                    }
                 }
-            }
+            });
         }
     }
 }

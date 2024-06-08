@@ -23,12 +23,12 @@ namespace Quan_ly_kho.ViewModels
 
         private Dictionary<string, DateTime> _deviceLastKeepAlive = new Dictionary<string, DateTime>();
         private HashSet<string> _acknowledgedTokens = new HashSet<string>();
+        private Dictionary<string, string> _deviceCurrentState = new Dictionary<string, string>();
 
         public SchedulerTaskService()
         {
-
-            
         }
+
         public void Start()
         {
             if (SchedulerState.KeepAliveTimer == null)
@@ -38,21 +38,23 @@ namespace Quan_ly_kho.ViewModels
 
             if (SchedulerState.ScheduleCheckTimer == null)
             {
-                SchedulerState.ScheduleCheckTimer = new System.Threading.Timer(CheckAndExecuteSchedules, null, 0, 60000);
+                SchedulerState.ScheduleCheckTimer = new System.Threading.Timer(CheckAndExecuteSchedules, null, 0, 40000);
             }
 
             // Lắng nghe topic của các tòa nhà
             foreach (var building in Buildings)
             {
-                Broker.Listen(building.BuildingName.ToMD5(), OnBrokerMessageReceived);
+                Broker.Instance.Listen(building.BuildingName.ToMD5(), OnBrokerMessageReceived);
             }
         }
+
         public void Stop()
         {
             SchedulerState.KeepAliveTimer?.Dispose();
             SchedulerState.ScheduleCheckTimer?.Dispose();
-            Broker?.Disconnect();
+            Broker.Instance?.Disconnect();
         }
+
         private void OnBrokerMessageReceived(Document e)
         {
             var doc = e;
@@ -122,6 +124,7 @@ namespace Quan_ly_kho.ViewModels
                 {
                     device.DeviceState.Add(new DeviceState { DeviceId = device.Id, State = state });
                 }
+                _deviceCurrentState[device.DeviceName] = state; // Cập nhật trạng thái hiện tại
             }
             DataProvider.Ins.DB.SaveChanges();
         }
@@ -136,7 +139,7 @@ namespace Quan_ly_kho.ViewModels
                 Status = status
             };
 
-            Broker.Send(buildingName.ToMD5(), doc);
+            Broker.Instance.Send(buildingName.ToLower().ToMD5(), doc);
         }
 
         public async void CheckAndExecuteSchedules(object state)
@@ -145,52 +148,109 @@ namespace Quan_ly_kho.ViewModels
             foreach (var building in Buildings)
             {
                 var rooms = Rooms.Where(r => r.Floor.BuildingId == building.Id).ToList();
-                foreach (var schedule in Schedules.Where(s => now >= s.StartTime && now <= s.EndTime))
+                foreach (var schedule in Schedules)
                 {
-                    var devicesCount = new int[3]; // 0: Lights, 1: Fans, 2: Doors
-
                     foreach (var room in rooms)
                     {
-                        foreach (var device in room.Device)
+                        // Kiểm tra và gửi lệnh "on" khi đến giờ bắt đầu
+                        if (now >= schedule.StartTime && now <= schedule.EndTime && (!_deviceCurrentState.ContainsKey(room.Id_esp32) || _deviceCurrentState[room.Id_esp32] != "on"))
                         {
-                            switch (device.DeviceType)
+                            var devicesCount = new int[3]; // 0: Lights, 1: Fans, 2: Doors
+                            foreach (var device in room.Device)
                             {
-                                case "Đèn":
-                                    devicesCount[0]++;
-                                    break;
-                                case "Quạt":
-                                    devicesCount[1]++;
-                                    break;
-                                case "Cửa":
-                                    devicesCount[2]++;
-                                    break;
+                                switch (device.DeviceType)
+                                {
+                                    case "Đèn":
+                                        devicesCount[0]++;
+                                        break;
+                                    case "Quạt":
+                                        devicesCount[1]++;
+                                        break;
+                                    case "Cửa":
+                                        devicesCount[2]++;
+                                        break;
+                                }
+                            }
+
+                            lock (_acknowledgedTokens)
+                            {
+                                _acknowledgedTokens.Clear();
+                            }
+
+                            // Gửi lệnh điều khiển tới tất cả các phòng trong tòa nhà
+                            await SendControlCommand(building.BuildingName, room.Id_esp32, devicesCount, "on");
+
+                            // Cập nhật trạng thái hiện tại
+                            _deviceCurrentState[room.Id_esp32] = "on";
+
+                            // Đợi 8 giây để nhận phản hồi
+                            await Task.Delay(8000);
+
+                            List<string> unacknowledgedRooms;
+                            // Kiểm tra token đã nhận phản hồi
+                            lock (_acknowledgedTokens)
+                            {
+                                unacknowledgedRooms = rooms.Where(r => !_acknowledgedTokens.Contains(r.Id_esp32)).Select(r => r.Id_esp32).ToList();
+                            }
+
+                            foreach (var unackRoom in unacknowledgedRooms)
+                            {
+                                var Room = rooms.FirstOrDefault(r => r.Id_esp32 == unackRoom);
+                                if (Room != null)
+                                {
+                                    UpdateDeviceStates(Room, "Lỗi");
+                                }
                             }
                         }
 
-                        lock (_acknowledgedTokens)
+                        // Kiểm tra và gửi lệnh "off" khi đến giờ kết thúc
+                        if (now > schedule.EndTime && _deviceCurrentState.ContainsKey(room.Id_esp32) && _deviceCurrentState[room.Id_esp32] != "off")
                         {
-                            _acknowledgedTokens.Clear();
-                        }
-
-                        // Gửi lệnh điều khiển tới tất cả các phòng trong tòa nhà
-                        await SendControlCommand(building.BuildingName, room.Id_esp32, devicesCount, "on");
-
-                        // Đợi 8 giây để nhận phản hồi
-                        await Task.Delay(8000);
-
-                        List<string> unacknowledgedRooms;
-                        // Kiểm tra token đã nhận phản hồi
-                        lock (_acknowledgedTokens)
-                        {
-                            unacknowledgedRooms = rooms.Where(r => !_acknowledgedTokens.Contains(r.Id_esp32)).Select(r => r.Id_esp32).ToList();
-                        }
-
-                        foreach (var unackRoom in unacknowledgedRooms)
-                        {
-                            var Room = rooms.FirstOrDefault(r => r.Id_esp32 == unackRoom);
-                            if (Room != null)
+                            var devicesCount = new int[3]; // 0: Lights, 1: Fans, 2: Doors
+                            foreach (var device in room.Device)
                             {
-                                UpdateDeviceStates(Room, "Lỗi");
+                                switch (device.DeviceType)
+                                {
+                                    case "Đèn":
+                                        devicesCount[0]++;
+                                        break;
+                                    case "Quạt":
+                                        devicesCount[1]++;
+                                        break;
+                                    case "Cửa":
+                                        devicesCount[2]++;
+                                        break;
+                                }
+                            }
+
+                            lock (_acknowledgedTokens)
+                            {
+                                _acknowledgedTokens.Clear();
+                            }
+
+                            // Gửi lệnh tắt tất cả các phòng trong tòa nhà
+                            await SendControlCommand(building.BuildingName, room.Id_esp32, devicesCount, "off");
+
+                            // Cập nhật trạng thái hiện tại
+                            _deviceCurrentState[room.Id_esp32] = "off";
+
+                            // Đợi 8 giây để nhận phản hồi
+                            await Task.Delay(8000);
+
+                            List<string> unacknowledgedRooms;
+                            // Kiểm tra token đã nhận phản hồi
+                            lock (_acknowledgedTokens)
+                            {
+                                unacknowledgedRooms = rooms.Where(r => !_acknowledgedTokens.Contains(r.Id_esp32)).Select(r => r.Id_esp32).ToList();
+                            }
+
+                            foreach (var unackRoom in unacknowledgedRooms)
+                            {
+                                var Room = rooms.FirstOrDefault(r => r.Id_esp32 == unackRoom);
+                                if (Room != null)
+                                {
+                                    UpdateDeviceStates(Room, "Lỗi");
+                                }
                             }
                         }
                     }
@@ -199,4 +259,3 @@ namespace Quan_ly_kho.ViewModels
         }
     }
 }
-

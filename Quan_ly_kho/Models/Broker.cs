@@ -9,6 +9,22 @@ namespace System
 {
     public class Broker : Client
     {
+        private static Broker _instance;
+        private static readonly object _lock = new object();
+        public static Broker Instance
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new Broker();
+                    }
+                    return _instance;
+                }
+            }
+        }
         public Broker() : base("broker.emqx.io") { }
         public void Send(string topic, Document doc)
         {

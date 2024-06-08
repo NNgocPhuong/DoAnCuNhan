@@ -16,22 +16,24 @@ namespace Quan_ly_kho
     /// </summary>
     public partial class App : Application
     {
-        //private ScheduledTaskService _scheduledTaskService;
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
 
-        //protected override void OnStartup(StartupEventArgs e)
-        //{
-        //    base.OnStartup(e);
+            // Khởi tạo và kết nối Broker
+            Broker.Instance.Connect();
 
-        //    // Khởi tạo Room và ScheduledTaskService
-        //    var selectedRoom = new Room();
-        //    _scheduledTaskService = new ScheduledTaskService(selectedRoom);
+            
+            //var mainWindow = new MainWindow();
+            //var mainViewModel = new MainViewModel();
+            //mainWindow.DataContext = mainViewModel;
+        }
 
-        //    // Thêm các lịch trình hiện có vào dịch vụ
-        //    var existingSchedules = DataProvider.Ins.DB.Schedule.Include((s) => s.Device).ToList();
-        //    foreach (var schedule in existingSchedules)
-        //    {
-        //        _scheduledTaskService.AddSchedule(schedule);
-        //    }
-        //}
+        protected override void OnExit(ExitEventArgs e)
+        {
+            // Ngắt kết nối Broker khi ứng dụng đóng
+            Broker.Instance.Disconnect();
+            base.OnExit(e);
+        }
     }
 }

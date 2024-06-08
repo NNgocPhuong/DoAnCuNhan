@@ -78,14 +78,17 @@ namespace Quan_ly_kho.ViewModels
             Devices = new ObservableCollection<Device>();
             SelectedRoom = selected_Room;
             SelectedBuilding = selected_Building;
-            
-            Broker.Listen(SelectedRoom.Id_esp32, received_callback);
+
+            //string s = (SelectedBuilding.BuildingName.ToLower() + SelectedRoom.RoomNumber).ToMD5();
+            //SelectedRoom.Id_esp32 = s;
+            //DataProvider.Ins.DB.SaveChanges();
+            Broker.Instance.Listen(SelectedRoom.Id_esp32, received_callback);
             Document doc = new Document()
             {
                 Type = "request-infor"
             };
-            Broker.Send(SelectedRoom.Id_esp32, doc);
-            
+            Broker.Instance.Send(SelectedRoom.Id_esp32, doc);
+
             // Xoá các lịch trình đã thực hiện
             RemoveExpiredSchedules();
             ModifyWindowCommand = new RelayCommand<object>((p) => { return true; },

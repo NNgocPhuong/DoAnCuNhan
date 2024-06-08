@@ -88,9 +88,11 @@ namespace Quan_ly_kho.ViewModels
         public ICommand ManageWindowCommand { get; set; }
         public bool IsLoaded { get; set; } = false;
         #endregion
+        private SchedulerTaskService _schedulerTaskService;
         public MainViewModel()
         {
-            Broker.Connect();
+            _schedulerTaskService = new SchedulerTaskService();
+            _schedulerTaskService.Start();
             LoadedWindowCommand = new RelayCommand<Window>((p) => true, async (p) =>
             {
                 IsLoaded = true;

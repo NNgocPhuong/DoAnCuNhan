@@ -61,7 +61,7 @@
                             Background="#1974D3"
                             Command="{Binding ManageWindowCommand}" IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                             Style="{StaticResource MaterialDesignPaperButton}"
-                            ToolTip="Resource name: MaterialDesignRaisedLightDarkButton"/>
+                            ToolTip="Tìm kiếm phòng vừa lựa chọn"/>
                     <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Button Style="{StaticResource MaterialDesignRaisedButton}" 
                         Content="Lập lịch cho toà nhà" 

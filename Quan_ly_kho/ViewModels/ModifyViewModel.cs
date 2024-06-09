@@ -122,9 +122,9 @@ namespace Quan_ly_kho.ViewModels
                 ModifyViewModelState.LastKeepAliveReceived = DateTime.Now;
             }
 
-            Broker.process_received_data -= OnBrokerMessageReceived;
-            Broker.process_received_data += OnBrokerMessageReceived;
-            Broker.Listen(SelectedRoom.Id_esp32, OnBrokerMessageReceived);
+            Broker.Instance.process_received_data -= OnBrokerMessageReceived;
+            Broker.Instance.process_received_data += OnBrokerMessageReceived;
+            Broker.Instance.Listen(SelectedRoom.Id_esp32, OnBrokerMessageReceived);
             AddCommand = new RelayCommand<object>(
                 (p) => !string.IsNullOrEmpty(DeviceName) && DataProvider.Ins.DB.Device.FirstOrDefault(x => x.DeviceName == DeviceName && x.RoomId == SelectedRoom.Id && x.DeviceType == DeviceType) == null,
                 async (p) =>
@@ -156,6 +156,8 @@ namespace Quan_ly_kho.ViewModels
                     {
                         device.DeviceName = DeviceName;
                         device.DeviceType = DeviceType;
+                        SelectedDevices.Remove(device);
+                        SelectedDevices.Add(device);
                         DataProvider.Ins.DB.SaveChanges();
                         DeviceEdited?.Invoke(this, device);
                     }
@@ -187,7 +189,7 @@ namespace Quan_ly_kho.ViewModels
         }
         private void ListenToBroker(object state)
         {
-            Broker.Listen(SelectedRoom.Id_esp32, OnBrokerMessageReceived);
+            Broker.Instance.Listen(SelectedRoom.Id_esp32, OnBrokerMessageReceived);
         }
 
         private void OnBrokerMessageReceived(Document doc)
@@ -199,7 +201,7 @@ namespace Quan_ly_kho.ViewModels
         }
         private void CheckKeepAlive(object state)
         {
-            if ((DateTime.Now - ModifyViewModelState.LastKeepAliveReceived).TotalMinutes > 2)
+            if ((DateTime.Now - ModifyViewModelState.LastKeepAliveReceived).TotalMinutes > 2.5)
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
@@ -225,7 +227,7 @@ namespace Quan_ly_kho.ViewModels
                 { "Type", "control" },
                 { "Devices", CreateDevicesObject(command) }
             };
-            Broker.Send(SelectedRoom.Id_esp32, controlMessage.ToString());
+            Broker.Instance.Send(SelectedRoom.Id_esp32, controlMessage.ToString());
 
             await ListenForResponseAndUpdateState(command);
         }
@@ -234,10 +236,10 @@ namespace Quan_ly_kho.ViewModels
         {
             var devicesObject = new JObject
             {
-                { "Doors", new JArray(SelectedDevices.Where(d => d.DeviceType.StartsWith("Cửa")).Select(d => new JObject { { "id_esp", d.DeviceName }, { "power", command } })) },
-                { "Lights", new JArray(SelectedDevices.Where(d => d.DeviceType.StartsWith("Đèn")).Select(d => new JObject { { "id_esp", d.DeviceName }, { "power", command } })) },
-                { "Fans", new JArray(SelectedDevices.Where(d => d.DeviceType.StartsWith("Quạt")).Select(d => new JObject { { "id_esp", d.DeviceName }, { "power", command } })) },
-                { "AirConditionings", new JArray(SelectedDevices.Where(d => d.DeviceType.StartsWith("Điều hoà")).Select(d => new JObject { { "id_esp", d.DeviceName }, { "power", command } })) }
+                { "Doors", new JArray(SelectedDevices.Where(d => d.DeviceType.StartsWith("Cửa")).Select(d => new JObject { { "id_esp", d.DeviceName }, { "status", command } })) },
+                { "Lights", new JArray(SelectedDevices.Where(d => d.DeviceType.StartsWith("Đèn")).Select(d => new JObject { { "id_esp", d.DeviceName }, { "status", command } })) },
+                { "Fans", new JArray(SelectedDevices.Where(d => d.DeviceType.StartsWith("Quạt")).Select(d => new JObject { { "id_esp", d.DeviceName }, { "status", command } })) },
+                { "AirConditionings", new JArray(SelectedDevices.Where(d => d.DeviceType.StartsWith("Điều hoà")).Select(d => new JObject { { "id_esp", d.DeviceName }, { "status", command } })) }
             };
             return devicesObject;
         }
@@ -253,12 +255,12 @@ namespace Quan_ly_kho.ViewModels
                 if (doc["Type"]?.ToString() == "ack-control" && doc["Response"]?.ToString() == "control-success")
                 {
                     tcs.TrySetResult(true);
-                    Broker.process_received_data -= handler; // Unsubscribe after handling
+                    Broker.Instance.process_received_data -= handler; // Unsubscribe after handling
                 }
             };
 
-            Broker.process_received_data += handler;
-            Broker.Listen(SelectedRoom.Id_esp32, handler);
+            Broker.Instance.process_received_data += handler;
+            Broker.Instance.Listen(SelectedRoom.Id_esp32, handler);
             try
             {
                 var result = await Task.WhenAny(tcs.Task, Task.Delay(Timeout.Infinite, cts.Token));
@@ -280,24 +282,27 @@ namespace Quan_ly_kho.ViewModels
             finally
             {
                 // Ensure handler is unsubscribed if Task was not completed successfully
-                Broker.process_received_data -= handler;
+                Broker.Instance.process_received_data -= handler;
             }
         }
 
 
         private void UpdateDeviceStates(string state)
         {
-            foreach (var device in SelectedDevices)
+            Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                device.DeviceState.Add(new DeviceState
+                foreach (var device in SelectedDevices)
                 {
-                    DeviceId = device.Id,
-                    State = state
-                });
-                DeviceEdited?.Invoke(this, device);
-            }
-            DataProvider.Ins.DB.SaveChanges();
-            OnPropertyChanged(nameof(SelectedDevices));
+                    device.DeviceState.Add(new DeviceState
+                    {
+                        DeviceId = device.Id,
+                        State = state
+                    });
+                    DeviceEdited?.Invoke(this, device);
+                }
+                DataProvider.Ins.DB.SaveChanges();
+                OnPropertyChanged(nameof(SelectedDevices));
+            });
         }
 
         private async Task SaveChangesAsync()

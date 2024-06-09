@@ -6,6 +6,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -16,22 +17,47 @@ namespace Quan_ly_kho
     /// </summary>
     public partial class App : Application
     {
-        //private ScheduledTaskService _scheduledTaskService;
+        private Timer _scheduleCleanupTimer;
 
-        //protected override void OnStartup(StartupEventArgs e)
-        //{
-        //    base.OnStartup(e);
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
 
-        //    // Khởi tạo Room và ScheduledTaskService
-        //    var selectedRoom = new Room();
-        //    _scheduledTaskService = new ScheduledTaskService(selectedRoom);
+            // Khởi tạo và kết nối Broker
+            Broker.Instance.Connect();
 
-        //    // Thêm các lịch trình hiện có vào dịch vụ
-        //    var existingSchedules = DataProvider.Ins.DB.Schedule.Include((s) => s.Device).ToList();
-        //    foreach (var schedule in existingSchedules)
-        //    {
-        //        _scheduledTaskService.AddSchedule(schedule);
-        //    }
-        //}
+            // Khởi động bộ định thời để kiểm tra và xóa các lịch trình đã kết thúc
+            _scheduleCleanupTimer = new Timer(RemoveExpiredSchedules, null, 0, 60000);
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            // Ngắt kết nối Broker khi ứng dụng đóng
+            Broker.Instance.Disconnect();
+
+            // Dừng bộ định thời
+            _scheduleCleanupTimer?.Dispose();
+
+            base.OnExit(e);
+        }
+
+        private void RemoveExpiredSchedules(object state)
+        {
+            var now = DateTime.Now;
+
+            // Find schedules that have already ended
+            var expiredSchedules = DataProvider.Ins.DB.Schedule
+                                    .Where(s => s.EndTime < now)
+                                    .ToList();
+
+            foreach (var schedule in expiredSchedules)
+            {
+                DataProvider.Ins.DB.Schedule.Remove(schedule);
+            }
+
+            // Save changes to the database
+            DataProvider.Ins.DB.SaveChanges();
+
+        }
     }
 }

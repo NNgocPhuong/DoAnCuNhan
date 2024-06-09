@@ -15,6 +15,8 @@ namespace Quan_ly_kho.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
+        #region Các biến
+        public ICommand ScheduleBuildingCommand { get; set; }
         private ObservableCollection<Building> _buildings;
         public ObservableCollection<Building> Buildings
         {
@@ -85,10 +87,12 @@ namespace Quan_ly_kho.ViewModels
         public ICommand LoadedWindowCommand { get; set; }
         public ICommand ManageWindowCommand { get; set; }
         public bool IsLoaded { get; set; } = false;
-
+        #endregion
+        private SchedulerTaskService _schedulerTaskService;
         public MainViewModel()
         {
-            Broker.Connect();
+            _schedulerTaskService = new SchedulerTaskService();
+            _schedulerTaskService.Start();
             LoadedWindowCommand = new RelayCommand<Window>((p) => true, async (p) =>
             {
                 IsLoaded = true;
@@ -117,8 +121,16 @@ namespace Quan_ly_kho.ViewModels
                 };
                 var manageWindow = new ManageWindow(manageViewModel);
                 
-                manageWindow.ShowDialog();
+                manageWindow.Show();
             });
+
+            ScheduleBuildingCommand = new RelayCommand<object>((p) => SelectedBuilding != null,
+                (p) =>
+                {
+                    var buildingScheduleViewModel = new BuildingScheduleViewModel(SelectedBuilding);
+                    BuildingScheduleWindow w = new BuildingScheduleWindow(buildingScheduleViewModel);
+                    w.ShowDialog();
+                });
         }
 
         public async Task LoadBuildingDataAsync()

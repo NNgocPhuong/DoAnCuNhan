@@ -11,22 +11,36 @@ namespace Quan_ly_kho.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        private static Broker broker;
-        public static Broker Broker
+        private static bool _brokerConnected = false;
+        private static readonly object _lock = new object();
+        //private static Broker broker;
+        //public static Broker Broker
+        //{
+        //    get => broker; 
+        //    set
+        //    {
+        //        if (broker == null)
+        //            broker = new Broker();
+        //        broker = value;
+        //    }
+        //}
+        public BaseViewModel() 
         {
-            get => broker; 
-            set
+            //Broker = new Broker();
+            EnsureBrokerConnected();
+        }
+        private void EnsureBrokerConnected()
+        {
+            lock (_lock)
             {
-                if (broker == null)
-                    broker = new Broker();
-                broker = value;
+                if (!_brokerConnected)
+                {
+                    Broker.Instance.Connect();
+                    _brokerConnected = true;
+                }
             }
         }
-        static BaseViewModel() 
-        {
-            Broker = new Broker();
-        }
-        
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

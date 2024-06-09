@@ -41,7 +41,7 @@ namespace Quan_ly_kho.ViewModels
 
             if (SchedulerState.ScheduleCheckTimer == null)
             {
-                SchedulerState.ScheduleCheckTimer = new System.Threading.Timer(CheckAndExecuteSchedules, null, 0, 60000);
+                SchedulerState.ScheduleCheckTimer = new System.Threading.Timer(CheckAndExecuteSchedules, null, 0, 30000);
             }
 
             // Lắng nghe topic của các tòa nhà
@@ -143,7 +143,8 @@ namespace Quan_ly_kho.ViewModels
             foreach (var building in Buildings)
             {
                 var rooms = Rooms.Where(r => r.Floor.BuildingId == building.Id).ToList();
-                foreach (var schedule in DataProvider.Ins.DB.Schedule.ToList())
+                var Schedules = DataProvider.Ins.DB.Schedule.ToList();
+                foreach (var schedule in Schedules)
                 {
                     if (now >= schedule.StartTime && now <= schedule.EndTime)
                     {

@@ -27,7 +27,7 @@ namespace Quan_ly_kho
             Broker.Instance.Connect();
 
             // Khởi động bộ định thời để kiểm tra và xóa các lịch trình đã kết thúc
-            _scheduleCleanupTimer = new Timer(RemoveExpiredSchedules, null, 0, 60000);
+            _scheduleCleanupTimer = new Timer(RemoveExpiredSchedules, null, 0, 300000);
         }
 
         protected override void OnExit(ExitEventArgs e)

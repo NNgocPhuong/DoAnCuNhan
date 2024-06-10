@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows.Controls;
 
 namespace Quan_ly_kho.ViewModels
 {
@@ -177,15 +178,29 @@ namespace Quan_ly_kho.ViewModels
                                 }
 
                                 await SendControlCommand(building.BuildingName, room.Id_esp32, devicesCount, "on");
+                                //Đánh dấu rằng lệnh on đã được gửi tới phòng hiện tại
                                 _deviceCurrentState[room.Id_esp32] = "on";
 
                                 // Đợi 8 giây để nhận phản hồi
                                 await Task.Delay(8000);
 
                                 List<string> unacknowledgedRooms;
+                                List<string> acknowledgedRooms;
                                 lock (_acknowledgedTokens)
                                 {
+                                    //Lọc ra các phòng trong danh sách rooms mà ID (r.Id_esp32) không có trong _acknowledgedTokens.
                                     unacknowledgedRooms = rooms.Where(r => !_acknowledgedTokens.Contains(r.Id_esp32)).Select(r => r.Id_esp32).ToList();
+                                    // Danh sách các phòng đã nhận được phản hồi
+                                    acknowledgedRooms = rooms.Where(r => _acknowledgedTokens.Contains(r.Id_esp32)).Select(r => r.Id_esp32).ToList();
+                                }
+                                // Cập nhật trạng thái thiết bị trong các phòng đã nhận được phản hồi thành "Bật"
+                                foreach (var ackRoom in acknowledgedRooms)
+                                {
+                                    var Room = rooms.FirstOrDefault(r => r.Id_esp32 == ackRoom);
+                                    if (Room != null)
+                                    {
+                                        UpdateDeviceStates(Room, "Bật");
+                                    }
                                 }
 
                                 foreach (var unackRoom in unacknowledgedRooms)
@@ -235,11 +250,21 @@ namespace Quan_ly_kho.ViewModels
                                 await Task.Delay(8000);
 
                                 List<string> unacknowledgedRooms;
+                                List<string> acknowledgedRooms;
                                 lock (_acknowledgedTokens)
                                 {
                                     unacknowledgedRooms = rooms.Where(r => !_acknowledgedTokens.Contains(r.Id_esp32)).Select(r => r.Id_esp32).ToList();
+                                    acknowledgedRooms = rooms.Where(r => _acknowledgedTokens.Contains(r.Id_esp32)).Select(r => r.Id_esp32).ToList();
                                 }
-
+                                // Cập nhật trạng thái thiết bị trong các phòng đã nhận được phản hồi thành "Tắt"
+                                foreach (var ackRoom in acknowledgedRooms)
+                                {
+                                    var Room = rooms.FirstOrDefault(r => r.Id_esp32 == ackRoom);
+                                    if (Room != null)
+                                    {
+                                        UpdateDeviceStates(Room, "Tắt");
+                                    }
+                                }
                                 foreach (var unackRoom in unacknowledgedRooms)
                                 {
                                     var Room = rooms.FirstOrDefault(r => r.Id_esp32 == unackRoom);

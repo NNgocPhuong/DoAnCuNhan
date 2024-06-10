@@ -2,6 +2,7 @@
 using Quan_ly_kho.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,19 +18,15 @@ namespace Quan_ly_kho.ViewModels
 
     public class SchedulerTaskService : BaseViewModel
     {
-        public List<Building> Buildings {  get; set; }
-        public List<Room> Rooms { get; set; }
-        //public List<Schedule> Schedules { get; set; }
-
         private Dictionary<string, DateTime> _deviceLastKeepAlive = new Dictionary<string, DateTime>();
         private HashSet<string> _acknowledgedTokens = new HashSet<string>();
         private Dictionary<string, string> _deviceCurrentState = new Dictionary<string, string>();
-
+        public List<Building> Buildings { get; set; }
+        public List<Room> Rooms { get; set; }
         public SchedulerTaskService()
         {
             Buildings = DataProvider.Ins.DB.Building.ToList();
-            Rooms = DataProvider.Ins.DB.Room.ToList();
-            //Schedules = DataProvider.Ins.DB.Schedule.ToList();
+            Rooms = DataProvider.Ins.DB.Room.Include(r => r.Floor).ToList();
         }
 
         public void Start()
@@ -95,7 +92,6 @@ namespace Quan_ly_kho.ViewModels
             {
                 deviceList = _deviceLastKeepAlive.ToList();
             }
-
             foreach (var kvp in deviceList)
             {
                 if ((now - kvp.Value).TotalMinutes > 2.5)
@@ -118,9 +114,9 @@ namespace Quan_ly_kho.ViewModels
         {
             foreach (var device in room.Device)
             {
-                 device.DeviceState.Add(new DeviceState { DeviceId = device.Id, State = state });
+                device.DeviceState.Add(new DeviceState { DeviceId = device.Id, State = state });
             }
-            
+
             DataProvider.Ins.DB.SaveChanges();
         }
 
@@ -140,11 +136,16 @@ namespace Quan_ly_kho.ViewModels
         public async void CheckAndExecuteSchedules(object state)
         {
             var now = DateTime.Now;
+           
             foreach (var building in Buildings)
             {
-                var rooms = Rooms.Where(r => r.Floor.BuildingId == building.Id).ToList();
-                var Schedules = DataProvider.Ins.DB.Schedule.ToList();
-                foreach (var schedule in Schedules)
+                List<Room> rooms = new List<Room>();
+                List<Schedule> schedules = new List<Schedule>();
+
+                rooms = Rooms.Where(r => r.Floor.BuildingId == building.Id).ToList();
+                schedules = DataProvider.Ins.DB.Schedule.Where(s => s.Device.Room.Floor.BuildingId == building.Id).ToList();
+
+                foreach (var schedule in schedules)
                 {
                     if (now >= schedule.StartTime && now <= schedule.EndTime)
                     {
@@ -251,7 +252,9 @@ namespace Quan_ly_kho.ViewModels
                         }
                     }
                 }
+
             }
         }
+
     }
 }

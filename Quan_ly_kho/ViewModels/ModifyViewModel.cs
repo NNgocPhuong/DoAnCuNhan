@@ -214,7 +214,7 @@ namespace Quan_ly_kho.ViewModels
 
                     if (!ModifyViewModelState.ErrorMessageShown)
                     {
-                        MessageBox.Show("Vi xử lý bị lỗi", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Vi xử lý ở phòng " + SelectedRoom.Floor.Building.BuildingName+SelectedRoom.RoomNumber + " lỗi", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                         ModifyViewModelState.ErrorMessageShown = true;
                     }
                 });

@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows;
 using Quan_ly_kho.Models;
+using System.Threading;
 
 namespace Quan_ly_kho.ViewModels
 {
@@ -20,6 +21,8 @@ namespace Quan_ly_kho.ViewModels
         public ICommand LoginCommand { get; set; }
         public ICommand CloseCommand { get; set; }
         public ICommand PasswordChangedCommand { get; set; }
+        private Timer _scheduleCleanupTimer;
+        private static readonly object _lockObject = new object();
         public LoginViewModel()
         {
             PassWord = "";
@@ -28,6 +31,8 @@ namespace Quan_ly_kho.ViewModels
             LoginCommand = new RelayCommand<Window>((p) => { return true; }, (p) => { Login(p); });
             CloseCommand = new RelayCommand<Window>((p) => { return true; }, (p) => { p.Close(); });
             PasswordChangedCommand = new RelayCommand<PasswordBox>((p) => { return true; }, (p) => { PassWord = p.Password; });
+            // Khởi động bộ định thời để kiểm tra và xóa các lịch trình đã kết thúc
+            _scheduleCleanupTimer = new Timer(RemoveExpiredSchedules, null, 0, 60000);
         }
 
         void Login(Window p)
@@ -47,6 +52,30 @@ namespace Quan_ly_kho.ViewModels
             {
                 IsLogin = false;
                 MessageBox.Show("Tài khoản hoặc mật khẩu sai");
+            }
+        }
+        private void RemoveExpiredSchedules(object state)
+        {
+            lock (_lockObject)
+            {
+                var now = DateTime.Now;
+                // Tìm các ID của lịch trình đã kết thúc
+                var expiredScheduleIds = DataProvider.Ins.DB.Schedule
+                                        .Where(s => s.EndTime < now)
+                                        .Select(s => s.Id) 
+                                        .ToList();
+                // Xóa các lịch trình khỏi cơ sở dữ liệu bằng cách tạo đối tượng mới với ID
+                foreach (var id in expiredScheduleIds)
+                {
+                    var schedule = DataProvider.Ins.DB.Schedule.Find(id);
+                    if (schedule != null)
+                    {
+                        DataProvider.Ins.DB.Schedule.Remove(schedule);
+                    }
+                }
+                // Lưu các thay đổi vào cơ sở dữ liệu
+                DataProvider.Ins.DB.SaveChanges();
+
             }
         }
     }

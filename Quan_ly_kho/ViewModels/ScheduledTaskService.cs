@@ -13,13 +13,13 @@ namespace Quan_ly_kho.ViewModels
 {
     public class SchedulerState
     {
-        public static System.Threading.Timer KeepAliveTimer { get; set; }
+        //public static System.Threading.Timer KeepAliveTimer { get; set; }
         public static System.Threading.Timer ScheduleCheckTimer { get; set; }
     }
 
     public class SchedulerTaskService : BaseViewModel
     {
-        private Dictionary<string, DateTime> _deviceLastKeepAlive = new Dictionary<string, DateTime>();
+        //private Dictionary<string, DateTime> _deviceLastKeepAlive = new Dictionary<string, DateTime>();
         private HashSet<string> _acknowledgedTokens = new HashSet<string>();
         private Dictionary<string, string> _deviceCurrentState = new Dictionary<string, string>();
         public List<Building> Buildings { get; set; }
@@ -32,10 +32,10 @@ namespace Quan_ly_kho.ViewModels
 
         public void Start()
         {
-            if (SchedulerState.KeepAliveTimer == null)
-            {
-                SchedulerState.KeepAliveTimer = new System.Threading.Timer(CheckKeepAlive, null, 0, 60000);
-            }
+            //if (SchedulerState.KeepAliveTimer == null)
+            //{
+            //    SchedulerState.KeepAliveTimer = new System.Threading.Timer(CheckKeepAlive, null, 0, 60000);
+            //}
 
             if (SchedulerState.ScheduleCheckTimer == null)
             {
@@ -51,7 +51,7 @@ namespace Quan_ly_kho.ViewModels
 
         public void Stop()
         {
-            SchedulerState.KeepAliveTimer?.Dispose();
+            //SchedulerState.KeepAliveTimer?.Dispose();
             SchedulerState.ScheduleCheckTimer?.Dispose();
             Broker.Instance?.Disconnect();
         }
@@ -60,18 +60,18 @@ namespace Quan_ly_kho.ViewModels
         {
             var doc = e;
 
-            if (doc["Type"]?.ToString() == "keep-alive")
-            {
-                var token = doc["Token"]?.ToString();
-                if (token != null)
-                {
-                    lock (_deviceLastKeepAlive)
-                    {
-                        _deviceLastKeepAlive[token] = DateTime.Now;
-                    }
-                }
-            }
-            else if (doc["Type"]?.ToString() == "ack-schedule")
+            //if (doc["Type"]?.ToString() == "keep-alive")
+            //{
+            //    var token = doc["Token"]?.ToString();
+            //    if (token != null)
+            //    {
+            //        lock (_deviceLastKeepAlive)
+            //        {
+            //            _deviceLastKeepAlive[token] = DateTime.Now;
+            //        }
+            //    }
+            //}
+            if (doc["Type"]?.ToString() == "ack-schedule")
             {
                 var token = doc["Token"]?.ToString();
                 if (token != null)
@@ -84,32 +84,32 @@ namespace Quan_ly_kho.ViewModels
             }
         }
 
-        public void CheckKeepAlive(object state)
-        {
-            var now = DateTime.Now;
-            List<KeyValuePair<string, DateTime>> deviceList;
+        //public void CheckKeepAlive(object state)
+        //{
+        //    var now = DateTime.Now;
+        //    List<KeyValuePair<string, DateTime>> deviceList;
 
-            lock (_deviceLastKeepAlive)
-            {
-                deviceList = _deviceLastKeepAlive.ToList();
-            }
-            foreach (var kvp in deviceList)
-            {
-                if ((now - kvp.Value).TotalMinutes > 2.5)
-                {
-                    var room = Rooms.FirstOrDefault(r => r.Id_esp32 == kvp.Key);
-                    if (room != null)
-                    {
-                        UpdateDeviceStates(room, "Lỗi");
-                    }
+        //    lock (_deviceLastKeepAlive)
+        //    {
+        //        deviceList = _deviceLastKeepAlive.ToList();
+        //    }
+        //    foreach (var kvp in deviceList)
+        //    {
+        //        if ((now - kvp.Value).TotalMinutes > 2.5)
+        //        {
+        //            var room = Rooms.FirstOrDefault(r => r.Id_esp32 == kvp.Key);
+        //            if (room != null)
+        //            {
+        //                UpdateDeviceStates(room, "Lỗi");
+        //            }
 
-                    lock (_deviceLastKeepAlive)
-                    {
-                        _deviceLastKeepAlive.Remove(kvp.Key);
-                    }
-                }
-            }
-        }
+        //            lock (_deviceLastKeepAlive)
+        //            {
+        //                _deviceLastKeepAlive.Remove(kvp.Key);
+        //            }
+        //        }
+        //    }
+        //}
 
         private void UpdateDeviceStates(Room room, string state)
         {
@@ -121,7 +121,7 @@ namespace Quan_ly_kho.ViewModels
             DataProvider.Ins.DB.SaveChanges();
         }
 
-        private async Task SendControlCommand(string buildingName, string token, int[] devices, string status)
+        private void SendControlCommand(string buildingName, string token, int[] devices, string status)
         {
             var doc = new Document
             {
@@ -177,12 +177,12 @@ namespace Quan_ly_kho.ViewModels
                                     _acknowledgedTokens.Clear();
                                 }
 
-                                await SendControlCommand(building.BuildingName, room.Id_esp32, devicesCount, "on");
+                                SendControlCommand(building.BuildingName, room.Id_esp32, devicesCount, "on");
                                 //Đánh dấu rằng lệnh on đã được gửi tới phòng hiện tại
                                 _deviceCurrentState[room.Id_esp32] = "on";
 
                                 // Đợi 8 giây để nhận phản hồi
-                                await Task.Delay(8000);
+                                await Task.Delay(5000);
 
                                 List<string> unacknowledgedRooms;
                                 List<string> acknowledgedRooms;
@@ -243,11 +243,11 @@ namespace Quan_ly_kho.ViewModels
                                     _acknowledgedTokens.Clear();
                                 }
 
-                                await SendControlCommand(building.BuildingName, room.Id_esp32, devicesCount, "off");
+                                SendControlCommand(building.BuildingName, room.Id_esp32, devicesCount, "off");
                                 _deviceCurrentState[room.Id_esp32] = "off";
 
                                 // Đợi 8 giây để nhận phản hồi
-                                await Task.Delay(8000);
+                                await Task.Delay(5000);
 
                                 List<string> unacknowledgedRooms;
                                 List<string> acknowledgedRooms;

@@ -115,9 +115,29 @@ namespace Quan_ly_kho.ViewModels
         {
             foreach (var device in room.Device)
             {
-                device.DeviceState.Add(new DeviceState { DeviceId = device.Id, State = state });
-            }
+                // Tìm trạng thái hiện tại của thiết bị
+                var existingDeviceState = device.DeviceState
+                    .FirstOrDefault(ds => ds.DeviceId == device.Id);
 
+                if (existingDeviceState != null)
+                {
+                    // Nếu trạng thái đã tồn tại, cập nhật trạng thái
+                    existingDeviceState.State = state;
+                    existingDeviceState.Timestamp = DateTime.Now; // Cập nhật thời gian nếu cần
+                }
+                else
+                {
+                    // Nếu trạng thái chưa tồn tại, thêm mới
+                    var deviceState = new DeviceState
+                    {
+                        DeviceId = device.Id,
+                        State = state,
+                        Timestamp = DateTime.Now // Cập nhật thời gian nếu cần
+                    };
+
+                    device.DeviceState.Add(deviceState);
+                }
+            }
             DataProvider.Ins.DB.SaveChanges();
         }
 

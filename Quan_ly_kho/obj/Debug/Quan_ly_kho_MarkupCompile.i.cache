@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\obj\Debug\
+D:\DoAnTotNghiepCuNhan\Quan_ly_kho\obj\Debug\
 Quan_ly_kho
 none
 false
 DEBUG;TRACE
-D:\CodeProjectMini\Quan_ly_kho\Quan_ly_kho\App.xaml
+D:\DoAnTotNghiepCuNhan\Quan_ly_kho\App.xaml
 81106795887
 2-842672889
 52411385927
-251235262126
+25-1851898796
 Views\BuildingScheduleWindow.xaml;Views\LoginWindow.xaml;MainWindow.xaml;Views\ManageWindow.xaml;Views\ModifyWindow.xaml;ResourceXAML\MainResource.xaml;Views\ScheduleWindow.xaml;UserControlPhuong\ControlBarUC.xaml;
 
-True
+False
 

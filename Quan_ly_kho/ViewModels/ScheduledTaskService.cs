@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Quan_ly_kho.ViewModels
@@ -113,78 +114,22 @@ namespace Quan_ly_kho.ViewModels
 
         private void UpdateDeviceStates(Room room, string state)
         {
-            var deviceStatesToAdd = new List<DeviceState>();
-            var devicesToUpdate = new List<DeviceState>();
-
-            foreach (var device in room.Device)
+            var listDevice = room.Device.ToList();
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                // Đảm bảo DeviceState được khởi tạo nếu nó đang null
-                if (device.DeviceState == null)
+                foreach (var device in listDevice)
                 {
-                    device.DeviceState = new HashSet<DeviceState>();
-                }
-
-                // Tìm trạng thái hiện tại của thiết bị
-                var existingDeviceState = device.DeviceState
-                    .OrderByDescending(ds => ds.Timestamp) // Đảm bảo lấy trạng thái mới nhất nếu có nhiều trạng thái
-                    .FirstOrDefault();
-
-                if (existingDeviceState != null)
-                {
-                    // Nếu trạng thái đã tồn tại, cập nhật trạng thái
-                    existingDeviceState.State = state;
-                    existingDeviceState.Timestamp = DateTime.Now; // Cập nhật thời gian nếu cần
-                    devicesToUpdate.Add(existingDeviceState);
-                }
-                else
-                {
-                    // Nếu trạng thái chưa tồn tại, thêm mới
-                    var deviceState = new DeviceState
-                    {
-                        DeviceId = device.Id,
-                        State = state,
-                        Timestamp = DateTime.Now // Cập nhật thời gian nếu cần
-                    };
-
-                    deviceStatesToAdd.Add(deviceState);
-                }
-            }
-
-            // Áp dụng các thay đổi sau khi vòng lặp hoàn tất
-            foreach (var deviceState in deviceStatesToAdd)
-            {
-                var device = room.Device.FirstOrDefault(d => d.Id == deviceState.DeviceId);
-                if (device != null)
-                {
-                    // Đảm bảo DeviceState được khởi tạo nếu nó đang null
                     if (device.DeviceState == null)
                     {
                         device.DeviceState = new HashSet<DeviceState>();
                     }
-                    device.DeviceState.Add(deviceState);
+                    device.DeviceState.Add(new DeviceState { DeviceId = device.Id, State = state });
                 }
-            }
 
-            // Lưu các thay đổi trong một bước duy nhất
-            using (var transaction = DataProvider.Ins.DB.Database.BeginTransaction())
-            {
-                try
-                {
-                    DataProvider.Ins.DB.DeviceState.AddRange(deviceStatesToAdd);
-                    foreach (var deviceState in devicesToUpdate)
-                    {
-                        DataProvider.Ins.DB.Entry(deviceState).State = EntityState.Modified;
-                    }
-                    DataProvider.Ins.DB.SaveChanges();
-                    transaction.Commit();
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    // Xử lý hoặc ghi log lỗi nếu cần thiết
-                    throw new InvalidOperationException("Đã xảy ra lỗi khi cập nhật trạng thái thiết bị.", ex);
-                }
-            }
+                DataProvider.Ins.DB.SaveChanges();
+            });
+
+            
         }
 
 

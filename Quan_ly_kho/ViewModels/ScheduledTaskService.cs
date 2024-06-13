@@ -113,17 +113,28 @@ namespace Quan_ly_kho.ViewModels
 
         private void UpdateDeviceStates(Room room, string state)
         {
+            var deviceStatesToAdd = new List<DeviceState>();
+            var devicesToUpdate = new List<DeviceState>();
+
             foreach (var device in room.Device)
             {
+                // Đảm bảo DeviceState được khởi tạo nếu nó đang null
+                if (device.DeviceState == null)
+                {
+                    device.DeviceState = new HashSet<DeviceState>();
+                }
+
                 // Tìm trạng thái hiện tại của thiết bị
                 var existingDeviceState = device.DeviceState
-                    .FirstOrDefault(ds => ds.DeviceId == device.Id);
+                    .OrderByDescending(ds => ds.Timestamp) // Đảm bảo lấy trạng thái mới nhất nếu có nhiều trạng thái
+                    .FirstOrDefault();
 
                 if (existingDeviceState != null)
                 {
                     // Nếu trạng thái đã tồn tại, cập nhật trạng thái
                     existingDeviceState.State = state;
                     existingDeviceState.Timestamp = DateTime.Now; // Cập nhật thời gian nếu cần
+                    devicesToUpdate.Add(existingDeviceState);
                 }
                 else
                 {
@@ -135,11 +146,48 @@ namespace Quan_ly_kho.ViewModels
                         Timestamp = DateTime.Now // Cập nhật thời gian nếu cần
                     };
 
+                    deviceStatesToAdd.Add(deviceState);
+                }
+            }
+
+            // Áp dụng các thay đổi sau khi vòng lặp hoàn tất
+            foreach (var deviceState in deviceStatesToAdd)
+            {
+                var device = room.Device.FirstOrDefault(d => d.Id == deviceState.DeviceId);
+                if (device != null)
+                {
+                    // Đảm bảo DeviceState được khởi tạo nếu nó đang null
+                    if (device.DeviceState == null)
+                    {
+                        device.DeviceState = new HashSet<DeviceState>();
+                    }
                     device.DeviceState.Add(deviceState);
                 }
             }
-            DataProvider.Ins.DB.SaveChanges();
+
+            // Lưu các thay đổi trong một bước duy nhất
+            using (var transaction = DataProvider.Ins.DB.Database.BeginTransaction())
+            {
+                try
+                {
+                    DataProvider.Ins.DB.DeviceState.AddRange(deviceStatesToAdd);
+                    foreach (var deviceState in devicesToUpdate)
+                    {
+                        DataProvider.Ins.DB.Entry(deviceState).State = EntityState.Modified;
+                    }
+                    DataProvider.Ins.DB.SaveChanges();
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    // Xử lý hoặc ghi log lỗi nếu cần thiết
+                    throw new InvalidOperationException("Đã xảy ra lỗi khi cập nhật trạng thái thiết bị.", ex);
+                }
+            }
         }
+
+
 
         private void SendControlCommand(string buildingName, string token, int[] devices, string status)
         {
@@ -157,7 +205,7 @@ namespace Quan_ly_kho.ViewModels
         public async void CheckAndExecuteSchedules(object state)
         {
             var now = DateTime.Now;
-           
+
             foreach (var building in Buildings)
             {
                 List<Room> rooms = new List<Room>();
@@ -171,7 +219,7 @@ namespace Quan_ly_kho.ViewModels
                     if (now >= schedule.StartTime && now <= schedule.EndTime)
                     {
                         // Gửi lệnh "on" cho tất cả các phòng chưa được bật
-                        foreach (var room in rooms)
+                        var tasks = rooms.Select(async room =>
                         {
                             if (!_deviceCurrentState.ContainsKey(room.Id_esp32) || _deviceCurrentState[room.Id_esp32] != "on")
                             {
@@ -198,22 +246,19 @@ namespace Quan_ly_kho.ViewModels
                                 }
 
                                 SendControlCommand(building.BuildingName, room.Id_esp32, devicesCount, "on");
-                                //Đánh dấu rằng lệnh on đã được gửi tới phòng hiện tại
                                 _deviceCurrentState[room.Id_esp32] = "on";
 
-                                // Đợi 8 giây để nhận phản hồi
-                                await Task.Delay(5000);
+                                // Đợi 3 giây để nhận phản hồi từ các thiết bị
+                                await Task.Delay(3000);
 
                                 List<string> unacknowledgedRooms;
                                 List<string> acknowledgedRooms;
                                 lock (_acknowledgedTokens)
                                 {
-                                    //Lọc ra các phòng trong danh sách rooms mà ID (r.Id_esp32) không có trong _acknowledgedTokens.
+                                    // lọc ra các phòng không gửi lại _acknowledgedTokens
                                     unacknowledgedRooms = rooms.Where(r => !_acknowledgedTokens.Contains(r.Id_esp32)).Select(r => r.Id_esp32).ToList();
-                                    // Danh sách các phòng đã nhận được phản hồi
                                     acknowledgedRooms = rooms.Where(r => _acknowledgedTokens.Contains(r.Id_esp32)).Select(r => r.Id_esp32).ToList();
                                 }
-                                // Cập nhật trạng thái thiết bị trong các phòng đã nhận được phản hồi thành "Bật"
                                 foreach (var ackRoom in acknowledgedRooms)
                                 {
                                     var Room = rooms.FirstOrDefault(r => r.Id_esp32 == ackRoom);
@@ -222,7 +267,6 @@ namespace Quan_ly_kho.ViewModels
                                         UpdateDeviceStates(Room, "Bật");
                                     }
                                 }
-
                                 foreach (var unackRoom in unacknowledgedRooms)
                                 {
                                     var Room = rooms.FirstOrDefault(r => r.Id_esp32 == unackRoom);
@@ -232,12 +276,14 @@ namespace Quan_ly_kho.ViewModels
                                     }
                                 }
                             }
-                        }
+                        }).ToList();
+
+                        await Task.WhenAll(tasks);
                     }
                     else if (now > schedule.EndTime && now <= schedule.EndTime.AddMinutes(1.5))
                     {
                         // Gửi lệnh "off" cho tất cả các phòng chưa được tắt
-                        foreach (var room in rooms)
+                        var tasks = rooms.Select(async room =>
                         {
                             if (_deviceCurrentState.ContainsKey(room.Id_esp32) && _deviceCurrentState[room.Id_esp32] != "off")
                             {
@@ -266,8 +312,8 @@ namespace Quan_ly_kho.ViewModels
                                 SendControlCommand(building.BuildingName, room.Id_esp32, devicesCount, "off");
                                 _deviceCurrentState[room.Id_esp32] = "off";
 
-                                // Đợi 8 giây để nhận phản hồi
-                                await Task.Delay(5000);
+                                // Đợi 3 giây để nhận phản hồi từ các thiết bị
+                                await Task.Delay(3000);
 
                                 List<string> unacknowledgedRooms;
                                 List<string> acknowledgedRooms;
@@ -276,7 +322,6 @@ namespace Quan_ly_kho.ViewModels
                                     unacknowledgedRooms = rooms.Where(r => !_acknowledgedTokens.Contains(r.Id_esp32)).Select(r => r.Id_esp32).ToList();
                                     acknowledgedRooms = rooms.Where(r => _acknowledgedTokens.Contains(r.Id_esp32)).Select(r => r.Id_esp32).ToList();
                                 }
-                                // Cập nhật trạng thái thiết bị trong các phòng đã nhận được phản hồi thành "Tắt"
                                 foreach (var ackRoom in acknowledgedRooms)
                                 {
                                     var Room = rooms.FirstOrDefault(r => r.Id_esp32 == ackRoom);
@@ -294,12 +339,15 @@ namespace Quan_ly_kho.ViewModels
                                     }
                                 }
                             }
-                        }
+                        }).ToList();
+
+                        await Task.WhenAll(tasks);
                     }
                 }
-
             }
+
         }
+
 
     }
 }

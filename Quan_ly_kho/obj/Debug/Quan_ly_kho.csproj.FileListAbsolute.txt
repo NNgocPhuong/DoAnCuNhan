@@ -104,3 +104,5 @@ D:\DoAnTotNghiepCuNhan\Quan_ly_kho\obj\Debug\Quan_ly_kho.csproj.CoreCompileInput
 D:\DoAnTotNghiepCuNhan\Quan_ly_kho\obj\Debug\Quan_ly_.5371F6DC.Up2Date
 D:\DoAnTotNghiepCuNhan\Quan_ly_kho\obj\Debug\Quan_ly_kho.exe
 D:\DoAnTotNghiepCuNhan\Quan_ly_kho\obj\Debug\Quan_ly_kho.pdb
+D:\DoAnTotNghiepCuNhan\Quan_ly_kho\obj\Debug\Views\ErrorRoom.g.cs
+D:\DoAnTotNghiepCuNhan\Quan_ly_kho\obj\Debug\Views\ErrorRoom.baml

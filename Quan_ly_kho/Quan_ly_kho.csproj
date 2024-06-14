@@ -90,6 +90,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\KeepAliveService.cs" />
+    <Compile Include="ViewModels\StateManagementService.cs" />
     <Compile Include="Views\BuildingScheduleWindow.xaml.cs">
       <DependentUpon>BuildingScheduleWindow.xaml</DependentUpon>
     </Compile>

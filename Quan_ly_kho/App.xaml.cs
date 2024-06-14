@@ -18,15 +18,19 @@ namespace Quan_ly_kho
     /// </summary>
     public partial class App : Application
     {
-        
+        private static StateManagementService _stateManagementService;
+        public static StateManagementService StateManagementService => _stateManagementService;
+
+        private static KeepAliveService _keepAliveService;
+        public static KeepAliveService KeepAliveService => _keepAliveService;
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
             // Khởi tạo và kết nối Broker
             Broker.Instance.Connect();
-
-            
+            _stateManagementService = new StateManagementService();
+            _keepAliveService = new KeepAliveService();
         }
 
         protected override void OnExit(ExitEventArgs e)

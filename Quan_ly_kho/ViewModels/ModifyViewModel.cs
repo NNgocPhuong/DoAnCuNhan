@@ -13,16 +13,8 @@ using System.Windows.Input;
 
 namespace Quan_ly_kho.ViewModels
 {
-    public static class ModifyViewModelState
-    {
-        public static Timer ListenTimer { get; set; }
-        public static ObservableCollection<Device> SelectedDevices { get; set; } = new ObservableCollection<Device>();
-        public static Timer KeepAliveTimer { get; set; }
-        public static DateTime LastKeepAliveReceived { get; set; }
-        public static bool ErrorMessageShown { get; set; } = false;
-    }
 
-    public class ModifyViewModel : BaseViewModel
+    public class ModifyViewModel : BaseViewModel, IDisposable
     {
         #region Các biến, event và Command
         public event EventHandler<Device> DeviceAdded;
@@ -107,24 +99,15 @@ namespace Quan_ly_kho.ViewModels
         public ICommand OnCommand { get; set; }
         public ICommand OffCommand { get; set; }
         #endregion
+        private string _deviceId;
+        
         public ModifyViewModel(Room selectedRoom)
         {
-            SelectedDevices = ModifyViewModelState.SelectedDevices ?? new ObservableCollection<Device>();
             SelectedRoom = selectedRoom;
-            if (ModifyViewModelState.KeepAliveTimer == null)
-            {
-                ModifyViewModelState.KeepAliveTimer = new Timer(CheckKeepAlive, null, 0, 60000);
-                ModifyViewModelState.LastKeepAliveReceived = DateTime.Now;
-            }
-            if (ModifyViewModelState.ListenTimer == null)
-            {
-                ModifyViewModelState.ListenTimer = new Timer(ListenToBroker, null, 0, 60000);
-                ModifyViewModelState.LastKeepAliveReceived = DateTime.Now;
-            }
+            _deviceId = SelectedRoom.Id_esp32;
 
-            Broker.Instance.process_received_data -= OnBrokerMessageReceived;
-            Broker.Instance.process_received_data += OnBrokerMessageReceived;
-            Broker.Instance.Listen(SelectedRoom.Id_esp32, OnBrokerMessageReceived);
+            
+            App.StateManagementService.StartMonitoring(_deviceId);
             AddCommand = new RelayCommand<object>(
                 (p) => !string.IsNullOrEmpty(DeviceName) && DataProvider.Ins.DB.Device.FirstOrDefault(x => x.DeviceName == DeviceName && x.RoomId == SelectedRoom.Id && x.DeviceType == DeviceType) == null,
                 async (p) =>
@@ -187,38 +170,11 @@ namespace Quan_ly_kho.ViewModels
                 (p) => SelectedDevices.Count > 0,
                 async (p) => await SendControlMessage("off"));
         }
-        private void ListenToBroker(object state)
-        {
-            Broker.Instance.Listen(SelectedRoom.Id_esp32, OnBrokerMessageReceived);
-        }
 
-        private void OnBrokerMessageReceived(Document doc)
+       
+        public void Dispose()
         {
-            if (doc["Type"]?.ToString() == "keep-alive")
-            {
-                ModifyViewModelState.LastKeepAliveReceived = DateTime.Now;
-            }
-        }
-        private void CheckKeepAlive(object state)
-        {
-            if ((DateTime.Now - ModifyViewModelState.LastKeepAliveReceived).TotalMinutes > 2.5)
-            {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    foreach (var device in SelectedDevices)
-                    {
-                        device.DeviceState.Add(new DeviceState { DeviceId = device.Id, State = "Lỗi" });
-                    }
-                    DataProvider.Ins.DB.SaveChangesAsync();
-                    OnPropertyChanged(nameof(SelectedDevices));
-
-                    if (!ModifyViewModelState.ErrorMessageShown)
-                    {
-                        MessageBox.Show("Vi xử lý ở phòng " + SelectedRoom.Floor.Building.BuildingName+SelectedRoom.RoomNumber + " lỗi", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                        ModifyViewModelState.ErrorMessageShown = true;
-                    }
-                });
-            }
+            App.StateManagementService.StopMonitoring(_deviceId);
         }
         private async Task SendControlMessage(string command)
         {

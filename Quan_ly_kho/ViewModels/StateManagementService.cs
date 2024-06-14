@@ -10,21 +10,30 @@ namespace Quan_ly_kho.ViewModels
 {
     public class StateManagementService
     {
-        private readonly Dictionary<string, Timer> _timers = new Dictionary<string, Timer>();
-        private readonly Dictionary<string, DateTime> _lastKeepAliveTimes = new Dictionary<string, DateTime>();
-        private readonly Dictionary<string, bool> _errorMessageShown = new Dictionary<string, bool>();
         private readonly object _lock = new object();
+
+        private class DeviceMonitoringInfo
+        {
+            public Timer Timer { get; set; }
+            public DateTime LastKeepAliveTime { get; set; }
+            public bool ErrorMessageShown { get; set; }
+        }
+
+        private readonly Dictionary<string, DeviceMonitoringInfo> _deviceMonitoringInfos = new Dictionary<string, DeviceMonitoringInfo>();
 
         public void StartMonitoring(string deviceId)
         {
             lock (_lock)
             {
-                if (!_timers.ContainsKey(deviceId))
+                if (!_deviceMonitoringInfos.ContainsKey(deviceId))
                 {
                     var timer = new Timer(CheckKeepAlive, deviceId, TimeSpan.Zero, TimeSpan.FromMinutes(1));
-                    _timers[deviceId] = timer;
-                    _lastKeepAliveTimes[deviceId] = DateTime.Now;
-                    _errorMessageShown[deviceId] = false;
+                    _deviceMonitoringInfos[deviceId] = new DeviceMonitoringInfo
+                    {
+                        Timer = timer,
+                        LastKeepAliveTime = DateTime.Now,
+                        ErrorMessageShown = false
+                    };
                 }
             }
             App.KeepAliveService.StartListening(deviceId);
@@ -34,12 +43,10 @@ namespace Quan_ly_kho.ViewModels
         {
             lock (_lock)
             {
-                if (_timers.TryGetValue(deviceId, out var timer))
+                if (_deviceMonitoringInfos.TryGetValue(deviceId, out var deviceInfo))
                 {
-                    timer.Dispose();
-                    _timers.Remove(deviceId);
-                    _lastKeepAliveTimes.Remove(deviceId);
-                    _errorMessageShown.Remove(deviceId);
+                    deviceInfo.Timer.Dispose();
+                    _deviceMonitoringInfos.Remove(deviceId);
                 }
             }
             //App.KeepAliveService.StopListening(deviceId);
@@ -49,10 +56,10 @@ namespace Quan_ly_kho.ViewModels
         {
             lock (_lock)
             {
-                if (_lastKeepAliveTimes.ContainsKey(deviceId))
+                if (_deviceMonitoringInfos.TryGetValue(deviceId, out var deviceInfo))
                 {
-                    _lastKeepAliveTimes[deviceId] = DateTime.Now;
-                    _errorMessageShown[deviceId] = false;
+                    deviceInfo.LastKeepAliveTime = DateTime.Now;
+                    deviceInfo.ErrorMessageShown = false;
                 }
             }
         }
@@ -62,17 +69,17 @@ namespace Quan_ly_kho.ViewModels
             string deviceId = (string)state;
             lock (_lock)
             {
-                if (_lastKeepAliveTimes.TryGetValue(deviceId, out var lastKeepAliveTime))
+                if (_deviceMonitoringInfos.TryGetValue(deviceId, out var deviceInfo))
                 {
-                    if ((DateTime.Now - lastKeepAliveTime).TotalMinutes > 2)
+                    if ((DateTime.Now - deviceInfo.LastKeepAliveTime).TotalMinutes > 2)
                     {
-                        if (!_errorMessageShown[deviceId])
+                        if (!deviceInfo.ErrorMessageShown)
                         {
                             Application.Current.Dispatcher.Invoke(() =>
                             {
                                 MessageBox.Show($"Vi xử lý ở phòng {deviceId} không phản hồi", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                             });
-                            _errorMessageShown[deviceId] = true;
+                            deviceInfo.ErrorMessageShown = true;
                         }
                     }
                 }

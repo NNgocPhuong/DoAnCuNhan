@@ -105,7 +105,7 @@ namespace Quan_ly_kho.ViewModels
                     modifyViewModel.DeviceDeleted += ModifyViewModel_DeviceDeleted;
 
                     ModifyWindow w = new ModifyWindow(modifyViewModel);
-                    //w.Closed += (sender, args) => modifyViewModel.Dispose();
+                    w.Closed += (sender, args) => modifyViewModel.Dispose();
                     w.ShowDialog();
                 });
             ScheduleRoomCommand = new RelayCommand<object>((p) => { return true; }, 

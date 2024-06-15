@@ -54,7 +54,7 @@ namespace Quan_ly_kho.Models
             {
                 if (DeviceState != null && DeviceState.Count > 0)
                 {
-                    return DeviceState.Last().State;
+                    return GetLatestDeviceState()?.State;
                 }
                 return null;
             }
@@ -67,7 +67,10 @@ namespace Quan_ly_kho.Models
                 }
             }
         }
-
+        public DeviceState GetLatestDeviceState()
+        {
+            return DeviceState?.OrderByDescending(ds => ds.Timestamp).FirstOrDefault();
+        }
 
     }
 }

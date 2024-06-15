@@ -189,7 +189,8 @@ namespace Quan_ly_kho.ViewModels
                     var newDeviceState = new DeviceState
                     {
                         DeviceId = device.Id,
-                        State = status == "on" ? "Bật" : "Tắt"
+                        State = status == "on" ? "Bật" : "Tắt",
+                        Timestamp = DateTime.Now
                     };
                     DataProvider.Ins.DB.DeviceState.Add(newDeviceState);
                 }

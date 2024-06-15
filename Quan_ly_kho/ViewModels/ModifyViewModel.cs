@@ -252,7 +252,8 @@ namespace Quan_ly_kho.ViewModels
                     device.DeviceState.Add(new DeviceState
                     {
                         DeviceId = device.Id,
-                        State = state
+                        State = state,
+                        Timestamp = DateTime.Now
                     });
                     DeviceEdited?.Invoke(this, device);
                 }

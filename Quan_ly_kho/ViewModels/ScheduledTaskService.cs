@@ -123,7 +123,7 @@ namespace Quan_ly_kho.ViewModels
                     {
                         device.DeviceState = new HashSet<DeviceState>();
                     }
-                    device.DeviceState.Add(new DeviceState { DeviceId = device.Id, State = state });
+                    device.DeviceState.Add(new DeviceState { DeviceId = device.Id, State = state, Timestamp = DateTime.Now });
                 }
 
                 DataProvider.Ins.DB.SaveChanges();
@@ -157,7 +157,7 @@ namespace Quan_ly_kho.ViewModels
                 List<Schedule> schedules = new List<Schedule>();
 
                 rooms = Rooms.Where(r => r.Floor.BuildingId == building.Id).ToList();
-                schedules = DataProvider.Ins.DB.Schedule.Where(s => s.Device.Room.Floor.BuildingId == building.Id).ToList();
+                schedules = await DataProvider.Ins.DB.Schedule.Where(s => s.Device.Room.Floor.BuildingId == building.Id).ToListAsync();
 
                 foreach (var schedule in schedules)
                 {

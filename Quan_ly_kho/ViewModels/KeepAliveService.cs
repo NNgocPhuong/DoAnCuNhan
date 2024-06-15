@@ -35,7 +35,7 @@ namespace Quan_ly_kho.ViewModels
                 }
             }
         }
-        // Hàm này thật ra không dùng
+       
         public void StopListening(string deviceId)
         {
             lock (_lock)

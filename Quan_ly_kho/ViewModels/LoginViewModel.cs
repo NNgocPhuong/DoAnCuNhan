@@ -59,23 +59,26 @@ namespace Quan_ly_kho.ViewModels
             lock (_lockObject)
             {
                 var now = DateTime.Now;
+                var thresholdTime = now.AddMinutes(-2); // Tính toán thời gian ngưỡng trước khi truy vấn
                 // Tìm các ID của lịch trình đã kết thúc
                 var expiredScheduleIds = DataProvider.Ins.DB.Schedule
-                                        .Where(s => s.EndTime < now)
+                                        .Where(s => s.EndTime <= thresholdTime)
                                         .Select(s => s.Id) 
                                         .ToList();
-                // Xóa các lịch trình khỏi cơ sở dữ liệu bằng cách tạo đối tượng mới với ID
-                foreach (var id in expiredScheduleIds)
+                Application.Current.Dispatcher.Invoke(() =>
                 {
-                    var schedule = DataProvider.Ins.DB.Schedule.Find(id);
-                    if (schedule != null)
+                    foreach (var id in expiredScheduleIds)
                     {
-                        DataProvider.Ins.DB.Schedule.Remove(schedule);
+                        var schedule = DataProvider.Ins.DB.Schedule.Find(id);
+                        if (schedule != null)
+                        {
+                            DataProvider.Ins.DB.Schedule.Remove(schedule);
+                        }
                     }
-                }
-                // Lưu các thay đổi vào cơ sở dữ liệu
-                DataProvider.Ins.DB.SaveChanges();
+                    // Lưu các thay đổi vào cơ sở dữ liệu
+                    DataProvider.Ins.DB.SaveChanges();
 
+                });
             }
         }
     }

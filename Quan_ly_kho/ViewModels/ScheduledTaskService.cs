@@ -14,13 +14,11 @@ namespace Quan_ly_kho.ViewModels
 {
     public class SchedulerState
     {
-        //public static System.Threading.Timer KeepAliveTimer { get; set; }
         public static System.Threading.Timer ScheduleCheckTimer { get; set; }
     }
 
     public class SchedulerTaskService : BaseViewModel
     {
-        //private Dictionary<string, DateTime> _deviceLastKeepAlive = new Dictionary<string, DateTime>();
         private HashSet<string> _acknowledgedTokens = new HashSet<string>();
         private Dictionary<string, string> _deviceCurrentState = new Dictionary<string, string>();
         public List<Building> Buildings { get; set; }
@@ -33,11 +31,6 @@ namespace Quan_ly_kho.ViewModels
 
         public void Start()
         {
-            //if (SchedulerState.KeepAliveTimer == null)
-            //{
-            //    SchedulerState.KeepAliveTimer = new System.Threading.Timer(CheckKeepAlive, null, 0, 60000);
-            //}
-
             if (SchedulerState.ScheduleCheckTimer == null)
             {
                 SchedulerState.ScheduleCheckTimer = new System.Threading.Timer(CheckAndExecuteSchedules, null, 0, 30000);
@@ -52,7 +45,6 @@ namespace Quan_ly_kho.ViewModels
 
         public void Stop()
         {
-            //SchedulerState.KeepAliveTimer?.Dispose();
             SchedulerState.ScheduleCheckTimer?.Dispose();
             Broker.Instance?.Disconnect();
         }
@@ -61,17 +53,6 @@ namespace Quan_ly_kho.ViewModels
         {
             var doc = e;
 
-            //if (doc["Type"]?.ToString() == "keep-alive")
-            //{
-            //    var token = doc["Token"]?.ToString();
-            //    if (token != null)
-            //    {
-            //        lock (_deviceLastKeepAlive)
-            //        {
-            //            _deviceLastKeepAlive[token] = DateTime.Now;
-            //        }
-            //    }
-            //}
             if (doc["Type"]?.ToString() == "ack-schedule")
             {
                 var token = doc["Token"]?.ToString();
@@ -85,33 +66,6 @@ namespace Quan_ly_kho.ViewModels
             }
         }
 
-        //public void CheckKeepAlive(object state)
-        //{
-        //    var now = DateTime.Now;
-        //    List<KeyValuePair<string, DateTime>> deviceList;
-
-        //    lock (_deviceLastKeepAlive)
-        //    {
-        //        deviceList = _deviceLastKeepAlive.ToList();
-        //    }
-        //    foreach (var kvp in deviceList)
-        //    {
-        //        if ((now - kvp.Value).TotalMinutes > 2.5)
-        //        {
-        //            var room = Rooms.FirstOrDefault(r => r.Id_esp32 == kvp.Key);
-        //            if (room != null)
-        //            {
-        //                UpdateDeviceStates(room, "Lỗi");
-        //            }
-
-        //            lock (_deviceLastKeepAlive)
-        //            {
-        //                _deviceLastKeepAlive.Remove(kvp.Key);
-        //            }
-        //        }
-        //    }
-        //}
-
         private void UpdateDeviceStates(Room room, string state)
         {
             var listDevice = room.Device.ToList();
@@ -119,17 +73,12 @@ namespace Quan_ly_kho.ViewModels
             {
                 foreach (var device in listDevice)
                 {
-                    if (device.DeviceState == null)
-                    {
-                        device.DeviceState = new HashSet<DeviceState>();
-                    }
                     device.DeviceState.Add(new DeviceState { DeviceId = device.Id, State = state, Timestamp = DateTime.Now });
                 }
-
                 DataProvider.Ins.DB.SaveChanges();
+                OnPropertyChanged();
             });
 
-            
         }
 
 
@@ -157,7 +106,7 @@ namespace Quan_ly_kho.ViewModels
                 List<Schedule> schedules = new List<Schedule>();
 
                 rooms = Rooms.Where(r => r.Floor.BuildingId == building.Id).ToList();
-                schedules = await DataProvider.Ins.DB.Schedule.Where(s => s.Device.Room.Floor.BuildingId == building.Id).ToListAsync();
+                schedules = DataProvider.Ins.DB.Schedule.Where(s => s.Device.Room.Floor.BuildingId == building.Id).ToList();
 
                 foreach (var schedule in schedules)
                 {
@@ -292,7 +241,6 @@ namespace Quan_ly_kho.ViewModels
             }
 
         }
-
 
     }
 }

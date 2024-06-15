@@ -77,7 +77,7 @@ namespace Quan_ly_kho.ViewModels
                         {
                             Application.Current.Dispatcher.Invoke(() =>
                             {
-                                MessageBox.Show($"Vi xử lý ở phòng {deviceId} không phản hồi", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                                MessageBox.Show($"Vi xử lý {deviceId} không phản hồi", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                             });
                             deviceInfo.ErrorMessageShown = true;
                         }

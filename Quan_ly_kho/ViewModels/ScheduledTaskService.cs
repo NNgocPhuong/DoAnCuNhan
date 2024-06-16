@@ -73,7 +73,14 @@ namespace Quan_ly_kho.ViewModels
             {
                 foreach (var device in listDevice)
                 {
-                    device.DeviceState.Add(new DeviceState { DeviceId = device.Id, State = state, Timestamp = DateTime.Now });
+                    if(device.DeviceState != null)
+                    {
+                        device.DeviceState.OrderByDescending(t => t.Timestamp).FirstOrDefault().State = state;
+                    }
+                    else
+                    {
+                        device.DeviceState.Add(new DeviceState { DeviceId = device.Id, State = state, Timestamp = DateTime.Now });
+                    }
                 }
                 DataProvider.Ins.DB.SaveChanges();
                 OnPropertyChanged();

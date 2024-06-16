@@ -249,12 +249,19 @@ namespace Quan_ly_kho.ViewModels
             {
                 foreach (var device in SelectedDevices)
                 {
-                    device.DeviceState.Add(new DeviceState
+                    if (device.DeviceState != null)
                     {
-                        DeviceId = device.Id,
-                        State = state,
-                        Timestamp = DateTime.Now
-                    });
+                        device.DeviceState.OrderByDescending(ds => ds.Timestamp).FirstOrDefault().State = state;
+                    }
+                    else
+                    {
+                        device.DeviceState.Add(new DeviceState
+                        {
+                            DeviceId = device.Id,
+                            State = state,
+                            Timestamp = DateTime.Now
+                        });
+                    }
                     DeviceEdited?.Invoke(this, device);
                 }
                 DataProvider.Ins.DB.SaveChanges();

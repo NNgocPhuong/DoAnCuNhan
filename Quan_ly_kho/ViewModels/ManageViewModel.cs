@@ -172,29 +172,33 @@ namespace Quan_ly_kho.ViewModels
                 
                 UpdateDevicesView();
             }
-            DataProvider.Ins.DB.SaveChanges();
+            //DataProvider.Ins.DB.SaveChanges();
             OnPropertyChanged(nameof(Devices));
 
         }
         public void UpdateDeviceState(JArray deviceState, string deviceType)
         {
-            foreach (JObject item in deviceState)
-            {
-                int deviceIdEsp = item["id_esp"].Value<int>();
-                string status = item["status"].ToString();
-
-                var device = DataProvider.Ins.DB.Device.FirstOrDefault(d => d.DeviceName == deviceIdEsp.ToString() && d.DeviceType == deviceType && d.Room.Id_esp32 == SelectedRoom.Id_esp32);
-                if (device != null)
+            Application.Current.Dispatcher.Invoke(() => {
+                foreach (JObject item in deviceState)
                 {
-                    var newDeviceState = new DeviceState
+                    int deviceIdEsp = item["id_esp"].Value<int>();
+                    string status = item["status"].ToString();
+
+                    var device = DataProvider.Ins.DB.Device.FirstOrDefault(d => d.DeviceName == deviceIdEsp.ToString() && d.DeviceType == deviceType && d.Room.Id_esp32 == SelectedRoom.Id_esp32);
+                    if (device != null)
                     {
-                        DeviceId = device.Id,
-                        State = status == "on" ? "Bật" : "Tắt",
-                        Timestamp = DateTime.Now
-                    };
-                    DataProvider.Ins.DB.DeviceState.Add(newDeviceState);
+                        var newDeviceState = new DeviceState
+                        {
+                            DeviceId = device.Id,
+                            State = status == "on" ? "Bật" : "Tắt",
+                            Timestamp = DateTime.Now
+                        };
+                        DataProvider.Ins.DB.DeviceState.Add(newDeviceState);
+                    }
                 }
-            }
+                OnPropertyChanged(nameof(Devices));
+                DataProvider.Ins.DB.SaveChanges();
+            });
         }
         public void UpdateDevicesView()
         {
@@ -212,6 +216,7 @@ namespace Quan_ly_kho.ViewModels
                         device.DeviceStateName = latestState.State;
                     }
                 }
+                OnPropertyChanged(nameof(Devices));
             });
         }
     }

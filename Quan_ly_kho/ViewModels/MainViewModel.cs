@@ -10,6 +10,7 @@ using Quan_ly_kho.Models;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using Quan_ly_kho.Views;
+using System.Threading;
 
 namespace Quan_ly_kho.ViewModels
 {
@@ -89,10 +90,12 @@ namespace Quan_ly_kho.ViewModels
         public bool IsLoaded { get; set; } = false;
         #endregion
         private SchedulerTaskService _schedulerTaskService;
+        private Timer _timer;
         public MainViewModel()
         {
             _schedulerTaskService = new SchedulerTaskService();
             _schedulerTaskService.Start();
+            _timer = new Timer(SendKeepAlive, null, 0, 60000);
             LoadedWindowCommand = new RelayCommand<Window>((p) => true, async (p) =>
             {
                 IsLoaded = true;
@@ -131,6 +134,15 @@ namespace Quan_ly_kho.ViewModels
                     BuildingScheduleWindow w = new BuildingScheduleWindow(buildingScheduleViewModel);
                     w.ShowDialog();
                 });
+        }
+
+        private void SendKeepAlive(object state)
+        {
+            Document doc = new Document()
+            {
+                ControlType = "Keep alive for software"
+            };
+            Broker.Instance.Send("KeepAlive", doc);
         }
 
         public async Task LoadBuildingDataAsync()

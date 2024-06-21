@@ -211,12 +211,12 @@ namespace Quan_ly_kho.ViewModels
                 if (doc["Type"]?.ToString() == "ack-control" && doc["Response"]?.ToString() == "control-success")
                 {
                     tcs.TrySetResult(true);
-                    Broker.Instance.process_received_data -= handler; // Unsubscribe after handling
+                    // Broker.Instance.process_received_data -= handler; // Unsubscribe after handling
                 }
             };
 
-            Broker.Instance.process_received_data += handler;
-            Broker.Instance.Listen(SelectedRoom.Id_esp32, handler);
+             Broker.Instance.process_received_data += handler;
+            //Broker.Instance.Listen(SelectedRoom.Id_esp32, handler);
             try
             {
                 var result = await Task.WhenAny(tcs.Task, Task.Delay(Timeout.Infinite, cts.Token));

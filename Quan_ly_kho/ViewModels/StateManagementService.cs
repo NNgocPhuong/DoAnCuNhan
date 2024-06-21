@@ -49,7 +49,7 @@ namespace Quan_ly_kho.ViewModels
                     _deviceMonitoringInfos.Remove(deviceId);
                 }
             }
-            //App.KeepAliveService.StopListening(deviceId);
+            App.KeepAliveService.StopListening(deviceId);
         }
 
         public void UpdateKeepAlive(string deviceId)

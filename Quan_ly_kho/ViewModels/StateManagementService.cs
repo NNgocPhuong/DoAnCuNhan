@@ -71,7 +71,7 @@ namespace Quan_ly_kho.ViewModels
             {
                 if (_deviceMonitoringInfos.TryGetValue(deviceId, out var deviceInfo))
                 {
-                    if ((DateTime.Now - deviceInfo.LastKeepAliveTime).TotalMinutes > 2)
+                    if ((DateTime.Now - deviceInfo.LastKeepAliveTime).TotalMinutes > 2.5)
                     {
                         if (!deviceInfo.ErrorMessageShown)
                         {

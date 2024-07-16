@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Quan_ly_kho.Views"
         mc:Ignorable="d"
         
-        WindowStartupLocation="CenterScreen"
+        WindowStartupLocation="Manual"
         xmlns:uc ="clr-namespace:Quan_ly_kho.UserControlPhuong"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"

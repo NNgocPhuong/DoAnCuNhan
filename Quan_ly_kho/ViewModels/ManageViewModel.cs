@@ -178,7 +178,7 @@ namespace Quan_ly_kho.ViewModels
         }
         public void UpdateDeviceState(JArray deviceState, string deviceType)
         {
-            Application.Current.Dispatcher.Invoke(() => {
+            Application.Current.Dispatcher.InvokeAsync(() => {
                 foreach (JObject item in deviceState)
                 {
                     int deviceIdEsp = item["id_esp"].Value<int>();

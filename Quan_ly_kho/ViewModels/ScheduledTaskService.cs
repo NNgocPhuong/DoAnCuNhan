@@ -69,7 +69,7 @@ namespace Quan_ly_kho.ViewModels
         private void UpdateDeviceStates(Room room, string state)
         {
             var listDevice = room.Device.ToList();
-            Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 foreach (var device in listDevice)
                 {

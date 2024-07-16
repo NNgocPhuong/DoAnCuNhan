@@ -8,7 +8,7 @@
         xmlns:uc="clr-namespace:Quan_ly_kho.UserControlPhuong"  
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        WindowStartupLocation="CenterScreen"
+        WindowStartupLocation="Manual"
         TextElement.FontWeight="Regular"
     TextElement.FontSize="13"
     TextOptions.TextFormattingMode="Ideal"

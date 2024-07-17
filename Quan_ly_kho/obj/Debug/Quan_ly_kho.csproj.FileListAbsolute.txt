@@ -81,7 +81,6 @@ D:\DoAnTotNghiepCuNhan\Quan_ly_kho\obj\Debug\Views\LoginWindow.g.cs
 D:\DoAnTotNghiepCuNhan\Quan_ly_kho\obj\Debug\MainWindow.g.cs
 D:\DoAnTotNghiepCuNhan\Quan_ly_kho\obj\Debug\Views\ManageWindow.g.cs
 D:\DoAnTotNghiepCuNhan\Quan_ly_kho\obj\Debug\Views\ModifyWindow.g.cs
-D:\DoAnTotNghiepCuNhan\Quan_ly_kho\obj\Debug\Views\ScheduleWindow.g.cs
 D:\DoAnTotNghiepCuNhan\Quan_ly_kho\obj\Debug\UserControlPhuong\ControlBarUC.g.cs
 D:\DoAnTotNghiepCuNhan\Quan_ly_kho\obj\Debug\App.g.cs
 D:\DoAnTotNghiepCuNhan\Quan_ly_kho\obj\Debug\Quan_ly_kho_Content.g.cs
@@ -95,7 +94,6 @@ D:\DoAnTotNghiepCuNhan\Quan_ly_kho\obj\Debug\MainWindow.baml
 D:\DoAnTotNghiepCuNhan\Quan_ly_kho\obj\Debug\Views\ManageWindow.baml
 D:\DoAnTotNghiepCuNhan\Quan_ly_kho\obj\Debug\Views\ModifyWindow.baml
 D:\DoAnTotNghiepCuNhan\Quan_ly_kho\obj\Debug\ResourceXAML\MainResource.baml
-D:\DoAnTotNghiepCuNhan\Quan_ly_kho\obj\Debug\Views\ScheduleWindow.baml
 D:\DoAnTotNghiepCuNhan\Quan_ly_kho\obj\Debug\UserControlPhuong\ControlBarUC.baml
 D:\DoAnTotNghiepCuNhan\Quan_ly_kho\obj\Debug\Quan_ly_kho.g.resources
 D:\DoAnTotNghiepCuNhan\Quan_ly_kho\obj\Debug\Quan_ly_kho.Properties.Resources.resources

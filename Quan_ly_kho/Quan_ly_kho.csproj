@@ -164,9 +164,6 @@
     <Compile Include="Views\ModifyWindow.xaml.cs">
       <DependentUpon>ModifyWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ScheduleWindow.xaml.cs">
-      <DependentUpon>ScheduleWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="UserControlPhuong\ControlBarUC.xaml.cs">
       <DependentUpon>ControlBarUC.xaml</DependentUpon>
     </Compile>
@@ -224,10 +221,6 @@
     <Page Include="ResourceXAML\MainResource.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\ScheduleWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControlPhuong\ControlBarUC.xaml">
       <Generator>MSBuild:Compile</Generator>

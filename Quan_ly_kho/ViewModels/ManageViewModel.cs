@@ -108,18 +108,18 @@ namespace Quan_ly_kho.ViewModels
                     w.Closed += (sender, args) => modifyViewModel.Dispose();
                     w.ShowDialog();
                 });
-            ScheduleRoomCommand = new RelayCommand<object>((p) => { return true; }, 
-                (p) => 
-                {
-                    var selectedDevices = Devices.Where(d => d.IsSelected).ToList();
+            //ScheduleRoomCommand = new RelayCommand<object>((p) => { return true; }, 
+            //    (p) => 
+            //    {
+            //        var selectedDevices = Devices.Where(d => d.IsSelected).ToList();
                     
-                    var scheduleViewModel = new ScheduleViewModel(SelectedRoom)
-                    {
-                        SelectedDevices = new ObservableCollection<Device>(selectedDevices)
-                    };
-                    ScheduleWindow w = new ScheduleWindow(scheduleViewModel);
-                    w.ShowDialog();
-                });
+            //        var scheduleViewModel = new ScheduleViewModel(SelectedRoom)
+            //        {
+            //            SelectedDevices = new ObservableCollection<Device>(selectedDevices)
+            //        };
+            //        ScheduleWindow w = new ScheduleWindow(scheduleViewModel);
+            //        w.ShowDialog();
+            //    });
             //ScheduleBuildingCommand = new RelayCommand<object>((p) => { return true; },
             //    (p) =>
             //    {
